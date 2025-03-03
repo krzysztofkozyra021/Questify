@@ -40,7 +40,7 @@ jobs:
         run: composer validate
 
       - name: Cache dependencies
-        uses: actions/cache@6849a6489940f00c2f30c0fb92c6274307ccb58a # v4.1.2 # https://github.com/actions/cache
+        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # v4.1.2 # https://github.com/actions/cache
         with:
           path: vendor
           key: ${{ runner.os }}-composer-dependencies-${{ hashFiles('composer.lock') }}
