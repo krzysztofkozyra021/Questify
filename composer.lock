@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8483b536e0e3313aa01d363edafd4ce1",
+    "content-hash": "3b360081c38a04021e74e08ff5c8a2ba",
     "packages": [
         {
             "name": "brick/math",
@@ -5929,27 +5929,27 @@
     "packages-dev": [
         {
             "name": "blumilksoftware/codestyle",
-            "version": "v3.3",
+            "version": "v4.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/blumilksoftware/codestyle.git",
-                "reference": "aecc480cd600c91da459999685e54ba0f9821507"
+                "reference": "7ade607cd8b749ccd80de4733161d72b3343a23b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/blumilksoftware/codestyle/zipball/aecc480cd600c91da459999685e54ba0f9821507",
-                "reference": "aecc480cd600c91da459999685e54ba0f9821507",
+                "url": "https://api.github.com/repos/blumilksoftware/codestyle/zipball/7ade607cd8b749ccd80de4733161d72b3343a23b",
+                "reference": "7ade607cd8b749ccd80de4733161d72b3343a23b",
                 "shasum": ""
             },
             "require": {
-                "friendsofphp/php-cs-fixer": "^3.59",
-                "kubawerlos/php-cs-fixer-custom-fixers": "^3.21",
-                "php": "^8.1"
+                "friendsofphp/php-cs-fixer": "^3.70",
+                "kubawerlos/php-cs-fixer-custom-fixers": "^3.23",
+                "php": "^8.2"
             },
             "require-dev": {
                 "jetbrains/phpstorm-attributes": "^1.1",
-                "phpunit/phpunit": "^10.0|^11.2",
-                "symfony/console": "^6.0|^7.0"
+                "phpunit/phpunit": "^11.2",
+                "symfony/console": "^7.0"
             },
             "bin": [
                 "bin/codestyle"
@@ -5973,9 +5973,9 @@
             "description": "Blumilk codestyle configurator",
             "support": {
                 "issues": "https://github.com/blumilksoftware/codestyle/issues",
-                "source": "https://github.com/blumilksoftware/codestyle/tree/v3.3"
+                "source": "https://github.com/blumilksoftware/codestyle/tree/v4.1.0"
             },
-            "time": "2024-08-02T05:18:46+00:00"
+            "time": "2025-03-03T07:17:00+00:00"
         },
         {
             "name": "clue/ndjson-react",
