@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-    <title>Questify</title>
-    @vite('resources/css/app.css')
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Laravel + Inertia</title>
+    @vite(['resources/css/app.css', 'resources/js/app.ts'])
+    @inertiaHead
 </head>
 <body>
-    <p class="text-red-500 text-xl">Hello world!</p>
+@inertia
 </body>
 </html>
