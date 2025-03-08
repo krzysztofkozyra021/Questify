@@ -15,7 +15,7 @@ return new class() extends Migration {
             $table->string("description");
             $table->integer("difficulty_level");
             $table->string("reset_frequency");
-            $table->dateTime("due_date");
+            $table->timestamp("due_date");
             $table->boolean("is_completed")->default(false);
             $table->boolean("is_deadline_task")->default(false);
             $table->float("experience_reward")->default(0);
