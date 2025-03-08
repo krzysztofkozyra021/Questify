@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Task extends Model
 {
@@ -42,5 +43,23 @@ class Task extends Model
     public function resetConfig(): BelongsTo
     {
         return $this->belongsTo(TaskResetConfig::class, 'reset_frequency', 'id');
+    }
+
+    /**
+     * Get the user tasks associated with this task.
+     */
+    public function userTasks(): HasMany
+    {
+        return $this->hasMany(UserTask::class);
+    }
+
+    /**
+     * Get the users that have this task assigned.
+     */
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_tasks')
+            ->withPivot('is_completed', 'completed_at', 'progress')
+            ->withTimestamps();
     }
 }
