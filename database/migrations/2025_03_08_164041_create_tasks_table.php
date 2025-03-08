@@ -12,9 +12,9 @@ return new class() extends Migration {
         Schema::create("tasks", function (Blueprint $table): void {
             $table->id();
             $table->string("title");
-            $table->string("description");
+            $table->string("description")->nullable();
             $table->integer("difficulty_level");
-            $table->string("reset_frequency");
+            $table->string("reset_frequency")->nullable();
             $table->timestamp("due_date");
             $table->boolean("is_completed")->default(false);
             $table->boolean("is_deadline_task")->default(false);
