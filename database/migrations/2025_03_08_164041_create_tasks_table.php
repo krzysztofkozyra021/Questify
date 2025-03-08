@@ -13,13 +13,17 @@ return new class() extends Migration {
             $table->id();
             $table->string("title");
             $table->string("description");
-            $table->integer("difficulty_level")->references("difficulty_level")->on("task_difficulties");
-            $table->string("reset_frequency")->references("id")->on("task_reset_configs");
+            $table->integer("difficulty_level");
+            $table->string("reset_frequency");
             $table->dateTime("due_date");
             $table->boolean("is_completed")->default(false);
             $table->boolean("is_deadline_task")->default(false);
             $table->float("experience_reward")->default(0);
             $table->timestamps();
+
+            // Foreign key constraints
+            $table->foreign("difficulty_level")->references("difficulty_level")->on("task_difficulties");
+            $table->foreign("reset_frequency")->references("id")->on("task_reset_configs");
         });
     }
 
