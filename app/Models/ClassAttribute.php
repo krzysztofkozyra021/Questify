@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ClassAttribute extends Model
 {
@@ -20,4 +21,10 @@ class ClassAttribute extends Model
         'exp_multiplier' => 'float',
     ];
 
+    /**
+     * Get the user statistics that belong to this class.
+     */
+    public function userStatistics() : HasMany{
+        return $this->hasMany(UserStatistics::class, 'class', 'id');
+    }
 }
