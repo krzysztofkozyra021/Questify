@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('user_statistics', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id');
-            $table->string('class');
+            $table->integer('class');
             $table->float("health");
             $table->float("energy");
             $table->float("experience");
@@ -26,6 +26,7 @@ return new class extends Migration
 
             // Foreign key
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('class')->references('id')->on('class_attributes')->onDelete('cascade');
         });
     }
 
