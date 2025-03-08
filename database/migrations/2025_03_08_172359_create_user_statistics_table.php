@@ -1,20 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
-    /**
-     * Run the migrations.
-     */
+return new class() extends Migration {
     public function up(): void
     {
-        Schema::create('user_statistics', function (Blueprint $table) {
+        Schema::create("user_statistics", function (Blueprint $table): void {
             $table->id();
-            $table->integer('user_id');
-            $table->integer('class');
+            $table->integer("user_id");
+            $table->integer("class");
             $table->float("health");
             $table->float("energy");
             $table->float("experience");
@@ -25,17 +23,14 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::table('user_statistics', function (Blueprint $table) {
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('class')->references('id')->on('class_attributes');
+        Schema::table("user_statistics", function (Blueprint $table): void {
+            $table->foreign("user_id")->references("id")->on("users");
+            $table->foreign("class")->references("id")->on("class_attributes");
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('user_statistics');
+        Schema::dropIfExists("user_statistics");
     }
 };

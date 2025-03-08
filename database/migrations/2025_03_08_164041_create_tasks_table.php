@@ -22,9 +22,9 @@ return new class() extends Migration {
             $table->timestamps();
         });
 
-        Schema::table('tasks', function (Blueprint $table) {
-            $table->foreign('difficulty_level')->references('difficulty_level')->on('task_difficulties');
-            $table->foreign('reset_frequency')->references('id')->on('task_reset_configs');
+        Schema::table("tasks", function (Blueprint $table): void {
+            $table->foreign("difficulty_level")->references("difficulty_level")->on("task_difficulties");
+            $table->foreign("reset_frequency")->references("id")->on("task_reset_configs");
         });
     }
 
