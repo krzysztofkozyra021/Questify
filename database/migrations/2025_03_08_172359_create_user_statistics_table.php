@@ -23,10 +23,11 @@ return new class extends Migration
             $table->timestamp("last_login");
             $table->timestamp("last_reset");
             $table->timestamps();
+        });
 
-            // Foreign key
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('class')->references('id')->on('class_attributes')->onDelete('cascade');
+        Schema::table('user_statistics', function (Blueprint $table) {
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('class')->references('id')->on('class_attributes');
         });
     }
 

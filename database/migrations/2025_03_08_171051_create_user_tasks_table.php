@@ -19,10 +19,11 @@ return new class extends Migration
             $table->timestamp('reset_at')->nullable();
             $table->float('progress')->default(0);
             $table->timestamps();
+        });
 
-            # Foreign keys
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('task_id')->references('id')->on('tasks')->onDelete('cascade');
+        Schema::table('user_tasks', function (Blueprint $table) {
+            $table-> foreign('task_id')->references('id')->on('tasks')->onDelete('cascade');
+            $table-> foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

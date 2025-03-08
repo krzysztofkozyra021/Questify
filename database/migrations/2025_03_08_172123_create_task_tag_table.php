@@ -16,8 +16,9 @@ return new class extends Migration
             $table->integer('task_id');
             $table->integer('tag_id');
             $table->timestamps();
+        });
 
-            // Foreign keys
+        Schema::table('task_tag', function (Blueprint $table) {
             $table->foreign('task_id')->references('id')->on('tasks')->onDelete('cascade');
             $table->foreign('tag_id')->references('id')->on('tags')->onDelete('cascade');
         });
