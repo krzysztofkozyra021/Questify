@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class UserTask extends Model
+class UserTaskCollection extends Model
 {
+
+    use HasFactory;
+
     protected $fillable = [
         "user_id",
         "task_id",
@@ -27,8 +31,10 @@ class UserTask extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function task(): BelongsTo
+    public function tasks(): BelongsToMany
     {
-        return $this->belongsTo(Task::class);
+        return $this->belongsToMany(Task::class, 'tasks')
+            ->withPivot('is_completed', 'completed_at', 'progress')
+            ->withTimestamps();
     }
 }

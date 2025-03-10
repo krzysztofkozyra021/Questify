@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class TaskResetConfig extends Model
 {
+
+    use HasFactory;
+
     protected $fillable = [
         "reset_frequency",
         "reset_time",

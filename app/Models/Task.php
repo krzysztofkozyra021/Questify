@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Task extends Model
 {
@@ -50,9 +49,11 @@ class Task extends Model
     /**
      * Get the user tasks associated with this task.
      */
-    public function userTasks(): HasMany
+    public function userTasks(): BelongsToMany
     {
-        return $this->hasMany(UserTask::class);
+        return $this->belongsToMany(UserTaskCollection::class, 'user_task_tasks')
+            ->withPivot('is_completed', 'completed_at', 'progress')
+            ->withTimestamps();
     }
 
     /**
