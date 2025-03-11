@@ -13,13 +13,13 @@ return new class() extends Migration {
             $table->id();
             $table->integer("user_id");
             $table->integer("class");
-            $table->float("health");
-            $table->float("energy");
-            $table->float("experience");
+            $table->float("health")->default(100);
+            $table->float("energy")->default(100);
+            $table->float("experience")->default(0);
             $table->integer("level")->default(1);
-            $table->float("energy_regen_rate");
-            $table->timestamp("last_login");
-            $table->timestamp("last_reset");
+            $table->float("energy_regen_rate")->default(1);
+            $table->timestamp("last_login")->nullable();
+            $table->timestamp("last_reset")->nullable();
             $table->timestamps();
         });
 
