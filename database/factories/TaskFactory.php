@@ -20,7 +20,7 @@ class TaskFactory extends Factory
             "title" => $this->faker->word(),
             "description" => $this->faker->sentence(10),
             "difficulty_level" => $this->faker->numberBetween(1, 4),
-            "reset_frequency" => $this->faker->numberBetween(0, 6),
+            "reset_frequency" => $this->faker->numberBetween(1, 7),
             "due_date" => $this->faker->dateTimeBetween("now", "+1 year"),
             "is_completed" => $this->faker->boolean,
             "is_deadline_task" => $this->faker->boolean,
