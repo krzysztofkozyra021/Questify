@@ -27,7 +27,7 @@ class ClassAttributeFactory extends Factory
             "energy_multiplier" => $this->faker->randomFloat(2, 0.5, 2),
             "health_multiplier" => $this->faker->randomFloat(2, 0.5, 2),
             "exp_multiplier" => $this->faker->randomFloat(2, 0.5, 2),
-            "special_ability" => $this->faker->sentence,
+            "special_ability" => $this->faker->sentence(7),
         ];
     }
 }
