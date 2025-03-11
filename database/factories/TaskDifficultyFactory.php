@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\TaskDifficulty;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\TaskDifficulty>
+ * @extends Factory<TaskDifficulty>
  */
 class TaskDifficultyFactory extends Factory
 {
@@ -17,30 +18,18 @@ class TaskDifficultyFactory extends Factory
     public function definition(): array
     {
         return [
-            "difficulty" => [
+           "difficulty_level" => [
+               1,2,3,4
+           ][ $this->faker->numberBetween(0, 3) ],
+            "difficulty_name" => [
                 "Easy",
                 "Medium",
                 "Hard",
                 "Very Hard",
             ][$this->faker->numberBetween(0, 3)],
-            "energy_cost" => [
-                5,
-                10,
-                15,
-                20,
-            ][$this->faker->numberBetween(0, 3)],
-            "health_penalty" => [
-                0,
-                5,
-                10,
-                15,
-            ][$this->faker->numberBetween(0, 3)],
-            "base_exp_multiplier" => [
-                1,
-                1.5,
-                2,
-                2.5,
-            ][$this->faker->numberBetween(0, 3)],
+            "energy_cost" => $this->faker->numberBetween(1, 20),
+            "health_penalty" => $this->faker->numberBetween(1, 20),
+            "base_exp_multiplier" => $this->faker->randomFloat(2, 1, 2),
         ];
     }
 }

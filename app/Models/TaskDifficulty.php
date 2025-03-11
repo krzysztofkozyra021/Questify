@@ -14,6 +14,7 @@ class TaskDifficulty extends Model
 
     protected $fillable = [
         "difficulty_level",
+        "difficulty_name",
         "energy_cost",
         "health_penalty",
         "base_exp_multiplier",

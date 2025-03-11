@@ -10,5 +10,10 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        $this->call([
+            TaskResetConfigSeeder::class,
+            TaskDifficultySeeder::class,
+            TaskSeeder::class,
+        ]);
     }
 }
