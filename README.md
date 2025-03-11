@@ -8,7 +8,23 @@ cp .env.example .env
 make init
 make dev
 ```
-Application will be running under [localhost:63851](localhost:63851) and [http://Questify.localhost/](http://Questify.blumilk.localhost/)
+Application will be running under [localhost:63851](localhost:63851)
+
+If you encounter error make sure that you have installed `make 4.*` `composer 2.8.*` and `docker-compose 2.*` on your machine.
+Then run `make init` and `make dev` again.
+If errors still occur, run `composer install` and `npm install` in the `app` container or locally in your terminal.
+
+### DB Populate
+
+To populate the database with some data, run the following command inside the container shell:
+First, to run the migrations and seeders get into shell with make: 
+```
+make shell
+```
+Then run the following command:
+```
+php artisan migrate:fresh --seed
+```
 
 #### Commands
 Before running any of the commands below, you must run shell:
