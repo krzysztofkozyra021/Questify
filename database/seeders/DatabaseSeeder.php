@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             TaskResetConfigSeeder::class,
             TaskDifficultySeeder::class,
             TaskSeeder::class,
+            TaskTagSeeder::class,
         ]);
     }
 }
