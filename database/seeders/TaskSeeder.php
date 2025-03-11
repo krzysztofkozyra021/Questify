@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
 use App\Models\Task;
@@ -14,19 +16,18 @@ class TaskSeeder extends Seeder
     public function run(): void
     {
         // Get all valid reset_frequency IDs from the database
-        $validResetFrequencies = TaskResetConfig::pluck('id')->toArray();
+        $validResetFrequencies = TaskResetConfig::pluck("id")->toArray();
 
         // If empty, stop execution and show error
         if (empty($validResetFrequencies)) {
-            $this->command->error('No TaskResetConfig records found, Run seeder first.');
+            $this->command->error("No TaskResetConfig records found, Run seeder first.");
+
             return;
         }
 
         Task::factory(50)->create([
             // Pick a random valid reset_frequency from the existing ones
-            'reset_frequency' => function () use ($validResetFrequencies) {
-                return $validResetFrequencies[array_rand($validResetFrequencies)];
-            }
+            "reset_frequency" => fn() => $validResetFrequencies[array_rand($validResetFrequencies)],
         ]);
     }
 }

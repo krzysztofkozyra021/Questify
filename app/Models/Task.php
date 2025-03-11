@@ -51,8 +51,8 @@ class Task extends Model
      */
     public function userTasks(): BelongsToMany
     {
-        return $this->belongsToMany(UserTaskCollection::class, 'user_task_tasks')
-            ->withPivot('is_completed', 'completed_at', 'progress')
+        return $this->belongsToMany(UserTaskCollection::class, "user_task_tasks")
+            ->withPivot("is_completed", "completed_at", "progress")
             ->withTimestamps();
     }
 

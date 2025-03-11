@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class UserStatistics extends Model
 {
-
     use HasFactory;
 
     protected $fillable = [

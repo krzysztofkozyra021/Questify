@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ClassAttribute extends Model
 {
-
     use HasFactory;
 
     protected $fillable = [

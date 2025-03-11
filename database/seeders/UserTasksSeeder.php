@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
 use App\Models\Task;
@@ -16,7 +18,8 @@ class UserTasksSeeder extends Seeder
         $users = User::all();
 
         if ($users->isEmpty()) {
-            $this->command->error('No User records found. Run user seeder first.');
+            $this->command->error("No User records found. Run user seeder first.");
+
             return;
         }
 
@@ -31,9 +34,9 @@ class UserTasksSeeder extends Seeder
             // Attach tasks to user with pivot data
             foreach ($randomTasks as $task) {
                 $user->tasks()->attach($task->id, [
-                    'is_completed' => false,
-                    'completed_at' => null,
-                    'progress' => 0,
+                    "is_completed" => false,
+                    "completed_at" => null,
+                    "progress" => 0,
                 ]);
 
                 // Add tags to the task

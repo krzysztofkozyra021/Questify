@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Factories;
 
 use App\Models\TaskDifficulty;
@@ -18,9 +20,9 @@ class TaskDifficultyFactory extends Factory
     public function definition(): array
     {
         return [
-           "difficulty_level" => [
-               1,2,3,4
-           ][ $this->faker->numberBetween(0, 3) ],
+            "difficulty_level" => [
+                1, 2, 3, 4,
+            ][$this->faker->numberBetween(0, 3)],
             "difficulty_name" => [
                 "Easy",
                 "Medium",

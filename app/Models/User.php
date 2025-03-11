@@ -21,9 +21,7 @@ use Laravel\Sanctum\HasApiTokens;
  */
 class User extends Authenticatable
 {
-
     use HasFactory;
-
     use HasApiTokens;
     use HasFactory;
     use Notifiable;
@@ -38,6 +36,13 @@ class User extends Authenticatable
         "remember_token",
     ];
 
+    public function tasks(): BelongsToMany
+    {
+        return $this->belongsToMany(Task::class, "user_tasks")
+            ->withPivot("is_completed", "completed_at", "progress")
+            ->withTimestamps();
+    }
+
     protected function casts(): array
     {
         return [
@@ -45,12 +50,4 @@ class User extends Authenticatable
             "password" => "hashed",
         ];
     }
-
-    public function tasks(): BelongsToMany
-    {
-        return $this->belongsToMany(Task::class, 'user_tasks')
-            ->withPivot('is_completed', 'completed_at', 'progress')
-            ->withTimestamps();
-    }
-
 }

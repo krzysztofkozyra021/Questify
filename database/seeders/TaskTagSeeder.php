@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
-use App\Models\Task;
 use App\Models\Tag;
+use App\Models\Task;
 use Illuminate\Database\Seeder;
 
 class TaskTagSeeder extends Seeder
@@ -20,7 +22,7 @@ class TaskTagSeeder extends Seeder
         foreach ($tasks as $task) {
             $randomTagCount = rand(1, min(3, $tags->count()));
             $randomTags = $tags->random($randomTagCount);
-            $task->tags()->attach($randomTags->pluck('id')->toArray());
+            $task->tags()->attach($randomTags->pluck("id")->toArray());
         }
     }
 }
