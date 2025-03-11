@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\Tag;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Tag>
+ * @extends Factory<Tag>
  */
 class TagFactory extends Factory
 {
@@ -17,18 +18,7 @@ class TagFactory extends Factory
     public function definition(): array
     {
         return [
-            "name" => [
-                "Work",
-                "Personal",
-                "Health",
-                "Fitness",
-                "School",
-                "Family",
-                "Friends",
-                "Hobbies",
-                "Chores",
-                "Errands",
-            ][$this->faker->numberBetween(0, 9)],
+            "name" => $this->faker->word(),
         ];
     }
 }

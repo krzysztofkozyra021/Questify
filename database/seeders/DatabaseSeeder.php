@@ -11,6 +11,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+            TagSeeder::class,
             TaskResetConfigSeeder::class,
             TaskDifficultySeeder::class,
             TaskSeeder::class,
