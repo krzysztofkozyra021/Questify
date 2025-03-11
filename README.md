@@ -10,7 +10,7 @@ make dev
 ```
 Application will be running under [localhost:63851](localhost:63851)
 
-If you encounter error make sure that you have installed `make 4.*` `composer 2.8.*` and `docker-compose 2.*` on your machine.
+If you encounter errors make sure that you have installed `make 4.*` `composer 2.8.*` and `docker-compose 2.*` on your machine.
 Then run `make init` and `make dev` again.
 If errors still occur, run `composer install` and `npm install` in the `app` container or locally in your terminal.
 
