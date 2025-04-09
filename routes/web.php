@@ -19,6 +19,16 @@ use Inertia\Response;
 Route::get("/", fn(): Response => inertia("Welcome"));
 Route::get("/about", fn(): Response => inertia("About"));
 
+Route::get('/language/{locale}', function (string $locale) {
+    // Validate that the locale exists in available locales
+    if (array_key_exists($locale, config('app.available_locales')) ||
+        in_array($locale, config('app.available_locales'))) {
+        session()->put('locale', $locale);
+    }
+
+    return redirect()->back();
+})->name('language.switch');
+
 // Class selection (post-registration, one-time only)
 Route::get('/select-class', [ClassSelectionController::class, 'show'])->name('select-class');
 Route::post('/select-class', [ClassSelectionController::class, 'store'])->name('select-class.store');
