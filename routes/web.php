@@ -20,7 +20,7 @@ Route::get("/", fn(): Response => inertia("Welcome"));
 Route::get("/about", fn(): Response => inertia("About"));
 
 Route::get('/language/{locale}', function (string $locale) {
-    // Validate that the locale exists in available locales
+  
     if (array_key_exists($locale, config('app.available_locales')) ||
         in_array($locale, config('app.available_locales'))) {
         session()->put('locale', $locale);
