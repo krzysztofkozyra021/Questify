@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-import { useTranslation } from '@/Composables/useTranslation';
+import { useTranslation } from '@/composables/useTranslation.js';
 const { trans } = useTranslation();
 const { currentLocale, availableLocales, switchLanguage } = useTranslation();
 

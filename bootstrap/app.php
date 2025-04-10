@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\Localization;
 use App\Http\Middleware\ShareInertiaData;
 use Illuminate\Foundation\Application;
@@ -20,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Add the Localization middleware to the web group
         $middleware->web(Localization::class);
         $middleware->web(ShareInertiaData::class);
+        $middleware->web(HandleInertiaRequests::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
     })

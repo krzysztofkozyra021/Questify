@@ -26,6 +26,7 @@ services:
             - .:/application
         ports:
             - ${DOCKER_APP_HOST_PORT:-63851}:80
+            - ${VITE_PORT}:5173
         networks:
             - Questify-dev
         restart: unless-stopped

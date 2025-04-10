@@ -1,21 +1,29 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Providers;
 
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
 use Inertia\Inertia;
 
 class AppServiceProvider extends ServiceProvider
 {
+    /**
+     * Register any application services.
+     */
     public function register(): void
     {
+        //
     }
 
+    /**
+     * Bootstrap any application services.
+     */
     public function boot(): void
     {
+        Vite::prefetch(concurrency: 3);
+
         // Share locale data with all Inertia views
         Inertia::share([
             'locale' => fn () => app()->getLocale(),
