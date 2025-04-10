@@ -1,17 +1,25 @@
 import '../css/app.css'
-import { createApp, h, type DefineComponent } from 'vue'
+import './bootstrap.js'
+
 import { createInertiaApp } from '@inertiajs/vue3'
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'
-import LanguageSwitcher from "@/Components/LanguageSwitcher.vue";
+import { createApp, h } from 'vue'
+import { ZiggyVue } from 'ziggy-js'
+import LanguageSwitcher from './Components/LanguageSwitcher.vue'
 
 const appName = import.meta.env.VITE_APP_NAME || 'Questify'
 
 createInertiaApp({
   title: (title) => `${title} - ${appName}`,
-  resolve: async (name) => await resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob<DefineComponent>('./Pages/**/*.vue')),
+  resolve: (name) =>
+    resolvePageComponent(
+      `./Pages/${name}.vue`,
+      import.meta.glob('./Pages/**/*.vue'),
+    ),
   setup({ el, App, props, plugin }) {
-    createApp({ render: () => h(App, props) })
+    return createApp({ render: () => h(App, props) })
       .use(plugin)
+      .use(ZiggyVue)
       .component('LanguageSwitcher', LanguageSwitcher)
       .mount(el)
   },
