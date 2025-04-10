@@ -2,7 +2,7 @@
 .pattern-background {
   position: absolute;
   inset: 0;
-  background-image: url('/images/gaming-pattern.webp'); /* If using public directory */
+  background-image: url('/images/gaming-pattern.webp');
   background-repeat: repeat;
   opacity: 0.3;
   z-index: 0;
@@ -36,7 +36,6 @@
 <script setup>
 import { usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
-import LanguageSwitcher from '@/Components/LanguageSwitcher.vue'; // Add this import
 
 const page = usePage();
 const translations = computed(() => page.props.translations || {});
