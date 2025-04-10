@@ -1,13 +1,13 @@
-import '../css/app.css';
-import './bootstrap';
+import '../css/app.css'
+import './bootstrap.js'
 
-import { createInertiaApp } from '@inertiajs/vue3';
-import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
-import { createApp, h } from 'vue';
-import { ZiggyVue } from 'ziggy-js';
-import LanguageSwitcher from './Components/LanguageSwitcher.vue';
+import { createInertiaApp } from '@inertiajs/vue3'
+import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'
+import { createApp, h } from 'vue'
+import { ZiggyVue } from 'ziggy-js'
+import LanguageSwitcher from './Components/LanguageSwitcher.vue'
 
-const appName = import.meta.env.VITE_APP_NAME || 'Questify';
+const appName = import.meta.env.VITE_APP_NAME || 'Questify'
 
 createInertiaApp({
   title: (title) => `${title} - ${appName}`,
@@ -26,4 +26,4 @@ createInertiaApp({
   progress: {
     color: '#4B5563',
   },
-});
+})
