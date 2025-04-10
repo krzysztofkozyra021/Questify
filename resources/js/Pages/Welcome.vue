@@ -2,7 +2,7 @@
 .pattern-background {
   position: absolute;
   inset: 0;
-  background-image: url('/images/gaming-pattern.webp');
+  background-image: url('/images/gaming-pattern.webp'); /* If using public directory */
   background-repeat: repeat;
   opacity: 0.3;
   z-index: 0;
@@ -34,15 +34,8 @@
 </template>
 
 <script setup>
-import { usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
-
-const page = usePage();
-const translations = computed(() => page.props.translations || {});
-
-function trans(key) {
-  return translations.value[key] || key;
-}
+import { useTranslation} from "@/Composables/useTranslation.js";
+const { trans } = useTranslation();
 
 function startAdventure() {
   window.location.href = '/dashboard';
