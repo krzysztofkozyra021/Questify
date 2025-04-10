@@ -16,11 +16,11 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Response;
 
 // Public routes
-Route::get("/", fn(): Response => inertia("Welcome"));
-Route::get("/about", fn(): Response => inertia("About"));
+Route::inertia("/","Welcome");
+Route::inertia("/about","About");
 
 Route::get('/language/{locale}', function (string $locale) {
-  
+
     if (array_key_exists($locale, config('app.available_locales')) ||
         in_array($locale, config('app.available_locales'))) {
         session()->put('locale', $locale);

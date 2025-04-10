@@ -34,16 +34,8 @@
 </template>
 
 <script setup>
-import { usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
-import LanguageSwitcher from '@/Components/LanguageSwitcher.vue'; // Add this import
-
-const page = usePage();
-const translations = computed(() => page.props.translations || {});
-
-function trans(key) {
-  return translations.value[key] || key;
-}
+import { useTranslation} from "@/Composables/useTranslation.js";
+const { trans } = useTranslation();
 
 function startAdventure() {
   window.location.href = '/dashboard';
