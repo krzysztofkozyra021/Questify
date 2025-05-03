@@ -12,8 +12,6 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             TagSeeder::class,
-            TaskResetConfigSeeder::class,
-            TaskDifficultySeeder::class,
             TaskSeeder::class,
             TaskTagSeeder::class,
             UserSeeder::class,
