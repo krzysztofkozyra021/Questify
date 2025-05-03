@@ -1,0 +1,9 @@
+ii  libapache2-mod-php7.4                      7.4.3-4ubuntu2.29                     amd64        server-side, HTML-embedded scripting language (Apache 2 module)
+ii  php                                        2:7.4+75                              all          server-side, HTML-embedded scripting language (default)
+ii  php-common                                 2:75                                  all          Common files for PHP packages
+ii  php7.4                                     7.4.3-4ubuntu2.29                     all          server-side, HTML-embedded scripting language (metapackage)
+ii  php7.4-cli                                 7.4.3-4ubuntu2.29                     amd64        command-line interpreter for the PHP scripting language
+ii  php7.4-common                              7.4.3-4ubuntu2.29                     amd64        documentation, examples and common module for PHP
+ii  php7.4-json                                7.4.3-4ubuntu2.29                     amd64        JSON module for PHP
+ii  php7.4-opcache                             7.4.3-4ubuntu2.29                     amd64        Zend OpCache module for PHP
+ii  php7.4-readline                            7.4.3-4ubuntu2.29                     amd64        readline module for PHP
