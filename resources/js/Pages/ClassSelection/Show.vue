@@ -124,7 +124,7 @@ export default {
     },
 
     // Get percentage for progress bar width using 1-5 scale
-    getPercentage(multiplier, statType) {
+    getPercentage(multiplier, statType) {1
       const { min, max } = this.statRanges[statType];
       const range = max - min;
       const normalizedValue = (multiplier - min) / range;
