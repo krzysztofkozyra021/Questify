@@ -21,10 +21,10 @@ export default defineConfig({
     hmr: {
       host: '0.0.0.0',
     },
-    host: '0.0.0.0',  // Ważne dla Dockera
+    host: '0.0.0.0',
     port: 5173,
     watch: {
-      usePolling: true  // Pomocne dla systemów plików Docker
+      usePolling: true
     }
   },
 });

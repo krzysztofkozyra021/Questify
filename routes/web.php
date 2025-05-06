@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ClassSelectionController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SupportController;
@@ -39,12 +40,13 @@ Route::middleware(["auth", "verified"])->group(function (): void {
     Route::get("/select-class", [ClassSelectionController::class, "show"])->name("select-class");
     Route::post("/select-class", [ClassSelectionController::class, "store"])->name("select-class.store");
 
+
     // Dashboard - Main game interface
-    Route::inertia("/dashboard", "Dashboard")->middleware(["auth", "verified"])->name("dashboard");
+    Route::get("/dashboard", [DashboardController::class, "index"])->middleware(["auth", "verified"])->name("dashboard");
     // Tasks - User-specific tasks
     Route::prefix("tasks")->name("tasks.")->group(function (): void {
-        Route::get("/", [TaskController::class, "index"])->name("index");
-        Route::post("/", [TaskController::class, "store"])->name("store");
+        Route::get('/create', [DashboardController::class, 'create'])->name('create');
+        Route::post('/', [DashboardController::class, 'store'])->name('store');
         Route::get("/{task}", [TaskController::class, "show"])->name("show");
         Route::put("/{task}", [TaskController::class, "update"])->name("update");
         Route::delete("/{task}", [TaskController::class, "destroy"])->name("destroy");

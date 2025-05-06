@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Middleware\EnsureClassIsSelected;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\Localization;
 use App\Http\Middleware\ShareInertiaData;
@@ -22,6 +23,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(Localization::class);
         $middleware->web(ShareInertiaData::class);
         $middleware->web(HandleInertiaRequests::class);
+        $middleware->web(EnsureClassIsSelected::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
     })

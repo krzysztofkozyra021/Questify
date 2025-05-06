@@ -70,7 +70,6 @@ function startAdventure() {
     window.location.href = route('dashboard')
   } catch (error) {
     console.error('Error navigating to dashboard:', error)
-    // Fallback jeśli route() nie działa
     window.location.href = '/dashboard'
   }
 }
