@@ -4,6 +4,7 @@ import InputError from '@/Components/InputError.vue'
 import InputLabel from '@/Components/InputLabel.vue'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import TextInput from '@/Components/TextInput.vue'
+import Preloader from '@/Components/Preloader.vue'
 import { Head, Link, useForm } from '@inertiajs/vue3'
 
 const form = useForm({
@@ -21,6 +22,7 @@ const submit = () => {
 </script>
 
 <template>
+  <Preloader />
   <div class="min-h-screen bg-slate-800">
     <!-- Header -->
     <header class="bg-slate-800 shadow-lg">
