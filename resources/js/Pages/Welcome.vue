@@ -1,6 +1,8 @@
 <template>
+
   <Head title="Welcome" />
-  <div class="min-h-screen flex flex-col items-center justify-center relative overflow-hidden bg-white  dark:text-white">
+  <div
+    class="min-h-screen flex flex-col items-center justify-center relative overflow-hidden bg-white  dark:text-white">
     <!-- RPG Background -->
     <div class="pattern-background" />
 
@@ -17,29 +19,22 @@
       </p>
 
       <!-- Primary Button -->
-      <button
-        v-if="$page?.props?.auth?.user"
+      <button v-if="$page?.props?.auth?.user"
         class="px-8 py-3 bg-indigo-600 text-white rounded-lg shadow-lg hover:bg-indigo-700 transition-colors duration-300 text-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-opacity-50 mb-4"
-        @click="startAdventure"
-      >
+        @click="startAdventure">
         {{ trans('Begin Your Quest') }}
       </button>
 
       <!-- Login/Register Buttons for guests -->
       <div v-else class="flex flex-col sm:flex-row justify-center gap-4 mt-6">
-        <Link
-          :href="route('login')"
-          class="px-8 py-3 bg-indigo-600 text-white rounded-lg shadow-lg hover:bg-indigo-700 transition-colors duration-300 text-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-opacity-50"
-        >
-          {{ trans('Log in') }}
+        <Link :href="route('login')"
+          class="px-8 py-3 bg-indigo-600 text-white rounded-lg shadow-lg hover:bg-indigo-700 transition-colors duration-300 text-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-opacity-50">
+        {{ trans('Log in') }}
         </Link>
 
-        <Link
-          v-if="canRegister"
-          :href="route('register')"
-          class="px-8 py-3 bg-indigo-600 bg-opacity-80 text-white rounded-lg shadow-lg hover:bg-indigo-700 transition-colors duration-300 text-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-opacity-50"
-        >
-          {{ trans('Register') }}
+        <Link v-if="canRegister" :href="route('register')"
+          class="px-8 py-3 bg-indigo-600 bg-opacity-80 text-white rounded-lg shadow-lg hover:bg-indigo-700 transition-colors duration-300 text-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-opacity-50">
+        {{ trans('Register') }}
         </Link>
       </div>
     </div>
@@ -50,7 +45,7 @@
 import { Head, Link } from '@inertiajs/vue3'
 import { useTranslation } from '@/composables/useTranslation.js'
 import LanguageSwitcher from '@/Components/LanguageSwitcher.vue'
-import {route} from 'ziggy-js'
+import { route } from 'ziggy-js'
 
 defineProps({
   canLogin: {
