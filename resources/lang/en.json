@@ -19,5 +19,20 @@
     "Begin Your Epic Journey": "Begin Your Epic Journey",
     "Join the ranks of legendary adventurers.": "Join the ranks of legendary adventurers.",
     "Every quest begins with a single step.": "Every quest begins with a single step.",
-    "Your story awaits, hero.": "Your story awaits, hero."
+    "Your story awaits, hero.": "Your story awaits, hero.",
+    "Warrior": "Warrior",
+    "Mage": "Mage",
+    "Rogue": "Rogue",
+    "Paladin": "Paladin",
+    "Health": "Health",
+    "Energy": "Energy",
+    "EXP Gain": "EXP Gain",
+    "Special Ability": "Special Ability",
+    "Confirm Selection": "Confirm Selection",
+    "Choose Your Class": "Choose Your Class",
+    "Select a class to begin your journey. This choice cannot be changed later.": "Select a class to begin your journey. This choice cannot be changed later.",
+    "Damage resistance: Reduces damage taken from tasks with high difficulty.": "Damage resistance: Reduces damage taken from tasks with high difficulty.",
+    "Wisdom: Gain bonus experience for completing knowledge-based tasks.": "Wisdom: Gain bonus experience for completing knowledge-based tasks.",
+    "Efficiency: Can complete certain tasks with reduced energy cost.": "Efficiency: Can complete certain tasks with reduced energy cost.",
+    "Inspiration: Has a chance to motivate you, restoring energy after completing tasks.": "Inspiration: Has a chance to motivate you, restoring energy after completing tasks."
 }

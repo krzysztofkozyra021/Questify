@@ -1,8 +1,8 @@
 <template>
   <div class="flex min-h-screen h-full w-full flex-col pt-4 sm:pt-8 bg-slate-800 background">
     <div class="text-center mb-6 sm:mb-12 px-4">
-      <h1 class="text-3xl sm:text-4xl font-bold text-amber-100 mb-2">Choose Your Class</h1>
-      <p class="text-base sm:text-lg text-stone-100">Select a class to begin your journey. This choice cannot be changed later.</p>
+      <h1 class="text-3xl sm:text-4xl font-bold text-amber-100 mb-2">{{ trans('Choose Your Class') }}</h1>
+      <p class="text-base sm:text-lg text-stone-100">{{ trans('Select a class to begin your journey. This choice cannot be changed later.') }}</p>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 lg:gap-12 mb-8 sm:mb-12 p-4 sm:p-8">
@@ -23,14 +23,14 @@
             class="w-28 h-64 sm:w-36 sm:h-80 object-cover rounded-lg"
           />
         </div>
-        <h2 class="text-xl sm:text-2xl font-bold text-center text-amber-400 mb-4 sm:mb-6">{{ classItem.name }}</h2>
+        <h2 class="text-xl sm:text-2xl font-bold text-center text-amber-400 mb-4 sm:mb-6">{{ trans(classItem.name) }}</h2>
 
         <!-- Stats section with simplified bars -->
         <div class="space-y-3 sm:space-y-4 mb-4 sm:mb-6">
           <!-- Health stat -->
           <div>
             <div class="flex items-center mb-1">
-              <span class="font-medium text-stone-100 w-20 sm:w-24 text-sm sm:text-base">Health:</span>
+              <span class="font-medium text-stone-100 w-20 sm:w-24 text-sm sm:text-base">{{ trans('Health') }}:</span>
               <div class="w-full bg-slate-700 rounded-full h-2 sm:h-2.5 ml-2">
                 <div
                   class="bg-red-600 text-white h-2 sm:h-2.5 rounded-full"
@@ -43,7 +43,7 @@
           <!-- Energy stat -->
           <div>
             <div class="flex items-center mb-1">
-              <span class="font-medium text-stone-100 w-20 sm:w-24 text-sm sm:text-base">Energy:</span>
+              <span class="font-medium text-stone-100 w-20 sm:w-24 text-sm sm:text-base">{{ trans('Energy') }}:</span>
               <div class="w-full bg-slate-700 rounded-full h-2 sm:h-2.5 ml-2">
                 <div
                   class="bg-blue-600 h-2 sm:h-2.5 rounded-full"
@@ -56,7 +56,7 @@
           <!-- Experience stat -->
           <div>
             <div class="flex items-center mb-1">
-              <span class="font-medium text-stone-100 w-20 sm:w-24 text-sm sm:text-base">EXP Gain:</span>
+              <span class="font-medium text-stone-100 w-20 sm:w-24 text-sm sm:text-base">{{ trans('EXP Gain') }}:</span>
               <div class="w-full bg-slate-700 rounded-full h-2 sm:h-2.5 ml-2">
                 <div
                   class="bg-amber-600 h-2 sm:h-2.5 rounded-full"
@@ -69,8 +69,8 @@
 
         <!-- Special ability section -->
         <div class="pt-3 sm:pt-4 border-t border-slate-500 mt-auto">
-          <h3 class="text-base sm:text-lg font-semibold text-stone-100 mb-1 sm:mb-2">Special Ability</h3>
-          <p class="text-sm sm:text-base text-stone-100 overflow-hidden text-ellipsis line-clamp-3 sm:line-clamp-2 max-h-16 sm:max-h-12">{{ classItem.special_ability }}</p>
+          <h3 class="text-base sm:text-lg font-semibold text-stone-100 mb-1 sm:mb-2">{{ trans('Special Ability') }}</h3>
+          <p class="text-sm sm:text-base text-stone-100 overflow-hidden text-ellipsis line-clamp-3 sm:line-clamp-2 max-h-16 sm:max-h-12">{{ trans(classItem.special_ability) }}</p>
         </div>
       </div>
     </div>
@@ -85,14 +85,15 @@
         :disabled="!selectedClass"
         @click="confirmSelection"
       >
-        Confirm Selection
+        {{ trans('Confirm Selection') }}
       </button>
     </div>
   </div>
 </template>
 
 <script>
-import {route} from "ziggy-js";
+import { route } from "ziggy-js";
+import { useTranslation } from '@/composables/useTranslation.js'
 
 export default {
   props: {
@@ -100,6 +101,10 @@ export default {
       type: Array,
       required: true
     }
+  },
+  setup() {
+    const { trans } = useTranslation()
+    return { trans }
   },
   data() {
     return {
@@ -119,38 +124,11 @@ export default {
         }
       },
       classImages: {
-      1: '/images/classes/ratWarrior.webp',
-      2: '/images/classes/ratMage.webp',
-      3: '/images/classes/ratRogue.webp',
-      4: '/images/classes/ratPaladin.webp'
-    }
-    }
-  },
-  methods: {
-    selectClass(classId) {
-      this.selectedClass = classId;
-    },
-
-    confirmSelection() {
-      if (!this.selectedClass) return;
-
-      this.$inertia.post(route('select-class.store'), {
-        class_id: this.selectedClass
-      });
-    },
-
-    // Get percentage for progress bar width using 1-5 scale
-    getPercentage(multiplier, statType) {
-      const { min, max } = this.statRanges[statType];
-      const range = max - min;
-      const normalizedValue = (multiplier - min) / range;
-
-      // Scale to 1-5 instead of 1-10
-      const scaleValue = Math.round(normalizedValue * 4) + 1; // Scale to 1-5
-      const percentage = scaleValue * 20; // Convert to percentage (20% per unit)
-
-      // Ensure the percentage does not exceed 100%
-      return Math.min(percentage, 100);
+        1: '/images/classes/ratWarrior.webp',
+        2: '/images/classes/ratMage.webp',
+        3: '/images/classes/ratRogue.webp',
+        4: '/images/classes/ratPaladin.webp'
+      }
     }
   },
   computed: {
@@ -159,6 +137,25 @@ export default {
         ...classItem,
         image: this.classImages[classItem.id] || '/images/classes/ratWarrior.webp'
       }));
+    }
+  },
+  methods: {
+    selectClass(classId) {
+      this.selectedClass = classId;
+    },
+    confirmSelection() {
+      if (!this.selectedClass) return;
+      this.$inertia.post(route('select-class.store'), {
+        class_id: this.selectedClass
+      });
+    },
+    getPercentage(multiplier, statType) {
+      const { min, max } = this.statRanges[statType];
+      const range = max - min;
+      const normalizedValue = (multiplier - min) / range;
+      const scaleValue = Math.round(normalizedValue * 4) + 1;
+      const percentage = scaleValue * 20;
+      return Math.min(percentage, 100);
     }
   }
 }
