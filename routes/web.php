@@ -26,7 +26,7 @@ Route::get("/language/{locale}", [LanguageController::class, 'switch'])->name('l
 
 require __DIR__ . "/auth.php";
 
-// Trasy wymagające autentykacji
+// Routes requiring authentication
 Route::middleware(["auth", "verified"])->group(function (): void {
     // Class selection (post-registration, one-time only)
     Route::get("/select-class", [ClassSelectionController::class, "show"])->name("select-class");
