@@ -9,10 +9,10 @@
       <div
         v-for="classItem in classesWithImages"
         :key="classItem.id"
-        class="flex flex-col justify-between bg-slate-600 bg-opacity-20 h-auto w-full rounded-lg shadow-md p-4 sm:p-6 cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:opacity-80 hover:grayscale-0 hover:shadow-lg relative"
-        :class="{ 
+        class="flex flex-col justify-between bg-slate-600 bg-opacity-20 h-auto w-full rounded-lg shadow-md p-4 sm:p-6 cursor-pointer transition-all duration-300 relative"
+        :class="{
           'ring-2 ring-amber-500 bg-slate-700': selectedClass === classItem.id,
-          'opacity-40 grayscale': selectedClass && selectedClass !== classItem.id
+          'opacity-40 grayscale hover:-translate-y-2 hover:opacity-80 hover:grayscale-0 hover:shadow-lg': selectedClass && selectedClass !== classItem.id
         }"
         @click="selectClass(classItem.id)"
       >
