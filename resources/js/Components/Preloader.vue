@@ -44,12 +44,6 @@ onMounted(() => {
           <path d="M16 16L18 18" stroke="currentColor" stroke-width="0.5" stroke-linecap="round"/>
         </svg>
       </div>
-      
-      <!-- Loading text with typing animation -->
-      <div class="text-2xl font-bold text-amber-100">
-        <span class="inline-block animate-pulse">Preparing your quest...</span>
-      </div>
-      
       <!-- Loading bar -->
       <div class="w-64 h-2 mt-4 bg-slate-700 rounded-full overflow-hidden">
         <div class="h-full bg-amber-600 rounded-full animate-[loading_1s_ease-in-out]"></div>
