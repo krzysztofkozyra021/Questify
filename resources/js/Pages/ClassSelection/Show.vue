@@ -1,4 +1,5 @@
 <template>
+  <Preloader />
   <div class="flex min-h-screen h-full w-full flex-col pt-4 sm:pt-8 bg-slate-800 background">
     <div class="text-center mb-6 sm:mb-12 px-4">
       <h1 class="text-3xl sm:text-4xl font-bold text-amber-100 mb-2">{{ trans('Choose Your Class') }}</h1>
@@ -94,8 +95,12 @@
 <script>
 import { route } from "ziggy-js";
 import { useTranslation } from '@/composables/useTranslation.js'
+import Preloader from '@/Components/Preloader.vue'
 
 export default {
+  components: {
+    Preloader
+  },
   props: {
     classes: {
       type: Array,
