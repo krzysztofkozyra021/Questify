@@ -6,6 +6,10 @@ import PrimaryButton from '@/Components/PrimaryButton.vue'
 import TextInput from '@/Components/TextInput.vue'
 import Preloader from '@/Components/Preloader.vue'
 import { Head, Link, useForm } from '@inertiajs/vue3'
+import { useTranslation } from '@/composables/useTranslation.js'
+import LanguageSwitcher from '@/Components/LanguageSwitcher.vue'
+
+const { trans } = useTranslation()
 
 const form = useForm({
   name: '',
@@ -30,12 +34,15 @@ const submit = () => {
         <div class="flex items-center">
           <img src="/images/logo.png" alt="Questify Logo" class="h-10 w-auto" />
         </div>
-        <Link
-          :href="route('login')"
-          class="px-6 py-2 bg-amber-900 text-stone-100 font-bold rounded-lg hover:bg-amber-800 transition-colors"
-        >
-          Login
-        </Link>
+        <div class="flex items-center space-x-4">
+          <LanguageSwitcher />
+          <Link
+            :href="route('login')"
+            class="px-6 py-2 bg-amber-900 text-stone-100 font-bold rounded-lg hover:bg-amber-800 transition-colors"
+          >
+            {{ trans('Log in') }}
+          </Link>
+        </div>
       </div>
     </header>
 
@@ -43,20 +50,21 @@ const submit = () => {
       <div class="max-w-6xl mx-auto flex gap-12 items-center">
         <!-- Left Column - Motivation Text -->
         <div class="flex-1">
-          <h2 class="text-5xl font-bold text-amber-100 mb-6 leading-tight">Begin Your Epic Journey</h2>
+          <h2 class="text-5xl font-bold text-amber-100 mb-6 leading-tight">{{ trans('Begin Your Epic Journey') }}</h2>
           <p class="text-2xl text-stone-100 leading-relaxed">
-            Join the ranks of legendary adventurers.<br>
-            Every quest begins with a single step.<br>
-            Your story awaits, hero.
+            {{ trans('Join the ranks of legendary adventurers.') }}<br>
+            {{ trans('Every quest begins with a single step.') }}<br>
+            {{ trans('Your story awaits, hero.') }}
           </p>
         </div>
 
         <!-- Right Column - Form -->
         <div class="flex-1">
           <div class="bg-slate-600 rounded-2xl p-8 shadow-2xl">
+            <h2 class="text-3xl font-bold text-center text-stone-100 mb-8">{{ trans('Sign up') }}</h2>
             <form @submit.prevent="submit" class="space-y-6">
               <div>
-                <InputLabel for="name" value="Name" class="text-stone-100" />
+                <InputLabel for="name" :value="trans('Name')" class="text-stone-100" />
                 <TextInput
                   id="name"
                   v-model="form.name"
@@ -70,7 +78,7 @@ const submit = () => {
               </div>
 
               <div>
-                <InputLabel for="email" value="Email" class="text-stone-100" />
+                <InputLabel for="email" :value="trans('Email')" class="text-stone-100" />
                 <TextInput
                   id="email"
                   v-model="form.email"
@@ -83,7 +91,7 @@ const submit = () => {
               </div>
 
               <div>
-                <InputLabel for="password" value="Password" class="text-stone-100" />
+                <InputLabel for="password" :value="trans('Password')" class="text-stone-100" />
                 <TextInput
                   id="password"
                   v-model="form.password"
@@ -96,7 +104,7 @@ const submit = () => {
               </div>
 
               <div>
-                <InputLabel for="password_confirmation" value="Confirm Password" class="text-stone-100" />
+                <InputLabel for="password_confirmation" :value="trans('Confirm Password')" class="text-stone-100" />
                 <TextInput
                   id="password_confirmation"
                   v-model="form.password_confirmation"
@@ -109,10 +117,10 @@ const submit = () => {
               </div>
 
               <div class="text-center text-sm text-stone-100 mb-4">
-                By clicking the button below, you are indicating that you have read and agree to the
-                <!-- <Link :href="route('terms')" class="text-amber-600 hover:text-amber-500">Terms of Service</Link>
-                and
-                <Link :href="route('privacy')" class="text-amber-600 hover:text-amber-500">Privacy Policy</Link>. -->
+                {{ trans('By clicking the button below, you are indicating that you have read and agree to the') }}
+                <!-- <Link :href="route('terms')" class="text-amber-600 hover:text-amber-500">{{ trans('Terms of Service') }}</Link>
+                {{ trans('and') }}
+                <Link :href="route('privacy')" class="text-amber-600 hover:text-amber-500">{{ trans('Privacy Policy') }}</Link>. -->
               </div>
 
               <PrimaryButton
@@ -120,7 +128,7 @@ const submit = () => {
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
               >
-                Sign up
+                {{ trans('Sign up') }}
               </PrimaryButton>
             </form>
           </div>
@@ -140,7 +148,7 @@ const submit = () => {
             </a>
           </div>
           <div class="text-stone-100 text-sm">
-            © {{ new Date().getFullYear() }} Questify. All rights reserved.
+            © {{ new Date().getFullYear() }} Questify. {{ trans('All rights reserved.') }}
           </div>
         </div>
       </div>
