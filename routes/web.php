@@ -15,11 +15,9 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 // Public routes
-Route::get("/", fn() => Inertia::render("Welcome", [
-    "canLogin" => Route::has("login"),
-    "canRegister" => Route::has("register"),
-    "auth" => ["user" => Auth::user()],
-]));
+Route::get("/", function () {
+    return redirect()->route('register');
+});
 
 Route::inertia("/about", "About");
 
