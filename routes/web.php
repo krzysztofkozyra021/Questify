@@ -11,30 +11,22 @@ use App\Http\Controllers\SupportController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserStatisticsController;
+use App\Http\Controllers\LanguageController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 // Public routes
-Route::get("/", fn() => Inertia::render("Welcome", [
-    "canLogin" => Route::has("login"),
-    "canRegister" => Route::has("register"),
-    "auth" => ["user" => Auth::user()],
-]));
+Route::get("/", function () {
+    return redirect()->route('register');
+});
 
 Route::inertia("/about", "About");
 
-Route::get("/language/{locale}", function (string $locale) {
-    if (array_key_exists($locale, config("app.available_locales")) ||
-        in_array($locale, config("app.available_locales"), true)) {
-        session()->put("locale", $locale);
-    }
-
-    return redirect()->back();
-})->name("language.switch");
+Route::get("/language/{locale}", [LanguageController::class, 'switch'])->name('language.switch');
 
 require __DIR__ . "/auth.php";
 
-// Trasy wymagające autentykacji
+// Routes requiring authentication
 Route::middleware(["auth", "verified"])->group(function (): void {
     // Class selection (post-registration, one-time only)
     Route::get("/select-class", [ClassSelectionController::class, "show"])->name("select-class");
