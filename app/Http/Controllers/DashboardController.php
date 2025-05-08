@@ -12,70 +12,60 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // Pobierz zalogowanego użytkownika
+        // Get the logged-in user
         $user = auth()->user();
 
-        // Pobierz zadania użytkownika z odpowiednimi relacjami
+        // Get user's tasks with appropriate relations
         $tasks = $user->tasks()
-            ->with(['difficulty', 'resetConfig', 'tags'])
-            ->get()
-            ->map(function ($task) {
-                $task->is_completed = $task->pivot->is_completed;
-                $task->completed_at = $task->pivot->completed_at;
-                $task->progress = $task->pivot->progress;
-                return $task;
-            });
+            ->with(['tags', 'difficulty', 'resetConfig'])
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-        // Przekaż dane do widoku
-        return Inertia::render('Tasks/Index', [
-            'tasks' => $tasks
+        // Pass data to the view
+        return Inertia::render('Dashboard', [
+            'tasks' => $tasks,
         ]);
     }
 
     public function create()
     {
-        // Pobierz dostępne poziomy trudności i konfiguracje resetu do formularza
+        // Get available difficulty levels and reset configurations for the form
         $difficulties = TaskDifficulty::orderBy('difficulty_level')->get();
         $resetConfigs = TaskResetConfig::all();
 
         return Inertia::render('Tasks/Create', [
             'difficulties' => $difficulties,
-            'resetConfigs' => $resetConfigs
+            'resetConfigs' => $resetConfigs,
         ]);
     }
 
     public function store(Request $request)
     {
-        // Walidacja danych
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'difficulty_level' => 'required|integer|exists:task_difficulties,difficulty_level',
-            'reset_frequency' => 'required|integer|exists:task_reset_configs,id',
-            'start_date' => 'nullable|date',
-            'due_date' => 'nullable|date',
+            'difficulty_level' => 'required|integer|exists:difficulties,id',
+            'reset_frequency' => 'required|integer|exists:reset_configs,id',
+            'start_date' => 'required|date',
+            'due_date' => 'nullable|date|after:start_date',
             'repeat_every' => 'required|integer|min:1',
-            'repeat_unit' => 'required|string|in:day,week,month,year',
+            'repeat_unit' => 'required|in:day,week,month',
             'is_completed' => 'boolean',
             'is_deadline_task' => 'boolean',
-            'experience_reward' => 'nullable|numeric',
-            'checklist_items' => 'nullable|array'
+            'experience_reward' => 'required|integer|min:1',
+            'tags' => 'array',
+            'tags.*' => 'string|max:50',
         ]);
 
-        // Przygotuj dane do zapisania
-        if (isset($validated['checklist_items']) && is_array($validated['checklist_items'])) {
-            $validated['checklist_items'] = json_encode($validated['checklist_items']);
+        // Assign task to the logged-in user
+        $task = auth()->user()->tasks()->create($validated);
+
+        if (!empty($validated['tags'])) {
+            $task->tags()->createMany(
+                collect($validated['tags'])->map(fn($tag) => ['name' => $tag])->toArray()
+            );
         }
 
-        // Tworzenie nowego zadania
-        $task = Task::create($validated);
-
-        // Przypisanie zadania do zalogowanego użytkownika
-        auth()->user()->tasks()->attach($task->id, [
-            'is_completed' => false,
-            'progress' => 0
-        ]);
-
-        return redirect()->route('dashboard')->with('success', __('Task created successfully.'));
+        return redirect()->route('dashboard');
     }
 }
