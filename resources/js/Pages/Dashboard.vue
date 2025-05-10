@@ -1,13 +1,9 @@
 <script setup>
-import PlayerPanel from "@/Pages/PlayerPanel.vue";
-import Task from "@/Pages/Task.vue";
-import OptionButton from "@/Pages/OptionButton.vue";
 import { ref, watch } from "vue";
-import { router } from "@inertiajs/vue3";
+import DashboardSidebar from "@/Components/DashboardSidebar.vue";
 
 const isTaskListVisible = ref(true);
 const showLevelUpNotification = ref(false);
-const previousLevel = ref(null);
 
 const props = defineProps({
   userStatistics: Object,
@@ -22,42 +18,9 @@ watch(() => props.userStatistics?.level, (newLevel, oldLevel) => {
       showLevelUpNotification.value = false;
     }, 3000);
   }
-  previousLevel.value = newLevel;
 }, { immediate: true });
 
-function toggleTaskList() {
-  isTaskListVisible.value = !isTaskListVisible.value;
-}
 
-function logout() {
-  router.post(route('logout'));
-}
-
-function reduceHealth() {
-  router.post(route('user.health'), {}, {
-    preserveScroll: true,
-    preserveState: true,
-    onSuccess: (page) => {
-      // The userStatistics will be automatically updated in the props
-    },
-    onError: (errors) => {
-      console.error('Error updating health:', errors);
-    }
-  });
-}
-
-function addExperience() {
-  router.post(route('user.addExperience'), {}, {
-    preserveScroll: true,
-    preserveState: true,
-    onSuccess: (page) => {
-      // The userStatistics will be automatically updated in the props
-    },
-    onError: (errors) => {
-      console.error('Error updating experience:', errors);
-    }
-  });
-}
 
 </script>
 
@@ -65,7 +28,7 @@ function addExperience() {
   <div class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
     <!-- Level Up Notification -->
     <div v-if="showLevelUpNotification" 
-         class="fixed top-4 right-4 bg-emerald-500 text-white px-6 py-3 rounded-lg shadow-lg transform transition-all duration-500 ease-in-out"
+         class="fixed top-4 right-4 bg-emerald-500 text-white px-6 py-3 rounded-lg shadow-lg transform transition-all duration-500 ease-in-out z-50"
          :class="{ 'translate-x-0 opacity-100': showLevelUpNotification, 'translate-x-full opacity-0': !showLevelUpNotification }">
       <div class="flex items-center space-x-2">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -77,64 +40,7 @@ function addExperience() {
     </div>
 
     <div class="flex min-h-screen">
-      <!-- Sidebar -->
-      <aside class="w-80 min-h-screen bg-slate-800/95 border-r border-slate-700">
-        <div class="p-4 h-full flex flex-col">
-          <!-- Player Panel -->
-          <div class="mb-6">
-            <PlayerPanel :userStatistics="userStatistics" :user="user" @showPlayerDetails="handlePlayerDetails" />
-          </div>
-
-          <!-- Test Button -->
-          <div class="mb-4">
-            <button
-              @click="reduceHealth"
-              class="w-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
-            >
-              Test: Reduce Health (-10)
-            </button>
-          </div>
-          <div class="mb-4">
-            <button
-              @click="addExperience"
-              class="w-full px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
-            >
-              Test: Add Experience (10)
-            </button>
-          </div>
-
-          <!-- Navigation Menu -->
-          <div class="flex-1 space-y-4">
-            <h1 class="text-xl font-semibold text-slate-200 text-center mb-4">
-              Quest Log
-            </h1>
-            <ul class="space-y-2">
-              <li>
-                <OptionButton 
-                  optionText="Quests" 
-                  route="/tasks"
-                  class="w-full px-4 py-2 text-slate-200 hover:bg-slate-700/50 rounded-lg transition-colors"
-                />
-              </li>
-              <li>
-                <OptionButton 
-                  optionText="Inventory" 
-                  route="/settings"
-                  class="w-full px-4 py-2 text-slate-200 hover:bg-slate-700/50 rounded-lg transition-colors"
-                />
-              </li>
-              <li>
-                <OptionButton 
-                  optionText="Leave Realm" 
-                  route="/logout"
-                  method="post"
-                  class="w-full px-4 py-2 text-slate-200 hover:bg-slate-700/50 rounded-lg transition-colors"
-                />
-              </li>
-            </ul>
-          </div>
-        </div>
-      </aside>
+      <DashboardSidebar :userStatistics="userStatistics" :user="user"/>
 
       <!-- Main Content -->
       <main class="flex-1 p-6 overflow-y-auto">

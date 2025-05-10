@@ -30,7 +30,7 @@ export default {
     navigate() {
       router.visit(this.route, {
         method: this.method,
-      }); // Przekierowanie na podany adres URL
+      });
     },
   },
 };
