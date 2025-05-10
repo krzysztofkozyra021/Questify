@@ -69,24 +69,24 @@ const props = defineProps({
 });
 
 const currentPlayerHealth = computed(() => {
-  return props.userStatistics.current_health;
+  return Math.round(props.userStatistics.current_health);
 });
 const maxPlayerHealth = computed(() => {
-  return props.userStatistics.max_health;
+  return Math.round(props.userStatistics.max_health);
 });
 
 const currentPlayerEnergy = computed(() => {
-  return props.userStatistics.current_energy;
+  return Math.round(props.userStatistics.current_energy);
 });
 const maxPlayerEnergy = computed(() => {
-  return props.userStatistics.max_energy;
+  return Math.round(props.userStatistics.max_energy);
 });
 
 const currentPlayerExperience = computed(() => {
-  return props.userStatistics.current_experience;
+  return Math.round(props.userStatistics.current_experience);
 });
 const maxPlayerExperience = computed(() => {
-  return props.userStatistics.next_level_experience;
+  return Math.round(props.userStatistics.next_level_experience);
 });
 
 

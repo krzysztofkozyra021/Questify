@@ -2,15 +2,28 @@
 import PlayerPanel from "@/Pages/PlayerPanel.vue";
 import Task from "@/Pages/Task.vue";
 import OptionButton from "@/Pages/OptionButton.vue";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { router } from "@inertiajs/vue3";
 
 const isTaskListVisible = ref(true);
+const showLevelUpNotification = ref(false);
+const previousLevel = ref(null);
 
 const props = defineProps({
   userStatistics: Object,
   user: Object,
 });
+
+// Watch for level changes
+watch(() => props.userStatistics?.level, (newLevel, oldLevel) => {
+  if (oldLevel && newLevel > oldLevel) {
+    showLevelUpNotification.value = true;
+    setTimeout(() => {
+      showLevelUpNotification.value = false;
+    }, 3000);
+  }
+  previousLevel.value = newLevel;
+}, { immediate: true });
 
 function toggleTaskList() {
   isTaskListVisible.value = !isTaskListVisible.value;
@@ -33,11 +46,36 @@ function reduceHealth() {
   });
 }
 
+function addExperience() {
+  router.post(route('user.addExperience'), {}, {
+    preserveScroll: true,
+    preserveState: true,
+    onSuccess: (page) => {
+      // The userStatistics will be automatically updated in the props
+    },
+    onError: (errors) => {
+      console.error('Error updating experience:', errors);
+    }
+  });
+}
 
 </script>
 
 <template>
   <div class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <!-- Level Up Notification -->
+    <div v-if="showLevelUpNotification" 
+         class="fixed top-4 right-4 bg-emerald-500 text-white px-6 py-3 rounded-lg shadow-lg transform transition-all duration-500 ease-in-out"
+         :class="{ 'translate-x-0 opacity-100': showLevelUpNotification, 'translate-x-full opacity-0': !showLevelUpNotification }">
+      <div class="flex items-center space-x-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+        </svg>
+        <span class="font-bold">Level Up!</span>
+        <span>You are now level {{ userStatistics?.level }}</span>
+      </div>
+    </div>
+
     <div class="flex min-h-screen">
       <!-- Sidebar -->
       <aside class="w-80 min-h-screen bg-slate-800/95 border-r border-slate-700">
@@ -54,6 +92,14 @@ function reduceHealth() {
               class="w-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
             >
               Test: Reduce Health (-10)
+            </button>
+          </div>
+          <div class="mb-4">
+            <button
+              @click="addExperience"
+              class="w-full px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+            >
+              Test: Add Experience (10)
             </button>
           </div>
 
