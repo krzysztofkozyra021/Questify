@@ -53,6 +53,11 @@ class ProfileController extends Controller
 
         $user = $request->user();
 
+        // Delete user statistics first
+        if ($user->userStatistics) {
+            $user->userStatistics->delete();
+        }
+
         Auth::logout();
 
         $user->delete();

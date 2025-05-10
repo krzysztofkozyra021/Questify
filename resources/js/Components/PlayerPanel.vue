@@ -1,3 +1,36 @@
+
+<script setup>
+import { computed } from 'vue';
+import { useTranslation } from '@/composables/useTranslation.js';
+
+const { trans } = useTranslation()
+const props = defineProps({
+  userStatistics: Object,
+  user: Object,
+});
+
+const currentPlayerHealth = computed(() => {
+  return Math.round(props.userStatistics.current_health);
+});
+const maxPlayerHealth = computed(() => {
+  return Math.round(props.userStatistics.max_health);
+});
+
+const currentPlayerEnergy = computed(() => {
+  return Math.round(props.userStatistics.current_energy);
+});
+const maxPlayerEnergy = computed(() => {
+  return Math.round(props.userStatistics.max_energy);
+});
+
+const currentPlayerExperience = computed(() => {
+  return Math.round(props.userStatistics.current_experience);
+});
+const maxPlayerExperience = computed(() => {
+  return Math.round(props.userStatistics.next_level_experience);
+});
+
+</script>
 <template>
   <div class="bg-slate-800/80 rounded-lg border border-slate-700 p-4">
     <!-- Player Info -->
@@ -58,38 +91,4 @@
   </div>
 </template>
 
-<script setup>
-import { computed } from 'vue';
-import { useTranslation } from '@/composables/useTranslation.js';
 
-const { trans } = useTranslation()
-const props = defineProps({
-  userStatistics: Object,
-  user: Object,
-});
-
-const currentPlayerHealth = computed(() => {
-  return Math.round(props.userStatistics.current_health);
-});
-const maxPlayerHealth = computed(() => {
-  return Math.round(props.userStatistics.max_health);
-});
-
-const currentPlayerEnergy = computed(() => {
-  return Math.round(props.userStatistics.current_energy);
-});
-const maxPlayerEnergy = computed(() => {
-  return Math.round(props.userStatistics.max_energy);
-});
-
-const currentPlayerExperience = computed(() => {
-  return Math.round(props.userStatistics.current_experience);
-});
-const maxPlayerExperience = computed(() => {
-  return Math.round(props.userStatistics.next_level_experience);
-});
-
-
-
-
-</script>
