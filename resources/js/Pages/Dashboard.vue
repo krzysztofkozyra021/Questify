@@ -1,30 +1,127 @@
 <script setup>
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
-import { Head } from '@inertiajs/vue3'
+import PlayerPanel from "@/Pages/PlayerPanel.vue";
+import Task from "@/Pages/Task.vue";
+import OptionButton from "@/Pages/OptionButton.vue";
+import { ref } from "vue";
+
+const isTaskListVisible = ref(true);
+
+const props = defineProps({
+  userStatistics: Object,
+  user: Object,
+});
+
+function toggleTaskList() {
+  isTaskListVisible.value = !isTaskListVisible.value;
+}
+
+function logout() {
+  router.post(route('logout'));
+}
+
 </script>
 
 <template>
-  <Head title="Dashboard" />
+  <div class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div class="flex min-h-screen">
+      <!-- Sidebar -->
+      <aside class="w-80 min-h-screen bg-slate-800/95 border-r border-slate-700">
+        <div class="p-4 h-full flex flex-col">
+          <!-- Player Panel -->
+          <div class="mb-6">
+            <PlayerPanel :userStatistics="userStatistics" :user="user" @showPlayerDetails="handlePlayerDetails" />
+          </div>
 
-  <AuthenticatedLayout>
-    <template #header>
-      <h2
-        class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200"
-      >
-        Dashboard
-      </h2>
-    </template>
-
-    <div class="py-12">
-      <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-        <div
-          class="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800"
-        >
-          <div class="p-6 text-gray-900 dark:text-gray-100">
-            You're logged in!
+          <!-- Navigation Menu -->
+          <div class="flex-1 space-y-4">
+            <h1 class="text-xl font-semibold text-slate-200 text-center mb-4">
+              Quest Log
+            </h1>
+            <ul class="space-y-2">
+              <li>
+                <OptionButton 
+                  optionText="Quests" 
+                  route="/tasks"
+                  class="w-full px-4 py-2 text-slate-200 hover:bg-slate-700/50 rounded-lg transition-colors"
+                />
+              </li>
+              <li>
+                <OptionButton 
+                  optionText="Inventory" 
+                  route="/settings"
+                  class="w-full px-4 py-2 text-slate-200 hover:bg-slate-700/50 rounded-lg transition-colors"
+                />
+              </li>
+              <li>
+                <OptionButton 
+                  optionText="Leave Realm" 
+                  route="/logout"
+                  method="post"
+                  class="w-full px-4 py-2 text-slate-200 hover:bg-slate-700/50 rounded-lg transition-colors"
+                />
+              </li>
+            </ul>
           </div>
         </div>
-      </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="flex-1 p-6 overflow-y-auto">
+        <!-- Quest Board -->
+        <div class="max-w-4xl mx-auto">
+          <div class="bg-slate-800/80 rounded-lg border border-slate-700 shadow-lg">
+            <!-- Quest Board Header -->
+            <div class="flex justify-between items-center p-4 border-b border-slate-700">
+              <h2 class="text-xl font-semibold text-slate-200">Active Quests</h2>
+              <button
+                @click="toggleTaskList"
+                class="text-slate-400 hover:text-slate-200 transition-colors p-2 rounded-lg hover:bg-slate-700/50"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    :class="{ hidden: isTaskListVisible }"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M19 9l-7 7-7-7"
+                  />
+                  <path
+                    :class="{ hidden: !isTaskListVisible }"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M19 15l-7-7-7 7"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
-  </AuthenticatedLayout>
+  </div>
 </template>
+
+<style>
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+</style>
