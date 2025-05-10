@@ -35,6 +35,7 @@ Route::middleware(["auth", "verified"])->group(function (): void {
 
     // Dashboard - Main game interface
     Route::get("/dashboard", [DashboardController::class, "index"])->middleware(["auth", "verified"])->name("dashboard");
+    Route::post('/user/health', [DashboardController::class, 'updateHealth'])->name('user.health');
     // Tasks - User-specific tasks
     Route::prefix("tasks")->name("tasks.")->group(function (): void {
         Route::get('/create', [DashboardController::class, 'create'])->name('create');

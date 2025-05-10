@@ -3,6 +3,7 @@ import PlayerPanel from "@/Pages/PlayerPanel.vue";
 import Task from "@/Pages/Task.vue";
 import OptionButton from "@/Pages/OptionButton.vue";
 import { ref } from "vue";
+import { router } from "@inertiajs/vue3";
 
 const isTaskListVisible = ref(true);
 
@@ -19,6 +20,20 @@ function logout() {
   router.post(route('logout'));
 }
 
+function reduceHealth() {
+  router.post(route('user.health'), {}, {
+    preserveScroll: true,
+    preserveState: true,
+    onSuccess: (page) => {
+      // The userStatistics will be automatically updated in the props
+    },
+    onError: (errors) => {
+      console.error('Error updating health:', errors);
+    }
+  });
+}
+
+
 </script>
 
 <template>
@@ -30,6 +45,16 @@ function logout() {
           <!-- Player Panel -->
           <div class="mb-6">
             <PlayerPanel :userStatistics="userStatistics" :user="user" @showPlayerDetails="handlePlayerDetails" />
+          </div>
+
+          <!-- Test Button -->
+          <div class="mb-4">
+            <button
+              @click="reduceHealth"
+              class="w-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+            >
+              Test: Reduce Health (-10)
+            </button>
           </div>
 
           <!-- Navigation Menu -->

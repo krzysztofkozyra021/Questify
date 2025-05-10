@@ -72,4 +72,17 @@ class DashboardController extends Controller
 
         return redirect()->route('dashboard');
     }
+
+    public function updateHealth(Request $request)
+    {
+        $user = auth()->user();
+        $userStats = $user->userStatistics;
+        
+        // Reduce health by 10 points, but not below 0
+        $newHealth = max(0, $userStats->current_health - 10);
+        $userStats->current_health = $newHealth;
+        $userStats->save();
+
+        return back()->with('userStatistics', $userStats);
+    }
 }

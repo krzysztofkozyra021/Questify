@@ -17,12 +17,12 @@
       <div>
         <div class="flex justify-between text-sm mb-1">
           <span class="text-red-400">Health</span>
-          <span class="text-slate-300">{{ userStatistics?.health || 100 }}/100</span>
+          <span class="text-slate-300">{{ currentPlayerHealth }}/{{ userStatistics?.max_health || 100 }}</span>
         </div>
         <div class="h-2 bg-slate-700 rounded-full overflow-hidden">
           <div
             class="h-full bg-red-500 rounded-full transition-all duration-300"
-            :style="{ width: `${userStatistics?.health || 100}%` }"
+            :style="{ width: `${currentPlayerHealth / maxPlayerHealth * 100}%` }"
           ></div>
         </div>
       </div>
@@ -31,12 +31,12 @@
       <div>
         <div class="flex justify-between text-sm mb-1">
           <span class="text-blue-400">Energy</span>
-          <span class="text-slate-300">{{ userStatistics?.energy || 100 }}/100</span>
+          <span class="text-slate-300">{{ userStatistics?.current_energy || 100 }}/{{ userStatistics?.max_energy || 100 }}</span>
         </div>
         <div class="h-2 bg-slate-700 rounded-full overflow-hidden">
           <div
             class="h-full bg-blue-500 rounded-full transition-all duration-300"
-            :style="{ width: `${userStatistics?.energy || 100}%` }"
+            :style="{ width: `${userStatistics?.current_energy || 100}%` }"
           ></div>
         </div>
       </div>
@@ -45,12 +45,12 @@
       <div>
         <div class="flex justify-between text-sm mb-1">
           <span class="text-emerald-400">Experience</span>
-          <span class="text-slate-300">{{ userStatistics?.experience || 0 }}/{{ userStatistics?.nextLevelExperience || 100 }}</span>
+            <span class="text-slate-300">{{ userStatistics?.current_experience || 0 }}/{{ userStatistics?.next_level_experience || 100 }}</span>
         </div>
         <div class="h-2 bg-slate-700 rounded-full overflow-hidden">
           <div
             class="h-full bg-emerald-500 rounded-full transition-all duration-300"
-            :style="{ width: `${(userStatistics?.experience || 0) / (userStatistics?.nextLevelExperience || 100) * 100}%` }"
+            :style="{ width: `${(userStatistics?.current_experience || 0) / (userStatistics?.next_level_experience || 100) * 100}%` }"
           ></div>
         </div>
       </div>
@@ -59,9 +59,18 @@
 </template>
 
 <script setup>
+import { computed } from 'vue';
+
 const props = defineProps({
   userStatistics: Object,
   user: Object,
+});
+
+const currentPlayerHealth = computed(() => {
+  return props.userStatistics.current_health;
+});
+const maxPlayerHealth = computed(() => {
+  return props.userStatistics.max_health;
 });
 
 </script>
