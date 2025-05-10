@@ -86,3 +86,12 @@ Route::middleware(["auth", "verified"])->group(function (): void {
     Route::get("/support", [SupportController::class, "index"])->name("support");
     Route::post("/support/contact", [SupportController::class, "contact"])->name("support.contact");
 });
+
+Route::get('/test-email', function() {
+    \Illuminate\Support\Facades\Mail::raw('This is a test email from Laravel to Mailpit!', function($message) {
+        $message->to('test@example.com')
+                ->subject('Mailpit Test Email');
+    });
+    
+    return "Test email sent to Mailpit! Check http://localhost:8025";
+});
