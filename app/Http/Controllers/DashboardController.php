@@ -21,9 +21,13 @@ class DashboardController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
+        $userStatistics = $user->userStatistics;
+
         // Pass data to the view
         return Inertia::render('Dashboard', [
             'tasks' => $tasks,
+            'userStatistics' => $userStatistics,
+            'user' => $user,
         ]);
     }
 
