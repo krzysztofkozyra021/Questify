@@ -21,10 +21,16 @@ export default {
     type: String,
     required: true,
   },
+  method: {
+    type: String, 
+    required: false,
+  },
 },
   methods: {
     navigate() {
-      router.visit(this.route); // Przekierowanie na podany adres URL
+      router.visit(this.route, {
+        method: this.method,
+      }); // Przekierowanie na podany adres URL
     },
   },
 };

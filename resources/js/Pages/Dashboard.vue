@@ -2,10 +2,9 @@
 import PlayerPanel from "@/Pages/PlayerPanel.vue";
 import Task from "@/Pages/Task.vue";
 import OptionButton from "@/Pages/OptionButton.vue";
-import DayChange from "@/Pages/DayChange.vue";
 import { ref } from "vue";
 
-const isTaskListVisible = ref(true); // Kontroluje widoczność listy zadań
+const isTaskListVisible = ref(true);
 
 const props = defineProps({
   userStatistics: Object,
@@ -13,87 +12,116 @@ const props = defineProps({
 });
 
 function toggleTaskList() {
-  isTaskListVisible.value = !isTaskListVisible.value; // Przełącz widoczność
+  isTaskListVisible.value = !isTaskListVisible.value;
+}
+
+function logout() {
+  router.post(route('logout'));
 }
 
 </script>
 
 <template>
-  <div class="flex h-screen"> 
-    <!-- Sidebar -->
-    <aside class="w-80 h-screen bg-zinc-950 text-white flex flex-col p-4 justify-between">
-      <PlayerPanel :userStatistics="userStatistics" :user="user" @showPlayerDetails="handlePlayerDetails" />
-      <div class="space-y-4">
-        <h1 class="text-2xl font-bold mb-4">Menu</h1>
-        <ul class="space-y-2">
-          <li>
-            <OptionButton optionText="Zadania" route="/tasks" />
-          </li>
-          <li>
-            <OptionButton optionText="Ustawienia" route="/settings" />
-          </li>
-          <li>
-            <OptionButton optionText="Wyloguj się" route="/logout" />
-          </li>
-        </ul>
-      </div>
-      <div>
-        <button class="w-full bg-zinc-600 hover:bg-zinc-400 p-2 mt-4 rounded">⚙️ Ustawienia</button>
-      </div>
-    </aside>
+  <div class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div class="flex min-h-screen">
+      <!-- Sidebar -->
+      <aside class="w-80 min-h-screen bg-slate-800/95 border-r border-slate-700">
+        <div class="p-4 h-full flex flex-col">
+          <!-- Player Panel -->
+          <div class="mb-6">
+            <PlayerPanel :userStatistics="userStatistics" :user="user" @showPlayerDetails="handlePlayerDetails" />
+          </div>
 
-    <!-- Główna zawartość -->
-    <main class="w-full h-screen bg-gray-100 p-4 flex justify-center items-center flex-col">
-      <DayChange />
-
-      <div class="w-full bg-white p-6 rounded-lg shadow-lg">
-        <div class="flex justify-between items-center">
-          <h1 class="text-2xl font-bold">Witaj, {{ $page.props.user.name }}</h1>
-          <button
-            @click="toggleTaskList"
-            class="text-gray-600 hover:text-gray-800"
-            data-accordion
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path
-                :class="{ hidden: isTaskListVisible }"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M19 9l-7 7-7-7"
-              />
-              <path
-                :class="{ hidden: !isTaskListVisible }"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M19 15l-7-7-7 7"
-              />
-            </svg>
-          </button>
+          <!-- Navigation Menu -->
+          <div class="flex-1 space-y-4">
+            <h1 class="text-xl font-semibold text-slate-200 text-center mb-4">
+              Quest Log
+            </h1>
+            <ul class="space-y-2">
+              <li>
+                <OptionButton 
+                  optionText="Quests" 
+                  route="/tasks"
+                  class="w-full px-4 py-2 text-slate-200 hover:bg-slate-700/50 rounded-lg transition-colors"
+                />
+              </li>
+              <li>
+                <OptionButton 
+                  optionText="Inventory" 
+                  route="/settings"
+                  class="w-full px-4 py-2 text-slate-200 hover:bg-slate-700/50 rounded-lg transition-colors"
+                />
+              </li>
+              <li>
+                <OptionButton 
+                  optionText="Leave Realm" 
+                  route="/logout"
+                  method="post"
+                  class="w-full px-4 py-2 text-slate-200 hover:bg-slate-700/50 rounded-lg transition-colors"
+                />
+              </li>
+            </ul>
+          </div>
         </div>
+      </aside>
 
-        <!-- Lista zadań -->
-        <ul
-          v-show="isTaskListVisible"
-          class="space-y-4 mt-4 transition-all duration-300 ease-in-out"
-        >
-          <li>
-            <Task :task="{ name: 'Umyć naczynia', description: 'Umyć naczynia zalegające w zlewie' }" />
-          </li>
-          <li>
-            <Task :task="{ name: 'Posprzątać pokój', description: 'Posprzątać pokój przed przyjaciółmi' }" />
-          </li>
-          <li>
-            <Task :task="{ name: 'Zrobić zakupy', description: 'Kupić mleko i chleb' }" />
-          </li>
-        </ul>
-      </div>
-    </main>
+      <!-- Main Content -->
+      <main class="flex-1 p-6 overflow-y-auto">
+        <!-- Quest Board -->
+        <div class="max-w-4xl mx-auto">
+          <div class="bg-slate-800/80 rounded-lg border border-slate-700 shadow-lg">
+            <!-- Quest Board Header -->
+            <div class="flex justify-between items-center p-4 border-b border-slate-700">
+              <h2 class="text-xl font-semibold text-slate-200">Active Quests</h2>
+              <button
+                @click="toggleTaskList"
+                class="text-slate-400 hover:text-slate-200 transition-colors p-2 rounded-lg hover:bg-slate-700/50"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    :class="{ hidden: isTaskListVisible }"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M19 9l-7 7-7-7"
+                  />
+                  <path
+                    :class="{ hidden: !isTaskListVisible }"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M19 15l-7-7-7 7"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
   </div>
 </template>
+
+<style>
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+</style>
