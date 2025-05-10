@@ -64,6 +64,4 @@ const props = defineProps({
   user: Object,
 });
 
-// Debug logging
-console.log('PlayerPanel props:', props);
 </script>
