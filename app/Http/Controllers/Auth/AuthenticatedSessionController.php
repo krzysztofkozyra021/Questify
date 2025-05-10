@@ -12,9 +12,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Services\UserActivityLogger;
 
 class AuthenticatedSessionController extends Controller
 {
+    public function __construct(
+        private readonly UserActivityLogger $logger
+    ) {}
+
     /**
      * Display the login view.
      */
@@ -35,6 +40,8 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        $this->logger->log(Auth::user(), 'login', $request);
+
         return redirect()->intended(route("dashboard", absolute: false));
     }
 
@@ -43,11 +50,17 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+        $user = Auth::user();
+        
         Auth::guard("web")->logout();
 
         $request->session()->invalidate();
 
         $request->session()->regenerateToken();
+
+        if ($user) {
+            $this->logger->log($user, 'logout', $request);
+        }
 
         return redirect("/");
     }
