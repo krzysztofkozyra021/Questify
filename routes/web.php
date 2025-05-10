@@ -20,8 +20,6 @@ Route::get("/", function () {
     return redirect()->route('register');
 });
 
-Route::inertia("/test", "Welcome");
-
 Route::inertia("/about", "About");
 
 Route::get("/language/{locale}", [LanguageController::class, 'switch'])->name('language.switch');
