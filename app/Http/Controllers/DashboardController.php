@@ -72,4 +72,52 @@ class DashboardController extends Controller
 
         return redirect()->route('dashboard');
     }
+
+    public function updateHealth(Request $request)
+    {
+        $user = auth()->user();
+        $userStats = $user->userStatistics;
+        
+        // Reduce health by 10 points, but not below 0
+        $newHealth = max(0, $userStats->current_health - 10);
+        $userStats->current_health = round($newHealth);
+        $userStats->max_health = round($userStats->max_health);
+        $userStats->save();
+
+        return back()->with('userStatistics', $userStats);
+    }
+
+    public function levelUp(Request $request)
+    {
+        $user = auth()->user();
+        $userStats = $user->userStatistics;
+
+        if ($userStats->current_experience >= $userStats->next_level_experience) {
+            $userStats->level++;
+            $userStats->current_experience = 0;
+            $userStats->next_level_experience = round($userStats->next_level_experience * 1.1);
+            $userStats->save();
+        }
+
+        return back()->with('userStatistics', $userStats);
+    }
+
+    public function addExperience(Request $request)
+    {
+        $user = auth()->user();
+        $userStats = $user->userStatistics;
+        
+        // Add experience
+        $userStats->current_experience = round($userStats->current_experience + 10);
+        
+        // Check if level up is needed
+        while ($userStats->current_experience >= $userStats->next_level_experience) {
+            $userStats->level++;
+            $userStats->current_experience = round($userStats->current_experience - $userStats->next_level_experience);
+            $userStats->next_level_experience = round($userStats->next_level_experience * 1.1);
+        }
+        
+        $userStats->save();
+        return back()->with('userStatistics', $userStats);
+    }
 }

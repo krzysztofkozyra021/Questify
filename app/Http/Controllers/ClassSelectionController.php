@@ -54,10 +54,16 @@ class ClassSelectionController extends Controller
             $userStats->user_id = Auth::id();
         }
 
+        $maxHealth = 100 * $selectedClass->health_multiplier;
+        $maxEnergy = 100 * $selectedClass->energy_multiplier;
+
         $userStats->class = $selectedClass->id;
-        $userStats->health = 100 * $selectedClass->health_multiplier;
-        $userStats->energy = 100 * $selectedClass->energy_multiplier;
-        $userStats->experience = 0;
+        $userStats->max_health = $maxHealth;
+        $userStats->max_energy = $maxEnergy;
+        $userStats->current_health = $maxHealth;
+        $userStats->current_energy = $maxEnergy;
+        $userStats->current_experience = 0;
+        $userStats->next_level_experience = 100;
         $userStats->level = 1;
         $userStats->energy_regen_rate = 1.0;
         $userStats->last_login = now();
