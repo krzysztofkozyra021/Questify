@@ -42,5 +42,21 @@
     "Let's continue your journey.": "Kontynuujmy Twoją podróż.",
     "Email or Username": "Email lub nazwa użytkownika",
     "Remember me": "Zapamiętaj mnie",
-    "Forgot your password?": "Zapomniałeś hasła?"
+    "Forgot your password?": "Zapomniałeś hasła?",
+    "Locale": "Język",
+    "Update Password": "Zaktualizuj hasło",
+    "Delete Account": "Usuń konto",
+    "Are you sure you want to delete your account?": "Jesteś pewny, że chcesz usunąć swoje konto?",
+    "Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.": "Po usunięciu Twojego konta, wszystkie jego zasoby i dane zostaną trwale usunięte. Proszę wprowadzić swoje hasło, aby potwierdzić, że chcesz trwale usunąć swoje konto.",
+    "Once your account is deleted, all of its resources and data will be permanently deleted.": "Po usunięciu Twojego konta, wszystkie jego zasoby i dane zostaną trwale usunięte.",
+    "Current Password": "Aktualne hasło",
+    "New Password": "Nowe hasło",
+    "Confirm New Password": "Potwierdź nowe hasło",
+    "Profile Information": "Informacje o profilu",
+    "Settings": "Ustawienia",
+    "Cancel": "Anuluj",
+    "en": "Angielski (English)",
+    "pl": "Polski",
+    "Log out": "Wyloguj się",
+    "Quests": "Misje"
 }
