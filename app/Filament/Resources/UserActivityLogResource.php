@@ -42,7 +42,6 @@ class UserActivityLogResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('user.name')
-                    ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('activity_type')
                     ->searchable(),
