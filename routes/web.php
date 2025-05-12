@@ -82,6 +82,7 @@ Route::middleware(["auth", "verified"])->group(function (): void {
     // Settings
     Route::get("/settings", [SettingsController::class, "index"])->name("settings");
     Route::put("/settings", [SettingsController::class, "update"])->name("settings.update");
+    Route::post("/settings/locale", [SettingsController::class, "changeLocale"])->name("settings.changeLocale");
 
     // Support
     Route::get("/support", [SupportController::class, "index"])->name("support");

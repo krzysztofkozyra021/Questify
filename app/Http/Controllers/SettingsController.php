@@ -18,10 +18,13 @@ class SettingsController extends Controller
     {
         $user = Auth::user()->load(['userStatistics', 'userStatistics.classAttributes']);
         $userStatistics = $user->userStatistics;
-        
+        $locales = config('app.available_locales', ['en']);
+        $currentLocale = app()->getLocale();
         return Inertia::render('Settings', [
             'user' => $user,
             'userStatistics' => $userStatistics,
+            'locales' => $locales,
+            'currentLocale' => $currentLocale,
         ]);
     }
 
@@ -37,4 +40,32 @@ class SettingsController extends Controller
 
         return redirect()->route('settings')->with('success', 'Settings updated successfully.');
     }
+
+    /**
+     * Change user's locale
+     */
+    public function changeLocale(Request $request): RedirectResponse
+    {
+        $user = Auth::user();
+        if (!$user) {
+            return redirect()->route('settings')->with('error', 'User not found.');
+        }
+
+        $locale = $request->input('locale');
+        $allowedLocales = config('app.available_locales', ['en']);
+        
+        // Validate the locale against allowed locales
+        if (!in_array($locale, $allowedLocales)) {
+            return redirect()->route('settings')->with('error', 'Invalid locale selected.');
+        }
+        
+        // Store the locale in the session
+        session()->put('locale', $locale);
+        
+        // Set the application locale
+        app()->setLocale($locale);
+
+        return redirect()->route('settings')->with('success', 'Locale changed successfully.');
+    }
+    
 } 

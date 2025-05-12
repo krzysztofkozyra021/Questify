@@ -42,5 +42,21 @@
     "Let's continue your journey.": "Let's continue your journey.",
     "Email or Username": "Email or Username",
     "Remember me": "Remember me",
-    "Forgot your password?": "Forgot your password?"
+    "Forgot your password?": "Forgot your password?",
+    "Locale": "Locale",
+    "Update Password": "Update Password",
+    "Delete Account": "Delete Account",
+    "Are you sure you want to delete your account?": "Are you sure you want to delete your account?",
+    "Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.": "Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.",
+    "Once your account is deleted, all of its resources and data will be permanently deleted.": "Once your account is deleted, all of its resources and data will be permanently deleted.",
+    "Current Password": "Current Password",
+    "New Password": "New Password",
+    "Confirm New Password": "Confirm New Password",
+    "Profile Information": "Profile Information",
+    "Cancel": "Cancel",
+    "Settings": "Settings",
+    "en": "English",
+    "pl": "Polish (Polski)",
+    "Log out": "Log out",
+    "Quests": "Quests"
 }

@@ -72,9 +72,6 @@ function addExperience() {
 
       <!-- Navigation Menu -->
       <div class="flex-1 space-y-4">
-        <h1 class="text-xl font-semibold text-slate-200 text-center mb-4">
-          Quest Log
-        </h1>
         <ul class="space-y-2">
           <li>
             <OptionButton 
@@ -92,7 +89,7 @@ function addExperience() {
           </li>
           <li>
             <OptionButton 
-              optionText="Leave Realm" 
+              optionText="Log out" 
               route="/logout"
               method="post"
               class="w-full px-4 py-2 text-slate-200 hover:bg-slate-700/50 rounded-lg transition-colors"
