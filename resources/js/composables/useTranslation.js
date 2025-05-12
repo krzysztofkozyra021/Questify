@@ -1,5 +1,6 @@
 import { usePage } from '@inertiajs/vue3'
 import { computed } from 'vue'
+import { router } from '@inertiajs/vue3'
 
 export function useTranslation() {
   const page = usePage()
@@ -16,7 +17,11 @@ export function useTranslation() {
   }
 
   function switchLanguage(locale) {
-    window.location.href = `/language/${locale}`
+    router.post(route('settings.changeLocale'), {
+      locale: locale,
+    }, {
+      preserveScroll: true,
+    })
   }
 
   return {
