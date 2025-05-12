@@ -37,6 +37,7 @@ Route::middleware(["auth", "verified"])->group(function (): void {
     Route::get("/dashboard", [DashboardController::class, "index"])->middleware(["auth", "verified"])->name("dashboard");
     Route::post('/user/health', [DashboardController::class, 'updateHealth'])->name('user.health');
     Route::post('/user/addExperience', [DashboardController::class, 'addExperience'])->name('user.addExperience');
+    Route::get('/dashboard/motivational-quote/{locale}', [DashboardController::class, 'getMotivationalQuote'])->name('dashboard.motivational-quote');
     // Tasks - User-specific tasks
     Route::prefix("tasks")->name("tasks.")->group(function (): void {
         Route::get('/create', [DashboardController::class, 'create'])->name('create');

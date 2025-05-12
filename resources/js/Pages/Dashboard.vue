@@ -1,43 +1,44 @@
 <script setup>
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import DashboardSidebar from "@/Components/DashboardSidebar.vue";
-
+import { onMounted } from "vue";
+import { getMotivationalQuote } from "@/composables/getMotivationalQuote.js";
+import Notification from "@/Components/Notification.vue";
 const isTaskListVisible = ref(true);
-const showLevelUpNotification = ref(false);
+const showMotivationalQuote = ref(false);
+const motivationalQuote = ref('');
 
 const props = defineProps({
   userStatistics: Object,
   user: Object,
+  motivationalQuote: String,
 });
 
-// Watch for level changes
-watch(() => props.userStatistics?.level, (newLevel, oldLevel) => {
-  if (oldLevel && newLevel > oldLevel) {
-    showLevelUpNotification.value = true;
+
+// Show motivational quote after user visits dashboard
+onMounted(async () => {
+  // Only show if not already shown (prevents double popup if page reloads quickly)
+  if (!showMotivationalQuote.value) {
+    // Fetch the quote
+    motivationalQuote.value = await getMotivationalQuote();
+
+    if (motivationalQuote.value) {
+      showMotivationalQuote.value = true;
+    }
+    // Hide after 5 seconds
     setTimeout(() => {
-      showLevelUpNotification.value = false;
-    }, 3000);
+      showMotivationalQuote.value = false;
+    }, 5000);
   }
-}, { immediate: true });
-
-
+});
 
 </script>
-
 <template>
   <div class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-    <!-- Level Up Notification -->
-    <div v-if="showLevelUpNotification" 
-         class="fixed top-4 right-4 bg-emerald-500 text-white px-6 py-3 rounded-lg shadow-lg transform transition-all duration-500 ease-in-out z-50"
-         :class="{ 'translate-x-0 opacity-100': showLevelUpNotification, 'translate-x-full opacity-0': !showLevelUpNotification }">
-      <div class="flex items-center space-x-2">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-        </svg>
-        <span class="font-bold">Level Up!</span>
-        <span>You are now level {{ userStatistics?.level }}</span>
-      </div>
-    </div>
+
+
+    <!-- Motivational Quote -->
+    <Notification :showNotification="showMotivationalQuote" :textToDisplay="motivationalQuote" />
 
     <div class="flex min-h-screen">
       <DashboardSidebar :userStatistics="userStatistics" :user="user"/>

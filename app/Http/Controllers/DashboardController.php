@@ -6,6 +6,7 @@ use App\Models\Task;
 use App\Models\TaskDifficulty;
 use App\Models\TaskResetConfig;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
@@ -120,4 +121,46 @@ class DashboardController extends Controller
         $userStats->save();
         return back()->with('userStatistics', $userStats);
     }
+
+    public function getMotivationalQuote($locale){
+        $response = Http::get('https://zenquotes.io/api/random');
+
+        if ($response->status() !== 200) {
+            return response()->json([
+                'error' => 'Failed to fetch quote from ZenQuotes API'
+            ], 500);
+        }
+
+        $quote = $response->json();
+        $locale = strtoupper($locale);
+    
+        $translated_quote = $this->translateWithDeepl($quote[0]['q'], $locale);
+    
+        // Return both the translated quote and the author as JSON
+        return response()->json([
+            [
+                'q' => $translated_quote['translations'][0]['text'],
+                'a' => $quote[0]['a']
+            ]
+        ]);
+    }
+
+    public function translateWithDeepl($text, $target_lang){
+        $deepl_api_key = env('DEEPL_API_KEY');
+        $deepl_translated_quote = Http::withHeaders([
+            'Content-Type' => 'application/json',
+            'Authorization' => 'DeepL-Auth-Key ' . $deepl_api_key,
+        ])->post('https://api-free.deepl.com/v2/translate', [
+            'text' => [$text],
+            'target_lang' => $target_lang,
+        ]);
+
+        if ($deepl_translated_quote->status() !== 200) {
+            return response()->json([
+                'error' => 'Failed to translate quote from ZenQuotes API'
+            ], 500);
+        }
+        return $deepl_translated_quote->json();
+    }
+    
 }
