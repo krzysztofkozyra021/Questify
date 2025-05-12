@@ -49,7 +49,7 @@ function addExperience() {
     <div class="p-4 h-full flex flex-col">
       <!-- Player Panel -->
       <div class="mb-6">
-        <PlayerPanel :userStatistics="userStatistics" :user="user" @showPlayerDetails="handlePlayerDetails" />
+        <PlayerPanel :userStatistics="userStatistics" :user="user"/>
       </div>
 
       <!-- Test Button -->
