@@ -132,7 +132,7 @@ const props = defineProps({
 })
 
 onMounted(() => {
-  console.log(props.locales)
+  // No debugging logs in production
 })
 
 const showDeleteModal = ref(false)
