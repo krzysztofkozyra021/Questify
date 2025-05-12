@@ -17,9 +17,7 @@ export function useTranslation() {
   }
 
   function switchLanguage(locale) {
-    router.post(route('settings.changeLocale'), {
-      locale: locale,
-    }, {
+    router.get(route('language.switch', { locale: locale }), {
       preserveScroll: true,
     })
   }
