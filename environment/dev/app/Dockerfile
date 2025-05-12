@@ -71,4 +71,9 @@ COPY ./entrypoint.sh /entrypoint.sh
 
 WORKDIR /application
 
+# Create storage directory and set permissions
+RUN mkdir -p /application/storage/app/public/profile-images \
+    && chown -R www-data:www-data /application/storage \
+    && chmod -R 775 /application/storage
+
 ENTRYPOINT ["/entrypoint.sh"]
