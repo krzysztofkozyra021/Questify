@@ -58,5 +58,13 @@
     "en": "English",
     "pl": "Polish (Polski)",
     "Log out": "Log out",
-    "Quests": "Quests"
+    "Quests": "Quests",
+    "Profile Picture": "Profile Picture",
+    "Select Image": "Select Image",
+    "Upload": "Upload",
+    "Preview": "Preview",
+    "JPG, PNG or GIF. Max 2MB.": "JPG, PNG or GIF. Max 2MB.",
+    "Please select a valid image file (JPG, PNG, or GIF).": "Please select a valid image file (JPG, PNG, or GIF).",
+    "Image size should not exceed 2MB.": "Image size should not exceed 2MB.",
+    "An error occurred while uploading the image.": "An error occurred while uploading the image."
 }
