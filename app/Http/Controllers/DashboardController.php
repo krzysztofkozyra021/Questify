@@ -6,6 +6,7 @@ use App\Models\Task;
 use App\Models\TaskDifficulty;
 use App\Models\TaskResetConfig;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
@@ -119,5 +120,11 @@ class DashboardController extends Controller
         
         $userStats->save();
         return back()->with('userStatistics', $userStats);
+    }
+
+    public function getMotivationalQuote(){
+        $response = Http::get('https://zenquotes.io/api/random');
+        $quote = $response->json();
+        return $quote;
     }
 }
