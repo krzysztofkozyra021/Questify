@@ -78,7 +78,8 @@ Route::middleware(["auth", "verified"])->group(function (): void {
     Route::get("/profile", [ProfileController::class, "edit"])->name("profile.edit");
     Route::patch("/profile", [ProfileController::class, "update"])->name("profile.update");
     Route::delete("/profile", [ProfileController::class, "destroy"])->name("profile.destroy");
-
+    Route::post("/profile/image", [ProfileController::class, "updateProfileImage"])->name("profile.image");
+    Route::get("/profile/image", [ProfileController::class, "getProfileImage"])->name("profile.image");
     // Settings
     Route::get("/settings", [SettingsController::class, "index"])->name("settings");
     Route::put("/settings", [SettingsController::class, "update"])->name("settings.update");
