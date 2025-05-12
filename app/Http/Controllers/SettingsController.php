@@ -58,7 +58,7 @@ class SettingsController extends Controller
         if (!in_array($locale, $allowedLocales)) {
             return redirect()->route('settings')->with('error', 'Invalid locale selected.');
         }
-        
+
         // Store the locale in the session
         session()->put('locale', $locale);
         
