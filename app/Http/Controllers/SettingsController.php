@@ -52,7 +52,13 @@ class SettingsController extends Controller
         }
 
         $locale = $request->input('locale');
+        $allowedLocales = config('app.available_locales', ['en']);
         
+        // Validate the locale against allowed locales
+        if (!in_array($locale, $allowedLocales)) {
+            return redirect()->route('settings')->with('error', 'Invalid locale selected.');
+        }
+
         // Store the locale in the session
         session()->put('locale', $locale);
         
