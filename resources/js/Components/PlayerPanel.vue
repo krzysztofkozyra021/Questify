@@ -1,13 +1,32 @@
 
 <script setup>
-import { computed } from 'vue';
+import { computed, ref, onMounted } from 'vue';
 import { useTranslation } from '@/composables/useTranslation.js';
+
 
 const { trans } = useTranslation()
 const props = defineProps({
   userStatistics: Object,
   user: Object,
 });
+
+const profileImageUrl = ref('/images/default-profile.png');
+
+const fetchProfileImage = async () => {
+    try {
+        const response = await fetch(`/profile/image`);
+        const data = await response.json();
+        
+        if (data.profile_image_url) {
+            profileImageUrl.value = data.profile_image_url;
+        }
+    } catch (error) {
+        console.error('Error fetching profile image:', error);
+    }
+};
+
+// Fetch profile image on mount
+onMounted(fetchProfileImage);
 
 const currentPlayerHealth = computed(() => {
   return Math.round(props.userStatistics.current_health);
@@ -36,7 +55,7 @@ const maxPlayerExperience = computed(() => {
     <!-- Player Info -->
     <div class="flex items-center space-x-3 mb-4">
       <div class="w-12 h-12 rounded-full bg-slate-700 flex items-center justify-center">
-        <span class="text-slate-300 text-lg">{{ user?.name?.[0]?.toUpperCase() }}</span>
+        <img :src="profileImageUrl" alt="Profile Image" class="w-full h-full object-cover rounded-full">
       </div>
       <div class="flex-1 min-w-0">
         <h2 class="text-slate-200 font-medium truncate">{{ user?.name }}</h2>

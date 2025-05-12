@@ -26,9 +26,61 @@
               </div>
 
 
-              <!-- Profile Information -->
-              <div class="bg-slate-700/50 rounded-lg p-4">
+               <!-- Profile Information -->
+               <div class="bg-slate-700/50 rounded-lg p-4">
                 <h2 class="text-xl font-semibold text-slate-200 mb-4">{{ trans('Profile Information') }}</h2>
+                
+                <!-- Profile Picture Section -->
+                <div class="mb-6">
+                  <label class="block text-sm font-medium text-slate-300 mb-2">{{ trans('Profile Picture') }}</label>
+                  
+                  <div class="flex items-center space-x-4 mb-4">
+                    <div class="w-24 h-24 rounded-full bg-slate-800 overflow-hidden border border-slate-600">
+                      <img 
+                        :src="profileImageUrl" 
+                        alt="Profile Picture" 
+                        class="w-full h-full object-cover"
+                      />
+                    </div>
+                    
+                    <div class="space-y-2">
+                      <p class="text-sm text-slate-400">{{ trans('JPG, PNG or GIF. Max 2MB.') }}</p>
+                      <input 
+                        type="file" 
+                        ref="fileInput"
+                        @change="previewImage"
+                        accept="image/*"
+                        class="hidden"
+                      />
+                      <div class="flex space-x-2">
+                        <button 
+                          @click="$refs.fileInput.click()" 
+                          type="button"
+                          class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition-colors"
+                        >
+                          {{ trans('Select Image') }}
+                        </button>
+                        <button 
+                          v-if="selectedFile"
+                          @click="uploadImage" 
+                          type="button"
+                          class="px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-sm rounded transition-colors"
+                        >
+                          {{ trans('Upload') }}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                                
+                                <!-- Image Preview -->
+                                <div v-if="imagePreview && imagePreview !== profileImageUrl" class="mt-2">
+                    <p class="text-sm text-slate-300 mb-1">{{ trans('Preview:') }}</p>
+                    <div class="w-24 h-24 rounded-full overflow-hidden border border-slate-600">
+                      <img :src="imagePreview" alt="Preview" class="w-full h-full object-cover" />
+                    </div>
+                  </div>
+                </div>
+                
                 <div class="space-y-4">
                   <div>
                     <label class="block text-sm font-medium text-slate-300 mb-1">{{ trans('Name') }}</label>
@@ -40,6 +92,7 @@
                   </div>
                 </div>
               </div>
+              
 
               <!-- Password Section -->
               <div class="bg-slate-700/50 rounded-lg p-4">
@@ -111,6 +164,11 @@
         </form>
       </div>
     </Modal>
+
+    <!-- Upload Error Notification -->
+    <div v-if="uploadError" class="mt-2">
+      <p class="text-sm text-red-500">{{ uploadError }}</p>
+    </div>
   </div>
 </template>
 
@@ -131,8 +189,99 @@ const props = defineProps({
   currentLocale: String,
 })
 
+const profileImageUrl = ref('/images/default-profile.png')
+const selectedFile = ref(null)
+const imagePreview = ref(null)
+const uploadError = ref(null)
+
+const form = useForm({
+  profile_image: null
+})
+
+const fetchProfileImage = async () => {
+  try {
+    const response = await fetch('/profile/image')
+    if (!response.ok) {
+      throw new Error('Network response was not ok')
+    }
+    const data = await response.json()
+    
+    if (data.profile_image_url) {
+      profileImageUrl.value = data.profile_image_url
+    } else {
+      profileImageUrl.value = '/images/default-profile.png'
+    }
+  } catch (error) {
+    console.error('Error fetching profile image:', error)
+    profileImageUrl.value = '/images/default-profile.png'
+  }
+}
+
+const previewImage = (event) => {
+  const file = event.target.files[0]
+  if (file) {
+    uploadError.value = null
+
+    const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif']
+    if (!validTypes.includes(file.type)) {
+      uploadError.value = 'Please select a valid image file (JPG, PNG, or GIF).'
+      return
+    }
+
+    // Check file size (2MB = 2 * 1024 * 1024 bytes)
+    const maxSize = 2 * 1024 * 1024
+    if (file.size > maxSize) {
+      uploadError.value = 'Image size should not exceed 2MB.'
+      return
+    }
+
+    selectedFile.value = file
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      imagePreview.value = e.target.result
+    }
+    reader.readAsDataURL(file)
+  }
+}
+
+const uploadImage = async () => {
+  if (!selectedFile.value) return
+  
+  uploadError.value = null
+
+  const formData = new FormData()
+  formData.append('profile_image', selectedFile.value)
+
+  try {
+    const response = await router.post('/profile/image', formData, {
+      preserveScroll: true,
+      onSuccess: (page) => {
+        if (page.props.profile_image_url) {
+          profileImageUrl.value = page.props.profile_image_url
+          imagePreview.value = null
+          selectedFile.value = null
+          if (form.value.fileInput) {
+            form.value.fileInput.value = ''
+          }
+        }
+        window.location.reload()
+      },
+      onError: (errors) => {
+        if (errors.profile_image) {
+          uploadError.value = errors.profile_image
+        } else {
+          uploadError.value = 'An error occurred while uploading the image.'
+        }
+      }
+    })
+  } catch (error) {
+    console.error('Error uploading image:', error)
+    uploadError.value = 'An error occurred while uploading the image.'
+  }
+}
+
 onMounted(() => {
-  // No debugging logs in production
+  fetchProfileImage()
 })
 
 const showDeleteModal = ref(false)

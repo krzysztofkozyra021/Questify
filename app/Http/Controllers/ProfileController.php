@@ -10,11 +10,62 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class ProfileController extends Controller
 {
+
+    public function updateProfileImage(Request $request)
+    {
+        $request->validate([
+            'profile_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+
+
+        $user = Auth::user();
+        
+        // Delete old image if exists
+        if ($user->profile_image && Storage::disk('public')->exists($user->profile_image)) {
+            Storage::disk('public')->delete($user->profile_image);
+        }
+        
+        $path = $request->file('profile_image')->store('profile-images', 'public');
+        
+        $user->update([
+            'profile_image' => $path
+        ]);
+        
+        $url = url('storage/' . $path);
+        
+        return back()->with([
+            'success' => true,
+            'profile_image_url' => $url
+        ]);
+    }
+
+    public function getProfileImage(Request $request)
+    {
+        $user = Auth::user();
+        
+        if ($user && $user->profile_image && Storage::disk('public')->exists($user->profile_image)) {
+            $url = url('storage/' . $user->profile_image);
+            return response()->json([
+                'profile_image_url' => $url
+            ]);
+        }
+        
+        // If no valid image exists, clear the profile_image field
+        if ($user && $user->profile_image) {
+            $user->update(['profile_image' => null]);
+        }
+        
+        return response()->json([
+            'profile_image_url' => null
+        ]);
+    }
+
     /**
      * Display the user's profile form.
      */

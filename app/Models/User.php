@@ -34,10 +34,16 @@ class User extends Authenticatable implements FilamentUser
         "email",
         "password",
         "is_admin",
+        "profile_image",
     ];
     protected $hidden = [
         "password",
         "remember_token",
+    ];
+
+    protected $casts = [
+        "email_verified_at" => "datetime",
+        "password" => "hashed",
     ];
 
     public function tasks(): BelongsToMany
@@ -50,14 +56,6 @@ class User extends Authenticatable implements FilamentUser
     public function userStatistics(): HasOne
     {
         return $this->hasOne(UserStatistics::class);
-    }
-
-    protected function casts(): array
-    {
-        return [
-            "email_verified_at" => "datetime",
-            "password" => "hashed",
-        ];
     }
 
     public function canAccessPanel(Panel $panel): bool
