@@ -3,16 +3,17 @@
     class="w-full h-20 bg-zinc-600 hover:bg-zinc-400 p-2 rounded-3xl"
     @click="navigate"
   >
-    {{ optionText }}
+    {{ trans(optionText) }}
   </button>
 </template>
 
-<script>
+<script setup>
 import { router } from '@inertiajs/vue3';
+import { useTranslation } from '@/composables/useTranslation.js';
 
-export default {
-  name: 'OptionButton',
- props: {
+const { trans } = useTranslation()
+
+const props = defineProps({
   optionText: {
     type: String,
     required: true,
@@ -25,13 +26,12 @@ export default {
     type: String, 
     required: false,
   },
-},
-  methods: {
-    navigate() {
-      router.visit(this.route, {
-        method: this.method,
-      });
-    },
-  },
-};
+})
+
+const navigate = () => {
+  router.visit(props.route, {
+    method: props.method,
+  });
+}
+
 </script>
