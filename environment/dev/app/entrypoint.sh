@@ -8,6 +8,9 @@ mkdir -p /application/storage/app/public/profile-images
 chown -R www-data:www-data /application/storage
 chmod -R 775 /application/storage
 
+# Create storage link
+php artisan storage:link
+
 # bash is not responding to the sigterm and container always have 10 second timeout (when stop/restart)
 # exec is related with
 # https://docs.docker.com/compose/faq/#why-do-my-services-take-10-seconds-to-recreate-or-stop
