@@ -122,28 +122,56 @@ class DashboardController extends Controller
         return back()->with('userStatistics', $userStats);
     }
 
-    public function getMotivationalQuote($locale){
-        $response = Http::get('https://zenquotes.io/api/random');
-
-        if ($response->status() !== 200) {
-            return response()->json([
-                'error' => 'Failed to fetch quote from ZenQuotes API'
-            ], 500);
-        }
-
-        $quote = $response->json();
-        $locale = strtoupper($locale);
+    public function getMotivationalQuote($locale)
+{
+    // Set default language for Forismatic API
+    $apiLang = 'en';
     
-        $translated_quote = $this->translateWithDeepl($quote[0]['q'], $locale);
+    // If locale is Russian, use it directly with Forismatic
+    if (strtolower(substr($locale, 0, 2)) === 'ru') {
+        $apiLang = 'ru';
+    }
     
-        // Return both the translated quote and the author as JSON
+    // Call Forismatic API
+    $response = Http::asForm()->post('http://api.forismatic.com/api/1.0/', [
+        'method' => 'getQuote',
+        'format' => 'json',
+        'lang' => $apiLang
+    ]);
+    
+    if ($response->status() !== 200) {
+        return response()->json([
+            'error' => 'Failed to fetch quote from Forismatic API'
+        ], 500);
+    }
+    
+    $quote = $response->json();
+    
+    $quoteText = $quote['quoteText'];
+    $quoteAuthor = $quote['quoteAuthor'] ?: 'Unknown'; 
+    
+    $locale = strtoupper($locale);
+    
+    // If the requested language is the same as API language, no translation needed
+    if ((strtolower(substr($locale, 0, 2)) === 'en' && $apiLang === 'en') || 
+        (strtolower(substr($locale, 0, 2)) === 'ru' && $apiLang === 'ru')) {
         return response()->json([
             [
-                'q' => $translated_quote['translations'][0]['text'],
-                'a' => $quote[0]['a']
+                'q' => $quoteText,
+                'a' => $quoteAuthor
             ]
         ]);
     }
+    
+    $translated_quote = $this->translateWithDeepl($quoteText, $locale);
+    
+    return response()->json([
+        [
+            'q' => $translated_quote['translations'][0]['text'],
+            'a' => $quoteAuthor
+        ]
+    ]);
+}
 
     public function translateWithDeepl($text, $target_lang){
         $deepl_api_key = env('DEEPL_API_KEY');
