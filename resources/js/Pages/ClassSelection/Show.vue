@@ -3,7 +3,7 @@ import { ref, computed } from 'vue';
 import { route } from 'ziggy-js';
 import { useTranslation } from '@/Composables/useTranslation';
 import Preloader from '@/Components/Preloader.vue';
-import { usePage } from '@inertiajs/vue3';
+import { usePage, router } from '@inertiajs/vue3';
 
 const props = defineProps({
   classes: {
@@ -41,8 +41,7 @@ function selectClass(classId) {
 
 function confirmSelection() {
   if (!selectedClass.value) return;
-  // @ts-ignore
-  window.Inertia.post(route('select-class.store'), {
+  router.post(route('select-class.store'), {
     class_id: selectedClass.value
   });
 }
