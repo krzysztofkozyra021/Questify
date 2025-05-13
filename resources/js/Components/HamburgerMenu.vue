@@ -18,8 +18,8 @@ const toggleMenu = () => {
 
 // Close menu when clicking outside
 const handleClickOutside = (event) => {
-  const menu = document.getElementById('mobile-menu')
-  const button = document.getElementById('hamburger-button')
+  const menu = menuRef.value
+  const button = buttonRef.value
   if (isOpen.value && menu && !menu.contains(event.target) && !button.contains(event.target)) {
     isOpen.value = false
     document.body.style.overflow = ''
