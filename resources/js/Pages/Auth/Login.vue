@@ -8,6 +8,7 @@ import Preloader from '@/Components/Preloader.vue'
 import { Head, Link, useForm } from '@inertiajs/vue3'
 import { useTranslation } from '@/Composables/useTranslation'
 import LanguageSwitcher from '@/Components/LanguageSwitcher.vue'
+import HamburgerMenu from '@/Components/HamburgerMenu.vue'
 
 const { trans } = useTranslation()
 
@@ -38,28 +39,29 @@ const submit = () => {
   <div class="min-h-screen bg-slate-800">
     <!-- Header -->
     <header class="bg-slate-800 shadow-lg">
-      <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+      <div class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
         <div class="flex items-center">
-          <img src="/images/logo.png" alt="Questify Logo" class="h-10 w-auto" />
+          <Link :href="route('dashboard')">
+            <img src="/images/logo.png" alt="Questify Logo" class="h-10 w-auto" />
+          </Link>
         </div>
-        <div class="flex items-center space-x-4">
-          <LanguageSwitcher />
+        <HamburgerMenu>
           <Link
             :href="route('register')"
-            class="px-6 py-2 bg-amber-900 text-stone-100 font-bold rounded-lg hover:bg-amber-800 transition-colors"
+            class="block px-4 py-2 text-stone-100 hover:bg-slate-600 transition-colors sm:px-6 sm:py-2 sm:bg-amber-900 sm:hover:bg-amber-800 sm:rounded-lg sm:font-bold"
           >
             {{ trans('Sign up') }}
           </Link>
-        </div>
+        </HamburgerMenu>
       </div>
     </header>
 
-    <div class="container mx-auto px-6 py-12">
-      <div class="max-w-6xl mx-auto flex gap-12 items-center">
+    <div class="container mx-auto px-4 sm:px-6 py-8 sm:py-12">
+      <div class="max-w-6xl mx-auto flex flex-col lg:flex-row gap-8 lg:gap-12 items-center">
         <!-- Left Column - Motivation Text -->
-        <div class="flex-1">
-          <h2 class="text-5xl font-bold text-amber-100 mb-6 leading-tight">{{ trans('Welcome Back, Adventurer') }}</h2>
-          <p class="text-2xl text-stone-100 leading-relaxed">
+        <div class="flex-1 text-center lg:text-left">
+          <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-amber-100 mb-4 sm:mb-6 leading-tight">{{ trans('Welcome Back, Adventurer') }}</h2>
+          <p class="text-xl sm:text-2xl text-stone-100 leading-relaxed">
             {{ trans('Your quest continues.') }}<br>
             {{ trans('Ready to face new challenges?') }}<br>
             {{ trans('Let\'s continue your journey.') }}
@@ -67,8 +69,8 @@ const submit = () => {
         </div>
 
         <!-- Right Column - Form -->
-        <div class="flex-1">
-          <div class="bg-slate-600 rounded-2xl p-8 shadow-2xl">
+        <div class="flex-1 w-full max-w-md mx-auto">
+          <div class="bg-slate-600 rounded-2xl p-6 sm:p-8 shadow-2xl">
             <h2 class="text-3xl font-bold text-center text-stone-100 mb-8">{{ trans('Log in') }}</h2>
 
             <div v-if="status" class="mb-4 text-sm font-medium text-green-600">
