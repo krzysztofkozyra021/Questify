@@ -41,7 +41,9 @@ const submit = () => {
     <header class="bg-slate-800 shadow-lg">
       <div class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
         <div class="flex items-center">
-          <img src="/images/logo.png" alt="Questify Logo" class="h-10 w-auto" />
+          <Link :href="route('dashboard')">
+            <img src="/images/logo.png" alt="Questify Logo" class="h-10 w-auto" />
+          </Link>
         </div>
         <HamburgerMenu>
           <Link
