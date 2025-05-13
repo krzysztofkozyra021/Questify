@@ -15,33 +15,6 @@ function toggleTaskList() {
 function logout() {
   router.post(route('logout'));
 }
-
-function reduceHealth() {
-  router.post(route('user.health'), {}, {
-    preserveScroll: true,
-    preserveState: false,
-    onSuccess: (page) => {
-      router.reload({ only: ['userStatistics'] });
-    },
-    onError: (errors) => {
-      console.error('Error updating health:', errors);
-    }
-  });
-}
-
-function addExperience() {
-  router.post(route('user.addExperience'), {}, {
-    preserveScroll: true,
-    preserveState: false,
-    onSuccess: (page) => {
-      router.reload({ only: ['userStatistics'] });
-    },
-    onError: (errors) => {
-      console.error('Error updating experience:', errors);
-    }
-  });
-}
-
 </script>
 
 <template>
@@ -50,24 +23,6 @@ function addExperience() {
       <!-- Player Panel -->
       <div class="mb-6">
         <PlayerPanel :userStatistics="userStatistics" :user="user"/>
-      </div>
-
-      <!-- Test Button -->
-      <div class="mb-4">
-        <button
-          @click="reduceHealth"
-          class="w-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
-        >
-          Test: Reduce Health (-10)
-        </button>
-      </div>
-      <div class="mb-4">
-        <button
-          @click="addExperience"
-          class="w-full px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
-        >
-          Test: Add Experience (10)
-        </button>
       </div>
 
       <!-- Navigation Menu -->
