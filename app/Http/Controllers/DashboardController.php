@@ -7,12 +7,18 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use App\Models\TaskDifficulty;
 use App\Models\TaskResetConfig;
+use App\Services\QuoteService;
+use App\Services\TranslationService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
 {
+    public function __construct(
+        private readonly QuoteService $quoteService,
+        private readonly TranslationService $translationService
+    ) {}
+
     public function index()
     {
         // Get the logged-in user
@@ -76,19 +82,6 @@ class DashboardController extends Controller
         return redirect()->route("dashboard");
     }
 
-    public function updateHealth(Request $request)
-    {
-        $user = auth()->user();
-        $userStats = $user->userStatistics;
-
-        // Reduce health by 10 points, but not below 0
-        $newHealth = max(0, $userStats->current_health - 10);
-        $userStats->current_health = round($newHealth);
-        $userStats->max_health = round($userStats->max_health);
-        $userStats->save();
-
-        return back()->with("userStatistics", $userStats);
-    }
 
     public function levelUp(Request $request)
     {
@@ -103,76 +96,40 @@ class DashboardController extends Controller
 
     public function getMotivationalQuote($locale)
     {
-        if (!config("app.enable_apis")) return;
-
-        // Set default language for Forismatic API
-        $apiLang = "en";
-
-        // If locale is Russian, use it directly with Forismatic
-        if (strtolower(substr($locale, 0, 2)) === "ru") {
-            $apiLang = "ru";
-        }
-
-        // Call Forismatic API
-        $response = Http::asForm()->post("http://api.forismatic.com/api/1.0/", [
-            "method" => "getQuote",
-            "format" => "json",
-            "lang" => $apiLang,
-        ]);
-
-        if ($response->status() !== 200) {
+        $quote = $this->quoteService->getQuote($locale);
+        
+        if (empty($quote)) {
             return response()->json([
-                "error" => "Forismatic: Failed to fetch quote",
+                'error' => 'Forismatic: Failed to fetch quote'
             ], 502);
         }
 
-        $quote = $response->json();
-
-        $quoteText = $quote["quoteText"];
-        $quoteAuthor = $quote["quoteAuthor"] ?: "Unknown"; 
-
         $locale = strtoupper($locale);
-
-        // If the requested language is the same as API language, no translation needed
-        if ((strtolower(substr($locale, 0, 2)) === "en" && $apiLang === "en") ||
-            (strtolower(substr($locale, 0, 2)) === "ru" && $apiLang === "ru")) {
+        
+        // Check if quote is already in the requested language
+        $requestedLang = strtolower(substr($locale, 0, 2));
+        if ($requestedLang === $quote['lang']) {
             return response()->json([
                 [
-                    "q" => $quoteText,
-                    "a" => $quoteAuthor,
-                ],
+                    'q' => $quote['text'],
+                    'a' => $quote['author']
+                ]
             ]);
         }
 
-        $translated_quote = $this->translateWithDeepl($quoteText, $locale);
-
-        return response()->json([
-            [
-                "q" => $translated_quote["translations"][0]["text"],
-                "a" => $quoteAuthor,
-            ],
-        ]);
-    }
-
-    public function translateWithDeepl($text, $target_lang)
-    {
-        if (!config("app.enable_apis")) return;
-
-        $deepl_api_key = config("services.deepl.api_key");
-        $deepl_translated_quote = Http::withHeaders([
-            "Content-Type" => "application/json",
-            "Authorization" => "DeepL-Auth-Key " . $deepl_api_key,
-        ])->post("https://api-free.deepl.com/v2/translate", [
-            "text" => [$text],
-            "target_lang" => $target_lang,
-        ]);
-
-        if ($deepl_translated_quote->status() !== 200) {
+        $translatedText = $this->translationService->translate($quote['text'], $locale);
+        
+        if (!$translatedText) {
             return response()->json([
-                "error" => "DeepL: Failed to translate quote",
+                'error' => 'DeepL: Failed to translate quote'
             ], 502);
         }
 
-        return $deepl_translated_quote->json();
+        return response()->json([
+            [
+                'q' => $translatedText,
+                'a' => $quote['author']
+            ]
+        ]);
     }
 }
