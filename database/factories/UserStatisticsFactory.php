@@ -20,7 +20,7 @@ class UserStatisticsFactory extends Factory
     public function definition(): array
     {
         $class = ClassAttribute::inRandomOrder()->first();
-        
+
         return [
             "user_id" => $this->faker->numberBetween(1, 10),
             "class" => $class->id,

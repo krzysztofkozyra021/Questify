@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref, onMounted, watch } from 'vue';
-import { useTranslation } from '@/composables/useTranslation.js';
+import { useTranslation } from '@/Composables/useTranslation';
 import { usePage } from '@inertiajs/vue3';
 
 const { trans } = useTranslation();

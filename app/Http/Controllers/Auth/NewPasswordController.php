@@ -20,7 +20,7 @@ use Inertia\Response;
 class NewPasswordController extends Controller
 {
     public function __construct(
-        private readonly UserActivityLogger $logger
+        private readonly UserActivityLogger $logger,
     ) {}
 
     /**
@@ -59,8 +59,8 @@ class NewPasswordController extends Controller
                 ])->save();
 
                 event(new PasswordReset($user));
-                
-                $this->logger->log($user, 'password_reset', $request);
+
+                $this->logger->log($user, "password_reset", $request);
             },
         );
 

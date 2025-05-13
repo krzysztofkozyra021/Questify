@@ -1,21 +1,21 @@
 <?php
 
-namespace App\Http\Controllers;
+declare(strict_types=1);
 
-use Illuminate\Http\Request;
+namespace App\Http\Controllers;
 
 class LanguageController extends Controller
 {
     public function switch($locale)
     {
         // Validate the locale
-        if (!in_array($locale, ['en', 'pl'])) {
+        if (!in_array($locale, ["en", "pl"], true)) {
             return redirect()->back();
         }
 
         // Store the locale in session
-        session()->put('locale', $locale);
+        session()->put("locale", $locale);
 
         return redirect()->back();
     }
-} 
+}

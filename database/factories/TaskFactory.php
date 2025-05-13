@@ -18,7 +18,7 @@ class TaskFactory extends Factory
      */
     public function definition(): array
     {
-        $repeatUnits = ['day', 'week', 'month', 'year'];
+        $repeatUnits = ["day", "week", "month", "year"];
 
         return [
             "title" => $this->faker->word(),

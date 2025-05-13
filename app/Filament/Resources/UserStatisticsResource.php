@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserStatisticsResource\Pages;
@@ -13,41 +15,40 @@ use Filament\Tables\Table;
 class UserStatisticsResource extends Resource
 {
     protected static ?string $model = UserStatistics::class;
-
-    protected static ?string $navigationIcon = 'heroicon-o-chart-bar';
+    protected static ?string $navigationIcon = "heroicon-o-chart-bar";
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('user_id')
-                    ->relationship('user', 'name')
+                Forms\Components\Select::make("user_id")
+                    ->relationship("user", "name")
                     ->required(),
-                Forms\Components\Select::make('class')
-                    ->relationship('classAttributes', 'class_name')
+                Forms\Components\Select::make("class")
+                    ->relationship("classAttributes", "class_name")
                     ->required(),
-                Forms\Components\TextInput::make('current_health')
+                Forms\Components\TextInput::make("current_health")
                     ->numeric()
                     ->required(),
-                Forms\Components\TextInput::make('current_energy')
+                Forms\Components\TextInput::make("current_energy")
                     ->numeric()
                     ->required(),
-                Forms\Components\TextInput::make('max_health')
+                Forms\Components\TextInput::make("max_health")
                     ->numeric()
                     ->required(),
-                Forms\Components\TextInput::make('max_energy')
+                Forms\Components\TextInput::make("max_energy")
                     ->numeric()
                     ->required(),
-                Forms\Components\TextInput::make('current_experience')
+                Forms\Components\TextInput::make("current_experience")
                     ->numeric()
                     ->required(),
-                Forms\Components\TextInput::make('next_level_experience')
+                Forms\Components\TextInput::make("next_level_experience")
                     ->numeric()
                     ->required(),
-                Forms\Components\TextInput::make('level')
+                Forms\Components\TextInput::make("level")
                     ->numeric()
                     ->required(),
-                Forms\Components\TextInput::make('energy_regen_rate')
+                Forms\Components\TextInput::make("energy_regen_rate")
                     ->numeric()
                     ->required(),
             ]);
@@ -57,46 +58,44 @@ class UserStatisticsResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('user.name')
+                Tables\Columns\TextColumn::make("user.name")
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('classAttributes.class_name')
+                Tables\Columns\TextColumn::make("classAttributes.class_name")
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('current_health')
+                Tables\Columns\TextColumn::make("current_health")
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('current_energy')
+                Tables\Columns\TextColumn::make("current_energy")
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('max_health')
+                Tables\Columns\TextColumn::make("max_health")
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('max_energy')
+                Tables\Columns\TextColumn::make("max_energy")
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('current_experience')
+                Tables\Columns\TextColumn::make("current_experience")
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('next_level_experience')
+                Tables\Columns\TextColumn::make("next_level_experience")
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('level')
+                Tables\Columns\TextColumn::make("level")
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('energy_regen_rate')
+                Tables\Columns\TextColumn::make("energy_regen_rate")
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('last_login')
+                Tables\Columns\TextColumn::make("last_login")
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('last_reset')
+                Tables\Columns\TextColumn::make("last_reset")
                     ->dateTime()
                     ->sortable(),
             ])
-            ->filters([
-                //
-            ])
+            ->filters([])
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
@@ -109,17 +108,15 @@ class UserStatisticsResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListUserStatistics::route('/'),
-            'create' => Pages\CreateUserStatistics::route('/create'),
-            'edit' => Pages\EditUserStatistics::route('/{record}/edit'),
+            "index" => Pages\ListUserStatistics::route("/"),
+            "create" => Pages\CreateUserStatistics::route("/create"),
+            "edit" => Pages\EditUserStatistics::route("/{record}/edit"),
         ];
     }
 }

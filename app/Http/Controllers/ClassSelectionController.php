@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Models\ClassAttribute;
@@ -12,42 +14,40 @@ class ClassSelectionController extends Controller
 {
     public function show()
     {
-        $userStats = UserStatistics::where('user_id', Auth::id())->first();
+        $userStats = UserStatistics::where("user_id", Auth::id())->first();
 
         if ($userStats && $userStats->class !== null) {
-            return redirect()->route('dashboard');
+            return redirect()->route("dashboard");
         }
 
         $classes = ClassAttribute::all();
 
-        return Inertia::render('ClassSelection/Show', [
-            'classes' => $classes->map(function ($class) {
-                return [
-                    'id' => $class->id,
-                    'name' => $class->class_name,
-                    'health_multiplier' => $class->health_multiplier,
-                    'energy_multiplier' => $class->energy_multiplier,
-                    'exp_multiplier' => $class->exp_multiplier,
-                    'special_ability' => $class->special_ability,
-                ];
-            }),
+        return Inertia::render("ClassSelection/Show", [
+            "classes" => $classes->map(fn($class) => [
+                "id" => $class->id,
+                "name" => $class->class_name,
+                "health_multiplier" => $class->health_multiplier,
+                "energy_multiplier" => $class->energy_multiplier,
+                "exp_multiplier" => $class->exp_multiplier,
+                "special_ability" => $class->special_ability,
+            ]),
         ]);
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'class_id' => 'required|exists:class_attributes,id',
+            "class_id" => "required|exists:class_attributes,id",
         ]);
 
-        $userStats = UserStatistics::where('user_id', Auth::id())->first();
+        $userStats = UserStatistics::where("user_id", Auth::id())->first();
 
         if ($userStats && $userStats->class !== null) {
-            return redirect()->route('dashboard')
-                ->with('error', 'You have already selected a class and cannot change it.');
+            return redirect()->route("dashboard")
+                ->with("error", "You have already selected a class and cannot change it.");
         }
 
-        $selectedClass = ClassAttribute::findOrFail($validated['class_id']);
+        $selectedClass = ClassAttribute::findOrFail($validated["class_id"]);
 
         if (!$userStats) {
             $userStats = new UserStatistics();
@@ -71,7 +71,7 @@ class ClassSelectionController extends Controller
 
         $userStats->save();
 
-        return redirect()->route('dashboard')
-            ->with('message', 'Class selected successfully: ' . $selectedClass->class_name);
+        return redirect()->route("dashboard")
+            ->with("message", "Class selected successfully: " . $selectedClass->class_name);
     }
 }

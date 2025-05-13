@@ -1,3 +1,15 @@
+<script setup>
+import { ref, computed } from 'vue'
+import { useTranslation } from '@/Composables/useTranslation'
+
+const { trans, currentLocale, availableLocales, switchLanguage } = useTranslation()
+const isOpen = ref(false)
+
+const currentLanguage = computed(() => {
+  return Object.entries(availableLocales.value).find(([_, code]) => code === currentLocale.value)?.[0] || 'English'
+})
+</script>
+
 <template>
   <div class="relative">
     <button
@@ -36,15 +48,3 @@
     </div>
   </div>
 </template>
-
-<script setup>
-import { ref, computed } from 'vue'
-import { useTranslation } from '@/composables/useTranslation.js'
-
-const { trans, currentLocale, availableLocales, switchLanguage } = useTranslation()
-const isOpen = ref(false)
-
-const currentLanguage = computed(() => {
-  return Object.entries(availableLocales.value).find(([_, code]) => code === currentLocale.value)?.[0] || 'English'
-})
-</script>

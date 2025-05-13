@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Services\ProfileImageService;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -16,54 +17,28 @@ use Inertia\Response;
 
 class ProfileController extends Controller
 {
+    public function __construct(
+        private readonly ProfileImageService $profileImageService
+    ) {}
 
     public function updateProfileImage(Request $request)
     {
         $request->validate([
-            'profile_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'profile_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
+        $result = $this->profileImageService->updateProfileImage(
+            Auth::user(),
+            $request->file('profile_image')
+        );
 
-        $user = Auth::user();
-        
-        // Delete old image if exists
-        if ($user->profile_image && Storage::disk('public')->exists($user->profile_image)) {
-            Storage::disk('public')->delete($user->profile_image);
-        }
-        
-        $path = $request->file('profile_image')->store('profile-images', 'public');
-        
-        $user->update([
-            'profile_image' => $path
-        ]);
-        
-        $url = url('storage/' . $path);
-        
-        return back()->with([
-            'success' => true,
-            'profile_image_url' => $url
-        ]);
+        return back()->with($result);
     }
 
     public function getProfileImage(Request $request)
     {
-        $user = Auth::user();
-        
-        if ($user && $user->profile_image && Storage::disk('public')->exists($user->profile_image)) {
-            $url = url('storage/' . $user->profile_image);
-            return response()->json([
-                'profile_image_url' => $url
-            ]);
-        }
-        
-        // If no valid image exists, clear the profile_image field
-        if ($user && $user->profile_image) {
-            $user->update(['profile_image' => null]);
-        }
-        
-        return response()->json([
-            'profile_image_url' => null
-        ]);
+        $result = $this->profileImageService->getProfileImageUrl(Auth::user());
+        return response()->json($result);
     }
 
     /**

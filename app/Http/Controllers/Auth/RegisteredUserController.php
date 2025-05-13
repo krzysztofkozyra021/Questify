@@ -20,7 +20,7 @@ use Inertia\Response;
 class RegisteredUserController extends Controller
 {
     public function __construct(
-        private readonly UserActivityLogger $logger
+        private readonly UserActivityLogger $logger,
     ) {}
 
     /**
@@ -54,7 +54,7 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        $this->logger->log($user, 'register', $request);
+        $this->logger->log($user, "register", $request);
 
         return redirect(route("dashboard", absolute: false));
     }
