@@ -66,5 +66,8 @@
     "JPG, PNG or GIF. Max 2MB.": "JPG, PNG or GIF. Max 2MB.",
     "Please select a valid image file (JPG, PNG, or GIF).": "Please select a valid image file (JPG, PNG, or GIF).",
     "Image size should not exceed 2MB.": "Image size should not exceed 2MB.",
-    "An error occurred while uploading the image.": "An error occurred while uploading the image."
+    "An error occurred while uploading the image.": "An error occurred while uploading the image.",
+    "Level": "Level",
+    "Successfully updated profile image.": "Successfully updated profile image.",
+    "Stay motivated!": "Stay motivated!"
 }
