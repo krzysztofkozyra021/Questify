@@ -1,74 +1,59 @@
-<script>
-import { route } from "ziggy-js";
+<script setup>
+import { ref, computed } from 'vue';
+import { route } from 'ziggy-js';
 import { useTranslation } from '@/Composables/useTranslation';
-import Preloader from '@/Components/Preloader.vue'
+import Preloader from '@/Components/Preloader.vue';
+import { usePage } from '@inertiajs/vue3';
 
-export default {
-  components: {
-    Preloader
-  },
-  props: {
-    classes: {
-      type: Array,
-      required: true
-    }
-  },
-  setup() {
-    const { trans } = useTranslation()
-    return { trans }
-  },
-  data() {
-    return {
-      selectedClass: null,
-      statRanges: {
-        health: {
-          min: 0.7,
-          max: 1.4
-        },
-        energy: {
-          min: 0.7,
-          max: 1.2
-        },
-        exp: {
-          min: 0.9,
-          max: 1.5
-        }
-      },
-      classImages: {
-        1: '/images/classes/ratWarrior.webp',
-        2: '/images/classes/ratMage.webp',
-        3: '/images/classes/ratRogue.webp',
-        4: '/images/classes/ratPaladin.webp'
-      }
-    }
-  },
-  computed: {
-    classesWithImages() {
-      return this.classes.map(classItem => ({
-        ...classItem,
-        image: this.classImages[classItem.id] || '/images/classes/ratWarrior.webp'
-      }));
-    }
-  },
-  methods: {
-    selectClass(classId) {
-      this.selectedClass = classId;
-    },
-    confirmSelection() {
-      if (!this.selectedClass) return;
-      this.$inertia.post(route('select-class.store'), {
-        class_id: this.selectedClass
-      });
-    },
-    getPercentage(multiplier, statType) {
-      const { min, max } = this.statRanges[statType];
-      const range = max - min;
-      const normalizedValue = (multiplier - min) / range;
-      const scaleValue = Math.round(normalizedValue * 4) + 1;
-      const percentage = scaleValue * 20;
-      return Math.min(percentage, 100);
-    }
+const props = defineProps({
+  classes: {
+    type: Array,
+    required: true
   }
+});
+
+const { trans } = useTranslation();
+const selectedClass = ref(null);
+
+const statRanges = {
+  health: { min: 0.7, max: 1.4 },
+  energy: { min: 0.7, max: 1.2 },
+  exp: { min: 0.9, max: 1.5 }
+};
+
+const classImages = {
+  1: '/images/classes/ratWarrior.webp',
+  2: '/images/classes/ratMage.webp',
+  3: '/images/classes/ratRogue.webp',
+  4: '/images/classes/ratPaladin.webp'
+};
+
+const classesWithImages = computed(() => {
+  return props.classes.map(classItem => ({
+    ...classItem,
+    image: classImages[classItem.id] || '/images/classes/ratWarrior.webp'
+  }));
+});
+
+function selectClass(classId) {
+  selectedClass.value = classId;
+}
+
+function confirmSelection() {
+  if (!selectedClass.value) return;
+  // @ts-ignore
+  window.Inertia.post(route('select-class.store'), {
+    class_id: selectedClass.value
+  });
+}
+
+function getPercentage(multiplier, statType) {
+  const { min, max } = statRanges[statType];
+  const range = max - min;
+  const normalizedValue = (multiplier - min) / range;
+  const scaleValue = Math.round(normalizedValue * 4) + 1;
+  const percentage = scaleValue * 20;
+  return Math.min(percentage, 100);
 }
 </script>
 
