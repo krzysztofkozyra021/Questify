@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, onMounted, watch } from 'vue';
+import { computed, ref, onMounted, watch, watchEffect } from 'vue';
 import { useTranslation } from '@/Composables/useTranslation';
 import { usePage } from '@inertiajs/vue3';
 
@@ -21,14 +21,13 @@ watch(() => props.userStatistics, (newStats) => {
   }
 }, { deep: true });
 
-
-watch(() => {
+watchEffect(() => {
   const userStats = page.props?.value?.userStatistics
 
   if (userStats && JSON.stringify(userStats) !== JSON.stringify(localStats.value)) {
     localStats.value = {...userStats};
   }
-}, { deep: true });
+});
 
 const userLevel = computed(() => {
   return localStats.value?.level || 1;
@@ -51,7 +50,6 @@ const fetchProfileImage = async () => {
 // Fetch profile image on mount
 onMounted(() => {
   fetchProfileImage();
-  console.log('Component mounted, initial stats:', localStats.value);
 });
 
 const currentPlayerHealth = computed(() => {
@@ -94,8 +92,8 @@ const experiencePercentage = computed(() => {
       </div>
       <div class="flex-1 min-w-0">
         <h2 class="text-slate-200 font-medium truncate">{{ user?.name }}</h2>
-        <p :class="['text-slate-400 text-sm truncate', { 'text-yellow-300 animate-pulse': isLevelingUp }]">
-          Level {{ userLevel }}
+        <p :class="['text-slate-400 text-sm truncate']">
+          {{ trans('Level') }} {{ userLevel }}
         </p>
       </div>
     </div>
