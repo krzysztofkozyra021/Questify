@@ -93,37 +93,18 @@ class DashboardController extends Controller
         $user = auth()->user();
         $userStats = $user->userStatistics;
 
-        if ($userStats->current_experience >= $userStats->next_level_experience) {
-            $userStats->level++;
-            $userStats->current_experience = 0;
-            $userStats->next_level_experience = round($userStats->next_level_experience * 1.1);
-            $userStats->save();
-        }
-
-        return back()->with('userStatistics', $userStats);
-    }
-
-    public function addExperience(Request $request)
-    {
-        $user = auth()->user();
-        $userStats = $user->userStatistics;
-        
-        // Add experience
-        $userStats->current_experience = round($userStats->current_experience + 10);
-        
-        // Check if level up is needed
-        while ($userStats->current_experience >= $userStats->next_level_experience) {
-            $userStats->level++;
-            $userStats->current_experience = round($userStats->current_experience - $userStats->next_level_experience);
-            $userStats->next_level_experience = round($userStats->next_level_experience * 1.1);
-        }
-        
+        $userStats->current_experience = $userStats->next_level_experience;
         $userStats->save();
+
         return back()->with('userStatistics', $userStats);
     }
+
+    
 
     public function getMotivationalQuote($locale)
 {
+    if (env('ENABLE_APIS', false)) return;
+
     // Set default language for Forismatic API
     $apiLang = 'en';
     
@@ -174,6 +155,8 @@ class DashboardController extends Controller
 }
 
     public function translateWithDeepl($text, $target_lang){
+
+        if (env('ENABLE_APIS', false)) return;
         $deepl_api_key = env('DEEPL_API_KEY');
         $deepl_translated_quote = Http::withHeaders([
             'Content-Type' => 'application/json',
