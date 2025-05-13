@@ -6,7 +6,7 @@ import PrimaryButton from '@/Components/PrimaryButton.vue'
 import TextInput from '@/Components/TextInput.vue'
 import Preloader from '@/Components/Preloader.vue'
 import { Head, Link, useForm } from '@inertiajs/vue3'
-import { useTranslation } from '@/composables/useTranslation.js'
+import { useTranslation } from '@/Composables/useTranslation'
 import LanguageSwitcher from '@/Components/LanguageSwitcher.vue'
 
 const { trans } = useTranslation()

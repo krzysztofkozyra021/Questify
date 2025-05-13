@@ -94,7 +94,7 @@
 
 <script>
 import { route } from "ziggy-js";
-import { useTranslation } from '@/composables/useTranslation.js'
+import { useTranslation } from '@/Composables/useTranslation';
 import Preloader from '@/Components/Preloader.vue'
 
 export default {

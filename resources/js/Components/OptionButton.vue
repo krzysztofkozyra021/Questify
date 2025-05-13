@@ -9,7 +9,7 @@
 
 <script setup>
 import { router } from '@inertiajs/vue3';
-import { useTranslation } from '@/composables/useTranslation.js';
+import { useTranslation } from '@/Composables/useTranslation';
 
 const { trans } = useTranslation()
 

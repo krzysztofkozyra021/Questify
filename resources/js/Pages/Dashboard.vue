@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import DashboardSidebar from "@/Components/DashboardSidebar.vue";
 import { onMounted } from "vue";
-import { getMotivationalQuote } from "@/composables/getMotivationalQuote.js";
+import { getMotivationalQuote } from "@/Composables/getMotivationalQuote";
 import Notification from "@/Components/Notification.vue";
 const isTaskListVisible = ref(true);
 const showMotivationalQuote = ref(false);

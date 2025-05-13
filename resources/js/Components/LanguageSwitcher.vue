@@ -39,7 +39,7 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import { useTranslation } from '@/composables/useTranslation.js'
+import { useTranslation } from '@/Composables/useTranslation'
 
 const { trans, currentLocale, availableLocales, switchLanguage } = useTranslation()
 const isOpen = ref(false)

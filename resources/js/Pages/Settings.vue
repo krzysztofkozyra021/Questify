@@ -4,7 +4,7 @@ import { useForm } from '@inertiajs/vue3'
 import DashboardSidebar from '@/Components/DashboardSidebar.vue'
 import Modal from '@/Components/Modal.vue'
 import { router } from '@inertiajs/vue3'
-import { useTranslation } from '@/composables/useTranslation.js';
+import { useTranslation } from '@/Composables/useTranslation';
 
 const { trans } = useTranslation()
 
@@ -93,6 +93,7 @@ const uploadImage = async () => {
             fileInput.value.value = ''
           }
         }
+        window.location.reload()
       },
       onError: (errors) => {
         if (errors.profile_image) {
