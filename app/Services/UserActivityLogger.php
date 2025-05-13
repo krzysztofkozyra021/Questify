@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use App\Models\User;
@@ -11,11 +13,11 @@ class UserActivityLogger
     public function log(User $user, string $activityType, Request $request, array $additionalData = []): void
     {
         UserActivityLog::create([
-            'user_id' => $user->id,
-            'activity_type' => $activityType,
-            'ip_address' => $request->ip(),
-            'user_agent' => $request->userAgent(),
-            'additional_data' => $additionalData,
+            "user_id" => $user->id,
+            "activity_type" => $activityType,
+            "ip_address" => $request->ip(),
+            "user_agent" => $request->userAgent(),
+            "additional_data" => $additionalData,
         ]);
     }
-} 
+}

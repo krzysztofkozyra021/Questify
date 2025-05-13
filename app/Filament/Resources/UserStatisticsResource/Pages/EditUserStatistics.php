@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\UserStatisticsResource\Pages;
 
 use App\Filament\Resources\UserStatisticsResource;
@@ -16,4 +18,4 @@ class EditUserStatistics extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
-} 
+}

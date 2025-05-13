@@ -5,24 +5,21 @@ declare(strict_types=1);
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ClassSelectionController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SupportController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserStatisticsController;
-use App\Http\Controllers\LanguageController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 // Public routes
-Route::get("/", function () {
-    return redirect()->route('register');
-});
+Route::get("/", fn() => redirect()->route("register"));
 
 Route::inertia("/about", "About");
 
-Route::get("/language/{locale}", [LanguageController::class, 'switch'])->name('language.switch');
+Route::get("/language/{locale}", [LanguageController::class, "switch"])->name("language.switch");
 
 require __DIR__ . "/auth.php";
 
@@ -32,16 +29,15 @@ Route::middleware(["auth", "verified"])->group(function (): void {
     Route::get("/select-class", [ClassSelectionController::class, "show"])->name("select-class");
     Route::post("/select-class", [ClassSelectionController::class, "store"])->name("select-class.store");
 
-
     // Dashboard - Main game interface
     Route::get("/dashboard", [DashboardController::class, "index"])->middleware(["auth", "verified"])->name("dashboard");
-    Route::post('/user/health', [DashboardController::class, 'updateHealth'])->name('user.health');
-    Route::post('/user/addExperience', [DashboardController::class, 'addExperience'])->name('user.addExperience');
-    Route::get('/dashboard/motivational-quote/{locale}', [DashboardController::class, 'getMotivationalQuote'])->name('dashboard.motivational-quote');
+    Route::post("/user/health", [DashboardController::class, "updateHealth"])->name("user.health");
+    Route::post("/user/addExperience", [DashboardController::class, "addExperience"])->name("user.addExperience");
+    Route::get("/dashboard/motivational-quote/{locale}", [DashboardController::class, "getMotivationalQuote"])->name("dashboard.motivational-quote");
     // Tasks - User-specific tasks
     Route::prefix("tasks")->name("tasks.")->group(function (): void {
-        Route::get('/create', [DashboardController::class, 'create'])->name('create');
-        Route::post('/', [DashboardController::class, 'store'])->name('store');
+        Route::get("/create", [DashboardController::class, "create"])->name("create");
+        Route::post("/", [DashboardController::class, "store"])->name("store");
         Route::get("/{task}", [TaskController::class, "show"])->name("show");
         Route::put("/{task}", [TaskController::class, "update"])->name("update");
         Route::delete("/{task}", [TaskController::class, "destroy"])->name("destroy");

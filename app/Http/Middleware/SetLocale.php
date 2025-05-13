@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Middleware;
 
 use Closure;
@@ -12,16 +14,16 @@ class SetLocale
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
         // Get locale from session or default to 'en'
-        $locale = session('locale', 'en');
-        
+        $locale = session("locale", "en");
+
         // Set the application locale
         App::setLocale($locale);
-        
+
         return $next($request);
     }
-} 
+}

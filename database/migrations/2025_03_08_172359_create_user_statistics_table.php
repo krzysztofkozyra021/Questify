@@ -27,7 +27,7 @@ return new class() extends Migration {
         });
 
         Schema::table("user_statistics", function (Blueprint $table): void {
-            $table->foreign("user_id")->references("id")->on("users")->onDelete('cascade');
+            $table->foreign("user_id")->references("id")->on("users")->onDelete("cascade");
             $table->foreign("class")->references("id")->on("class_attributes");
         });
     }

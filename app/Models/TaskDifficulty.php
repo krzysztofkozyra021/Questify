@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -7,18 +9,16 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class TaskDifficulty extends Model
 {
-    protected $primaryKey = 'difficulty_level';
-
     public $incrementing = false;
-
+    protected $primaryKey = "difficulty_level";
     protected $fillable = [
-        'difficulty_level',
-        'name',
-        'color',
-        'icon',
-        'energy_cost',
-        'health_penalty',
-        'exp_multiplier'
+        "difficulty_level",
+        "name",
+        "color",
+        "icon",
+        "energy_cost",
+        "health_penalty",
+        "exp_multiplier",
     ];
 
     /**
@@ -26,6 +26,6 @@ class TaskDifficulty extends Model
      */
     public function tasks(): HasMany
     {
-        return $this->hasMany(Task::class, 'difficulty_level', 'difficulty_level');
+        return $this->hasMany(Task::class, "difficulty_level", "difficulty_level");
     }
 }

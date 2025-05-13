@@ -45,14 +45,14 @@ class LoginRequest extends FormRequest
         $this->ensureIsNotRateLimited();
 
         $credentials = [
-            'password' => $this->password,
+            "password" => $this->password,
         ];
 
         // Check if login is email or username
         if (filter_var($this->login, FILTER_VALIDATE_EMAIL)) {
-            $credentials['email'] = $this->login;
+            $credentials["email"] = $this->login;
         } else {
-            $credentials['name'] = $this->login;
+            $credentials["name"] = $this->login;
         }
 
         if (!Auth::attempt($credentials, $this->boolean("remember"))) {
