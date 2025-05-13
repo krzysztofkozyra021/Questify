@@ -1,3 +1,167 @@
+<script setup>
+import { ref, onMounted } from 'vue'
+import { useForm } from '@inertiajs/vue3'
+import DashboardSidebar from '@/Components/DashboardSidebar.vue'
+import Modal from '@/Components/Modal.vue'
+import { router } from '@inertiajs/vue3'
+import { useTranslation } from '@/composables/useTranslation.js';
+
+const { trans } = useTranslation()
+
+const props = defineProps({
+  user: Object,
+  userStatistics: Object,
+  locales: Object,
+  currentLocale: String,
+})
+
+const profileImageUrl = ref('/images/default-profile.png')
+const selectedFile = ref(null)
+const imagePreview = ref(null)
+const uploadError = ref(null)
+const isUploading = ref(false)
+const fileInput = ref(null)
+
+const form = useForm({
+  profile_image: null
+})
+
+const fetchProfileImage = async () => {
+  try {
+    const response = await fetch('/profile/image')
+    if (!response.ok) {
+      throw new Error('Network response was not ok')
+    }
+    const data = await response.json()
+    
+    if (data.profile_image_url) {
+      profileImageUrl.value = data.profile_image_url
+    } else {
+      profileImageUrl.value = '/images/default-profile.png'
+    }
+  } catch (error) {
+    console.error('Error fetching profile image:', error)
+    profileImageUrl.value = '/images/default-profile.png'
+  }
+}
+
+const previewImage = (event) => {
+  const file = event.target.files[0]
+  if (file) {
+    uploadError.value = null
+
+    const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif']
+    if (!validTypes.includes(file.type)) {
+      uploadError.value = 'Please select a valid image file (JPG, PNG, or GIF).'
+      return
+    }
+
+    // Check file size (2MB = 2 * 1024 * 1024 bytes)
+    const maxSize = 2 * 1024 * 1024
+    if (file.size > maxSize) {
+      uploadError.value = 'Image size should not exceed 2MB.'
+      return
+    }
+
+    selectedFile.value = file
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      imagePreview.value = e.target.result
+    }
+    reader.readAsDataURL(file)
+  }
+}
+
+const uploadImage = async () => {
+  if (!selectedFile.value) return
+  
+  uploadError.value = null
+  isUploading.value = true
+
+  const formData = new FormData()
+  formData.append('profile_image', selectedFile.value)
+
+  try {
+    await router.post('/profile/image', formData, {
+      preserveScroll: true,
+      onSuccess: (page) => {
+        if (page.props.profile_image_url) {
+          profileImageUrl.value = page.props.profile_image_url
+          imagePreview.value = null
+          selectedFile.value = null
+          if (fileInput.value) {
+            fileInput.value.value = ''
+          }
+        }
+      },
+      onError: (errors) => {
+        if (errors.profile_image) {
+          uploadError.value = errors.profile_image
+        } else {
+          uploadError.value = 'An error occurred while uploading the image.'
+        }
+      }
+    })
+  } catch (error) {
+    console.error('Error uploading image:', error)
+    uploadError.value = 'An error occurred while uploading the image.'
+  } finally {
+    isUploading.value = false
+  }
+}
+
+onMounted(() => {
+  fetchProfileImage()
+})
+
+const showDeleteModal = ref(false)
+
+const passwordForm = useForm({
+  current_password: '',
+  password: '',
+  password_confirmation: '',
+})
+
+const deleteForm = useForm({
+  password: '',
+})
+
+const updatePassword = () => {
+  passwordForm.put(route('password.update'), {
+    preserveScroll: true,
+    onSuccess: () => {
+      passwordForm.reset()
+    },
+  })
+}
+
+const confirmDeleteAccount = () => {
+  showDeleteModal.value = true
+}
+
+const closeDeleteModal = () => {
+  showDeleteModal.value = false
+  deleteForm.reset()
+}
+
+const deleteAccount = () => {
+  deleteForm.delete(route('profile.destroy'), {
+    preserveScroll: true,
+    onSuccess: () => {
+      closeDeleteModal()
+    },
+  })
+}
+
+const changeLocale = ($event) => {
+  router.post(route('settings.changeLocale'), {
+    locale: $event.target.value,
+  }, {
+    preserveScroll: true,
+  })
+}
+</script>
+
 <template>
   <div class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
     <div class="flex min-h-screen">
@@ -37,7 +201,7 @@
                   <div class="flex items-center space-x-4 mb-4">
                     <div class="w-24 h-24 rounded-full bg-slate-800 overflow-hidden border border-slate-600">
                       <img 
-                        :src="profileImageUrl" 
+                        :src="imagePreview || profileImageUrl" 
                         alt="Profile Picture" 
                         class="w-full h-full object-cover"
                       />
@@ -57,6 +221,7 @@
                           @click="$refs.fileInput.click()" 
                           type="button"
                           class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition-colors"
+                          :disabled="isUploading"
                         >
                           {{ trans('Select Image') }}
                         </button>
@@ -65,8 +230,9 @@
                           @click="uploadImage" 
                           type="button"
                           class="px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-sm rounded transition-colors"
+                          :disabled="isUploading"
                         >
-                          {{ trans('Upload') }}
+                          {{ isUploading ? trans('Uploading...') : trans('Upload') }}
                         </button>
                       </div>
                     </div>
@@ -171,163 +337,3 @@
     </div>
   </div>
 </template>
-
-<script setup>
-import { ref, onMounted } from 'vue'
-import { useForm } from '@inertiajs/vue3'
-import DashboardSidebar from '@/Components/DashboardSidebar.vue'
-import Modal from '@/Components/Modal.vue'
-import { router } from '@inertiajs/vue3'
-import { useTranslation } from '@/composables/useTranslation.js';
-
-const { trans } = useTranslation()
-
-const props = defineProps({
-  user: Object,
-  userStatistics: Object,
-  locales: Object,
-  currentLocale: String,
-})
-
-const profileImageUrl = ref('/images/default-profile.png')
-const selectedFile = ref(null)
-const imagePreview = ref(null)
-const uploadError = ref(null)
-
-const form = useForm({
-  profile_image: null
-})
-
-const fetchProfileImage = async () => {
-  try {
-    const response = await fetch('/profile/image')
-    if (!response.ok) {
-      throw new Error('Network response was not ok')
-    }
-    const data = await response.json()
-    
-    if (data.profile_image_url) {
-      profileImageUrl.value = data.profile_image_url
-    } else {
-      profileImageUrl.value = '/images/default-profile.png'
-    }
-  } catch (error) {
-    console.error('Error fetching profile image:', error)
-    profileImageUrl.value = '/images/default-profile.png'
-  }
-}
-
-const previewImage = (event) => {
-  const file = event.target.files[0]
-  if (file) {
-    uploadError.value = null
-
-    const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif']
-    if (!validTypes.includes(file.type)) {
-      uploadError.value = 'Please select a valid image file (JPG, PNG, or GIF).'
-      return
-    }
-
-    // Check file size (2MB = 2 * 1024 * 1024 bytes)
-    const maxSize = 2 * 1024 * 1024
-    if (file.size > maxSize) {
-      uploadError.value = 'Image size should not exceed 2MB.'
-      return
-    }
-
-    selectedFile.value = file
-    const reader = new FileReader()
-    reader.onload = (e) => {
-      imagePreview.value = e.target.result
-    }
-    reader.readAsDataURL(file)
-  }
-}
-
-const uploadImage = async () => {
-  if (!selectedFile.value) return
-  
-  uploadError.value = null
-
-  const formData = new FormData()
-  formData.append('profile_image', selectedFile.value)
-
-  try {
-    const response = await router.post('/profile/image', formData, {
-      preserveScroll: true,
-      onSuccess: (page) => {
-        if (page.props.profile_image_url) {
-          profileImageUrl.value = page.props.profile_image_url
-          imagePreview.value = null
-          selectedFile.value = null
-          if (form.value.fileInput) {
-            form.value.fileInput.value = ''
-          }
-        }
-        window.location.reload()
-      },
-      onError: (errors) => {
-        if (errors.profile_image) {
-          uploadError.value = errors.profile_image
-        } else {
-          uploadError.value = 'An error occurred while uploading the image.'
-        }
-      }
-    })
-  } catch (error) {
-    console.error('Error uploading image:', error)
-    uploadError.value = 'An error occurred while uploading the image.'
-  }
-}
-
-onMounted(() => {
-  fetchProfileImage()
-})
-
-const showDeleteModal = ref(false)
-
-const passwordForm = useForm({
-  current_password: '',
-  password: '',
-  password_confirmation: '',
-})
-
-const deleteForm = useForm({
-  password: '',
-})
-
-const updatePassword = () => {
-  passwordForm.put(route('password.update'), {
-    preserveScroll: true,
-    onSuccess: () => {
-      passwordForm.reset()
-    },
-  })
-}
-
-const confirmDeleteAccount = () => {
-  showDeleteModal.value = true
-}
-
-const closeDeleteModal = () => {
-  showDeleteModal.value = false
-  deleteForm.reset()
-}
-
-const deleteAccount = () => {
-  deleteForm.delete(route('profile.destroy'), {
-    preserveScroll: true,
-    onSuccess: () => {
-      closeDeleteModal()
-    },
-  })
-}
-
-const changeLocale = ($event) => {
-  router.post(route('settings.changeLocale'), {
-    locale: $event.target.value,
-  }, {
-    preserveScroll: true,
-  })
-}
-</script>
