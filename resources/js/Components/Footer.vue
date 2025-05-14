@@ -1,8 +1,9 @@
-
 <script setup>
 import { useTranslation } from '@/Composables/useTranslation'
+import { usePage } from '@inertiajs/vue3'
 
 const { trans } = useTranslation()
+const { socialLinks } = usePage().props
 </script>
 
 <template>
@@ -20,9 +21,10 @@ const { trans } = useTranslation()
         </div>
 
         <!-- Social Links -->
-        <div class="mt-4 md:mt-0">
+        <div class="mt-4 md:mt-0 flex space-x-4">
           <a
-            href="https://github.com/krzysztofkozyra021/Questify"
+            v-if="socialLinks.github"
+            :href="socialLinks.github"
             target="_blank"
             rel="noopener noreferrer"
             class="text-gray-400 hover:text-white transition-colors"
