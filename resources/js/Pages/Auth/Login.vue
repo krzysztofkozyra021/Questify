@@ -61,7 +61,7 @@ const submit = () => {
               required
               autofocus
               autocomplete="username"
-              :placeholder="trans('Email or Username (case-sensitive)')"
+              :placeholder="trans('Email or Username')"
             />
             <InputError class="mt-2" :message="form.errors.login" />
           </div>
@@ -100,7 +100,7 @@ const submit = () => {
         <div class="w-full text-center mt-6 text-stone-200 text-sm">
           {{ trans("Don't have a Questify account?") }}
           <Link :href="route('register')" class="text-amber-400 hover:text-amber-300 font-semibold ml-1">
-            {{ trans('Sign up.') }}
+            {{ trans('Sign up') }}
           </Link>
         </div>
       </div>
