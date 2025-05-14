@@ -5,6 +5,7 @@ import { onMounted } from "vue";
 import { getMotivationalQuote } from "@/Composables/getMotivationalQuote";
 import Notification from "@/Components/Notification.vue";
 import { usePage } from '@inertiajs/vue3';
+import Footer from "@/Components/Footer.vue";
 
 const page = usePage();
 
@@ -81,6 +82,7 @@ onMounted(async () => {
       </main>
     </div>
   </div>
+  <Footer/>
 </template>
 
 <style>
