@@ -5,10 +5,10 @@ import InputLabel from '@/Components/InputLabel.vue'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import TextInput from '@/Components/TextInput.vue'
 import Preloader from '@/Components/Preloader.vue'
-import { Head, useForm } from '@inertiajs/vue3'
+import { Head, useForm, Link } from '@inertiajs/vue3'
 import { useTranslation } from '@/Composables/useTranslation'
 import LanguageSwitcher from '@/Components/LanguageSwitcher.vue'
-import Link from '@/Components/Link.vue'
+
 
 const { trans } = useTranslation()
 
