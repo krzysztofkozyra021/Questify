@@ -16,9 +16,9 @@ const { trans } = useTranslation();
 const selectedClass = ref(null);
 
 const statRanges = {
-  health: { min: 0.7, max: 1.4 },
-  energy: { min: 0.7, max: 1.2 },
-  exp: { min: 0.9, max: 1.5 }
+  health: { min: 0.5, max: 1.8 },
+  energy: { min: 0.4, max: 2},
+  exp: { min: 0.6, max: 2 }
 };
 
 const classImages = {

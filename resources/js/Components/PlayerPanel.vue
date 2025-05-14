@@ -6,23 +6,19 @@ import { usePage } from '@inertiajs/vue3';
 const { trans } = useTranslation();
 const page = usePage();
 
-const props = defineProps({
-  userStatistics: Object,
-  user: Object,
-});
-
 // Create local reactive copy of userStatistics
-const localStats = ref({...props.userStatistics});
+const localStats = ref({...page.props.userStatistics});
+const userClassName = page.props.userClassName;
 
 // Update local stats when props change
-watch(() => props.userStatistics, (newStats) => {
+watch(() => page.props.userStatistics, (newStats) => {
   if (newStats) {
     localStats.value = {...newStats};
   }
 }, { deep: true });
 
 watchEffect(() => {
-  const userStats = page.props?.value?.userStatistics
+  const userStats = page.props.userStatistics;
 
   if (userStats && JSON.stringify(userStats) !== JSON.stringify(localStats.value)) {
     localStats.value = {...userStats};
@@ -91,9 +87,9 @@ const experiencePercentage = computed(() => {
         <img :src="profileImageUrl" alt="Profile Image" class="w-full h-full object-cover rounded-full">
       </div>
       <div class="flex-1 min-w-0">
-        <h2 class="text-slate-200 font-medium truncate">{{ user?.name }}</h2>
+        <h2 class="text-slate-200 font-medium truncate">{{ page.props.user?.name }}</h2>
         <p :class="['text-slate-400 text-sm truncate']">
-          {{ trans('Level') }} {{ userLevel }}
+          {{ trans('Level') }} {{ userLevel }} - {{ trans(userClassName) }}
         </p>
       </div>
     </div>

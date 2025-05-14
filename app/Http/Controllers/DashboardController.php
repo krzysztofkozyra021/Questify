@@ -31,12 +31,13 @@ class DashboardController extends Controller
             ->get();
 
         $userStatistics = $user->userStatistics;
-
+        $userClassName = $userStatistics->classAttributes->class_name;
         // Pass data to the view
         return Inertia::render("Dashboard", [
             "tasks" => $tasks,
             "userStatistics" => $userStatistics,
             "user" => $user,
+            "userClassName" => $userClassName,
         ]);
     }
 

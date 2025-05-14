@@ -21,6 +21,7 @@ class ShareInertiaData
         Inertia::share([
             "locale" => app()->getLocale(),
             "availableLocales" => config("app.available_locales"),
+            "socialLinks" => config("social.links"),
         ]);
 
         return $next($request);

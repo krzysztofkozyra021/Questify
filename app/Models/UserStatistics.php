@@ -103,4 +103,5 @@ class UserStatistics extends Model
         // etc.
         return 100 + (($level - 1) * 30);
     }
+    
 }

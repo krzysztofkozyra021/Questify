@@ -3,11 +3,6 @@ import PlayerPanel from '@/Components/PlayerPanel.vue';
 import OptionButton from '@/Components/OptionButton.vue';
 import { router } from '@inertiajs/vue3';
 
-const props = defineProps({
-  userStatistics: Object,
-  user: Object,
-});
-
 function toggleTaskList() {
   isTaskListVisible.value = !isTaskListVisible.value;
 }
@@ -22,7 +17,7 @@ function logout() {
     <div class="p-4 h-full flex flex-col">
       <!-- Player Panel -->
       <div class="mb-6">
-        <PlayerPanel :userStatistics="userStatistics" :user="user"/>
+        <PlayerPanel/>
       </div>
 
       <!-- Navigation Menu -->
