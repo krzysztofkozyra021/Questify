@@ -4,15 +4,14 @@ import DashboardSidebar from "@/Components/DashboardSidebar.vue";
 import { onMounted } from "vue";
 import { getMotivationalQuote } from "@/Composables/getMotivationalQuote";
 import Notification from "@/Components/Notification.vue";
+import { usePage } from '@inertiajs/vue3';
+
+const page = usePage();
+
 const isTaskListVisible = ref(true);
 const showMotivationalQuote = ref(false);
-const motivationalQuote = ref('');
+const motivationalQuote = ref(page.props.motivationalQuote);
 
-const props = defineProps({
-  userStatistics: Object,
-  user: Object,
-  motivationalQuote: String,
-});
 
 
 // Show motivational quote after user visits dashboard
@@ -41,7 +40,7 @@ onMounted(async () => {
     <Notification :showNotification="showMotivationalQuote" :textToDisplay="motivationalQuote" />
 
     <div class="flex min-h-screen">
-      <DashboardSidebar :userStatistics="userStatistics" :user="user"/>
+      <DashboardSidebar/>
 
       <!-- Main Content -->
       <main class="flex-1 p-6 overflow-y-auto">
