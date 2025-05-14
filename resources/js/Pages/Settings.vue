@@ -174,6 +174,7 @@ const changeLocale = ($event) => {
           <div class="bg-slate-800/80 rounded-lg border border-slate-700 shadow-lg p-6">
             <h1 class="text-2xl font-bold text-slate-200 mb-6">{{ trans('Settings') }}</h1>
 
+
             <!-- Account Settings Section -->
             <div class="space-y-6">
 
@@ -256,6 +257,9 @@ const changeLocale = ($event) => {
                   <div>
                     <label class="block text-sm font-medium text-slate-300 mb-1">{{ trans('Email') }}</label>
                     <input type="email" class="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500" :value="user?.email" disabled />
+                  </div>
+                  <div v-if="!user.email_verified_at" class="text-red-400">
+                    {{ trans('Email not verified. Please verify your email address.') }}
                   </div>
                 </div>
               </div>
