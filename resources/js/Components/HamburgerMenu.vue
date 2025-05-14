@@ -6,6 +6,8 @@ import { useTranslation } from '@/Composables/useTranslation'
 
 const { trans } = useTranslation()
 const isOpen = ref(false)
+const menuRef = ref(null)
+const buttonRef = ref(null)
 
 const toggleMenu = () => {
   isOpen.value = !isOpen.value
@@ -41,6 +43,7 @@ onUnmounted(() => {
     <!-- Hamburger Button - Only visible on mobile -->
     <button
       id="hamburger-button"
+      ref="buttonRef"
       @click="toggleMenu"
       class="sm:hidden p-2 rounded-lg hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-600"
       aria-label="Toggle menu"
@@ -75,6 +78,7 @@ onUnmounted(() => {
     <!-- Mobile Menu - Only visible on mobile -->
     <div
       id="mobile-menu"
+      ref="menuRef"
       v-show="isOpen"
       class="sm:hidden fixed top-0 left-0 h-full w-64 bg-slate-800 shadow-xl transform transition-transform duration-300 ease-in-out z-50"
       :class="{ 'translate-x-0': isOpen, '-translate-x-full': !isOpen }"
