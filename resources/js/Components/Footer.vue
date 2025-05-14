@@ -29,7 +29,7 @@ const { socialLinks } = usePage().props
             rel="noopener noreferrer"
             class="text-gray-400 hover:text-white transition-colors"
           >
-            <svg
+          <svg
               class="w-6 h-6"
               fill="currentColor"
               viewBox="0 0 24 24"
