@@ -1,3 +1,10 @@
+
+<script setup>
+import { useTranslation } from '@/Composables/useTranslation'
+
+const { trans } = useTranslation()
+</script>
+
 <template>
   <footer class="bg-gray-800 text-white py-6">
     <div class="container mx-auto px-4">
@@ -9,7 +16,7 @@
 
         <!-- Copyright -->
         <div class="text-sm text-gray-400">
-          © {{ new Date().getFullYear() }} Questify. All rights reserved.
+          © {{ new Date().getFullYear() }} Questify. {{ trans('All rights reserved.') }}
         </div>
 
         <!-- Social Links -->
@@ -39,10 +46,5 @@
   </footer>
 </template>
 
-<script setup>
-// No additional setup needed for this simple footer
-</script>
 
-<style scoped>
-/* Add any custom styles here if needed */
-</style>
+
