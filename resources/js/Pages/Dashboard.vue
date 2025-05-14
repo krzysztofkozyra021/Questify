@@ -102,10 +102,10 @@ onMounted(async () => {
     <div class="flex flex-col min-h-screen">
       <DashboardBar/>
       <PlayerPanel/>
-      <div class="flex-1 grid grid-cols-3 w-[98%] bg-slate-600 rounded-lg shadow-lg mx-auto my-4 p-2 gap-2">
+      <div class="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-[98%] bg-slate-600 rounded-lg shadow-lg mx-auto my-4 p-2 gap-2">
         <div class="bg-slate-800 rounded-lg shadow-lg p-4 hover:shadow-xl transition-shadow duration-300 border border-slate-700 flex flex-col">
-          <h2 class="text-2xl font-bold text-slate-200 mb-4 text-center">Obowiązki</h2>
-          <div class="flex-1 overflow-y-auto custom-scrollbar">
+          <h2 class="text-xl md:text-2xl font-bold text-slate-200 mb-4 text-center">Obowiązki</h2>
+          <div class="flex-1 overflow-y-auto custom-scrollbar max-h-[300px] md:max-h-[400px] lg:max-h-[500px]">
             <ul class="space-y-2">
               <li v-for="task in obligations" :key="task.id" 
                   class="bg-slate-700/50 p-3 rounded-lg border border-slate-600 hover:bg-slate-700 transition-colors"
@@ -129,8 +129,8 @@ onMounted(async () => {
         </div>
 
         <div class="bg-slate-800 rounded-lg shadow-lg p-4 hover:shadow-xl transition-shadow duration-300 border border-slate-700 flex flex-col">
-          <h2 class="text-2xl font-bold text-slate-200 mb-4 text-center">Dzienne</h2>
-          <div class="flex-1 overflow-y-auto custom-scrollbar">
+          <h2 class="text-xl md:text-2xl font-bold text-slate-200 mb-4 text-center">Dzienne</h2>
+          <div class="flex-1 overflow-y-auto custom-scrollbar max-h-[300px] md:max-h-[400px] lg:max-h-[500px]">
             <ul class="space-y-2">
               <li v-for="task in dailyTasks" :key="task.id" 
                   class="bg-slate-700/50 p-3 rounded-lg border border-slate-600 hover:bg-slate-700 transition-colors"
@@ -154,8 +154,8 @@ onMounted(async () => {
         </div>
 
         <div class="bg-slate-800 rounded-lg shadow-lg p-4 hover:shadow-xl transition-shadow duration-300 border border-slate-700 flex flex-col">
-          <h2 class="text-2xl font-bold text-slate-200 mb-4 text-center">TO DO</h2>
-          <div class="flex-1 overflow-y-auto custom-scrollbar">
+          <h2 class="text-xl md:text-2xl font-bold text-slate-200 mb-4 text-center">TO DO</h2>
+          <div class="flex-1 overflow-y-auto custom-scrollbar max-h-[300px] md:max-h-[400px] lg:max-h-[500px]">
             <ul class="space-y-2">
               <li v-for="task in todoTasks" :key="task.id" 
                   class="bg-slate-700/50 p-3 rounded-lg border border-slate-600 hover:bg-slate-700 transition-colors"
