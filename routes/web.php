@@ -24,13 +24,13 @@ Route::get("/language/{locale}", [LanguageController::class, "switch"])->name("l
 require __DIR__ . "/auth.php";
 
 // Routes requiring authentication
-Route::middleware(["auth", "verified"])->group(function (): void {
+Route::middleware(["auth"])->group(function (): void {
     // Class selection (post-registration, one-time only)
     Route::get("/select-class", [ClassSelectionController::class, "show"])->name("select-class");
     Route::post("/select-class", [ClassSelectionController::class, "store"])->name("select-class.store");
 
     // Dashboard - Main game interface
-    Route::get("/dashboard", [DashboardController::class, "index"])->middleware(["auth", "verified"])->name("dashboard");
+    Route::get("/dashboard", [DashboardController::class, "index"])->middleware(["auth"])->name("dashboard");
     Route::post("/user/health", [DashboardController::class, "updateHealth"])->name("user.health");
     Route::post("/user/addExperience", [DashboardController::class, "addExperience"])->name("user.addExperience");
     Route::get("/dashboard/motivational-quote/{locale}", [DashboardController::class, "getMotivationalQuote"])->name("dashboard.motivational-quote");
