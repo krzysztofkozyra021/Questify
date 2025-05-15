@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class TagFactory extends Factory
 {
+    protected $model = Tag::class;
+
     /**
      * Define the model's default state.
      *
@@ -20,7 +22,7 @@ class TagFactory extends Factory
     public function definition(): array
     {
         return [
-            "name" => $this->faker->word(),
+            'name' => $this->faker->unique()->word(),
         ];
     }
 }
