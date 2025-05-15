@@ -35,10 +35,10 @@ const closeMenu = () => {
 
 <template>
   <div class="bg-slate-800 border-b border-slate-700">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="py-1 mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-16">
         <div class="flex items-center">
-          <img src="/images/logo.png" alt="Logo" class="w-18 h-16 mr-3">
+          <img src="/images/logo.png" alt="Logo" class="hidden sm:flex w-18 h-16 mr-3">
           <h1 class="text-xl font-bold text-slate-200">{{ currentTitle }}</h1>
         </div>
 

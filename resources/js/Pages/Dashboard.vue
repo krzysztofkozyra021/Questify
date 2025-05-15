@@ -93,7 +93,7 @@ onMounted(async () => {
 
 </script>
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+  <div class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 overflow-x-hidden">
 
 
     <!-- Motivational Quote -->
@@ -179,9 +179,8 @@ onMounted(async () => {
         </div>
       </div>
     </div>
-      <Footer/>
+    <Footer/>
   </div>
-
 </template>
 
 <style>

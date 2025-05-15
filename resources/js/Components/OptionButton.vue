@@ -29,7 +29,7 @@ const navigate = () => {
 
 <template>
   <button
-    class="w-full h-20 bg-zinc-600 hover:bg-zinc-400 p-2 rounded-3xl"
+    class="w-3/4 h-20 mt-2 bg-zinc-600 hover:bg-zinc-400 p-2 rounded-3xl"
     @click="navigate"
   >
     {{ trans(optionText) }}
