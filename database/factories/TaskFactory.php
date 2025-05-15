@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Models\Task;
+use App\Models\TaskDifficulty;
+use App\Models\TaskResetConfig;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -11,6 +14,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class TaskFactory extends Factory
 {
+    protected $model = Task::class;
+
     /**
      * Define the model's default state.
      *
@@ -18,25 +23,22 @@ class TaskFactory extends Factory
      */
     public function definition(): array
     {
-        $repeatUnits = ["day", "week", "month", "year"];
+        // Get existing difficulty levels and reset configs
+        $difficultyLevel = TaskDifficulty::inRandomOrder()->first()->difficulty_level;
+        $resetConfig = TaskResetConfig::inRandomOrder()->first()->id;
 
         return [
-            "title" => $this->faker->word(),
-            "description" => $this->faker->sentence(10),
-            "difficulty_level" => $this->faker->numberBetween(1, 4),
-            // Don't set reset_frequency here, will be overridden by seeder
-            "reset_frequency" => null,
-            "due_date" => $this->faker->dateTimeBetween("now", "+1 year"),
-            "start_date" => $this->faker->dateTimeBetween("-1 month", "now"),
-            "repeat_every" => $this->faker->numberBetween(1, 30),
-            "repeat_unit" => $this->faker->randomElement($repeatUnits),
-            "is_completed" => $this->faker->boolean,
-            "is_deadline_task" => $this->faker->boolean,
-            "experience_reward" => $this->faker->randomFloat(2, 1, 100),
-            "checklist_items" => $this->faker->boolean(70) ? json_encode([
-                ["text" => $this->faker->sentence(3), "completed" => $this->faker->boolean],
-                ["text" => $this->faker->sentence(3), "completed" => $this->faker->boolean],
-            ]) : null,
+            'title' => $this->faker->sentence,
+            'description' => $this->faker->paragraph,
+            'difficulty_level' => $difficultyLevel,
+            'reset_frequency' => $resetConfig,
+            'start_date' => now(),
+            'due_date' => $this->faker->optional()->dateTimeBetween('now', '+1 month'),
+            'repeat_every' => $this->faker->numberBetween(1, 7),
+            'repeat_unit' => $this->faker->randomElement(['day', 'week', 'month']),
+            'is_completed' => false,
+            'is_deadline_task' => $this->faker->boolean,
+            'experience_reward' => $this->faker->numberBetween(5, 50),
         ];
     }
 }

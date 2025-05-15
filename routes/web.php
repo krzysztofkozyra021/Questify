@@ -34,17 +34,13 @@ Route::middleware(["auth"])->group(function (): void {
     Route::post("/user/health", [DashboardController::class, "updateHealth"])->name("user.health");
     Route::post("/user/addExperience", [DashboardController::class, "addExperience"])->name("user.addExperience");
     Route::get("/dashboard/motivational-quote/{locale}", [DashboardController::class, "getMotivationalQuote"])->name("dashboard.motivational-quote");
+
     // Tasks - User-specific tasks
     Route::prefix("tasks")->name("tasks.")->group(function (): void {
         Route::get("/create", [DashboardController::class, "create"])->name("create");
         Route::post("/", [DashboardController::class, "store"])->name("store");
-        Route::get("/{task}", [TaskController::class, "show"])->name("show");
-        Route::put("/{task}", [TaskController::class, "update"])->name("update");
-        Route::delete("/{task}", [TaskController::class, "destroy"])->name("destroy");
-        // Task actions
-        Route::post("/{task}/complete", [TaskController::class, "complete"])->name("complete");
-        Route::put("/{task}/progress", [TaskController::class, "updateProgress"])->name("progress");
-        Route::post("/{task}/reset", [TaskController::class, "reset"])->name("reset");
+        Route::post("/{task}/complete", [DashboardController::class, "completeTask"])->name("complete");
+        Route::post("/{task}/reset", [DashboardController::class, "resetTask"])->name("reset");
     });
 
     // Tags - User-specific tags
@@ -54,9 +50,6 @@ Route::middleware(["auth"])->group(function (): void {
         Route::get("/{tag}", [TagController::class, "show"])->name("show");
         Route::put("/{tag}", [TagController::class, "update"])->name("update");
         Route::delete("/{tag}", [TagController::class, "destroy"])->name("destroy");
-        // Get user's tasks with specific tag
-        Route::get("/{tag}/tasks", [TagController::class, "tasks"])->name("tasks");
-        // Filter dashboard tasks by tag (for dynamic filtering)
         Route::get("/filter/{tag}", [TagController::class, "filter"])->name("filter");
     });
 

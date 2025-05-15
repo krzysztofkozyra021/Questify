@@ -19,15 +19,21 @@ class Task extends Model
         "difficulty_level",
         "reset_frequency",
         "due_date",
+        "start_date",
+        "repeat_every",
+        "repeat_unit",
         "is_completed",
         "is_deadline_task",
         "experience_reward",
+        "checklist_items"
     ];
     protected $casts = [
         "due_date" => "datetime",
+        "start_date" => "datetime",
         "is_completed" => "boolean",
         "is_deadline_task" => "boolean",
         "experience_reward" => "float",
+        "checklist_items" => "array"
     ];
 
     /**
