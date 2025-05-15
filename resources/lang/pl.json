@@ -99,5 +99,13 @@
     "Adventure awaits": "Przygoda czeka",
     "Don't have a Questify account?": "Nie masz konta Questify?",
     "Email or Username (case-sensitive)": "Email lub nazwa użytkownika (wielkość liter ma znaczenie)",
-    "Forgot Password?": "Zapomniałeś hasła?"
+    "Forgot Password?": "Zapomniałeś hasła?",
+    "No file selected": "Nie wybrano pliku",
+    "Remove": "Usuń",
+    "Browse...": "Przeglądaj...",
+    "This action cannot be undone. Please enter your password to confirm.": "Ta akcja nie może być cofnięta. Proszę wprowadzić swoje hasło, aby potwierdzić.",
+    "Change Password": "Zmień hasło",
+    "Log Out": "Wyloguj się",
+    "Stats": "Statystyki",
+    "Tasks": "Zadania"
 }
