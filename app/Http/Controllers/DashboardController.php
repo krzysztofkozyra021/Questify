@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Models\Task;
-use App\Models\TaskDifficulty;
-use App\Models\TaskResetConfig;
 use App\Services\QuoteService;
+use App\Services\TagService;
+use App\Services\TaskService;
 use App\Services\TranslationService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -16,25 +16,26 @@ class DashboardController extends Controller
 {
     public function __construct(
         private readonly QuoteService $quoteService,
-        private readonly TranslationService $translationService
+        private readonly TranslationService $translationService,
+        private readonly TaskService $taskService,
+        private readonly TagService $tagService
     ) {}
 
     public function index()
     {
-        // Get the logged-in user
         $user = auth()->user();
-
-        // Get user's tasks with appropriate relations
-        $tasks = $user->tasks()
-            ->with(["tags", "difficulty", "resetConfig"])
-            ->orderBy("created_at", "desc")
-            ->get();
-
         $userStatistics = $user->userStatistics;
         $userClassName = $userStatistics->classAttributes->class_name;
-        // Pass data to the view
+
+        // Get tasks using TaskService
+        $tasks = $this->taskService->getUserTasks($user);
+        
+        // Get tags using TagService
+        $tags = $this->tagService->getUserTags($user);
+
         return Inertia::render("Dashboard", [
             "tasks" => $tasks,
+            "tags" => $tags,
             "userStatistics" => $userStatistics,
             "user" => $user,
             "userClassName" => $userClassName,
@@ -43,14 +44,9 @@ class DashboardController extends Controller
 
     public function create()
     {
-        // Get available difficulty levels and reset configurations for the form
-        $difficulties = TaskDifficulty::orderBy("difficulty_level")->get();
-        $resetConfigs = TaskResetConfig::all();
-
-        return Inertia::render("Tasks/Create", [
-            "difficulties" => $difficulties,
-            "resetConfigs" => $resetConfigs,
-        ]);
+        $formData = $this->taskService->getTaskFormData();
+        
+        return Inertia::render("Tasks/Create", $formData);
     }
 
     public function store(Request $request)
@@ -58,8 +54,8 @@ class DashboardController extends Controller
         $validated = $request->validate([
             "title" => "required|string|max:255",
             "description" => "nullable|string",
-            "difficulty_level" => "required|integer|exists:difficulties,id",
-            "reset_frequency" => "required|integer|exists:reset_configs,id",
+            "difficulty_level" => "required|integer|exists:task_difficulties,difficulty_level",
+            "reset_frequency" => "required|integer|exists:task_reset_configs,id",
             "start_date" => "required|date",
             "due_date" => "nullable|date|after:start_date",
             "repeat_every" => "required|integer|min:1",
@@ -71,29 +67,22 @@ class DashboardController extends Controller
             "tags.*" => "string|max:50",
         ]);
 
-        // Assign task to the logged-in user
-        $task = auth()->user()->tasks()->create($validated);
-
-        if (!empty($validated["tags"])) {
-            $task->tags()->createMany(
-                collect($validated["tags"])->map(fn($tag) => ["name" => $tag])->toArray(),
-            );
-        }
+        $this->taskService->createTask(auth()->user(), $validated);
 
         return redirect()->route("dashboard");
     }
 
-
-    public function levelUp(Request $request)
+    public function completeTask(Task $task)
     {
-        $user = auth()->user();
-        $userStats = $user->userStatistics;
+        $this->taskService->completeTask($task);
+        return back();
+    }
 
-        $userStats->current_experience = $userStats->next_level_experience;
-        $userStats->save();
-
-        return back()->with("userStatistics", $userStats);
-    }    
+    public function resetTask(Task $task)
+    {
+        $this->taskService->resetTask($task);
+        return back();
+    }
 
     public function getMotivationalQuote($locale)
     {

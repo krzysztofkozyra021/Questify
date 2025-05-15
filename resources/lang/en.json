@@ -99,5 +99,10 @@
     "Adventure awaits": "Adventure awaits",
     "Don't have a Questify account?": "Don't have a Questify account?",
     "Email or Username (case-sensitive)": "Email or Username (case-sensitive)",
-    "Forgot Password?": "Forgot Password?"
+    "Forgot Password?": "Forgot Password?",
+    "No file selected": "No file selected",
+    "Remove": "Remove",
+    "Browse": "Browse",
+    "This action cannot be undone. Please enter your password to confirm.": "This action cannot be undone. Please enter your password to confirm.",
+    "Change Password": "Change Password"
 }

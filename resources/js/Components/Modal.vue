@@ -79,7 +79,7 @@ const maxWidthClass = computed(() => {
     >
       <div
         v-show="show"
-        class="fixed inset-0 z-[9999] overflow-y-auto"
+        class="fixed inset-0 z-[9999] overflow-y-auto bg-stone-900/50 backdrop-blur-sm"
       >
         <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
           <Transition
@@ -92,7 +92,7 @@ const maxWidthClass = computed(() => {
           >
             <div
               v-show="show"
-              class="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:p-6 dark:bg-gray-800"
+              class="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:p-6"
               :class="maxWidthClass"
             >
               <div
@@ -101,7 +101,7 @@ const maxWidthClass = computed(() => {
               >
                 <button
                   type="button"
-                  class="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:bg-gray-800 dark:hover:text-gray-300"
+                  class="rounded-md bg-white text-stone-400 hover:text-stone-500 focus:outline-none focus:ring-2 focus:ring-stone-500 focus:ring-offset-2 transition-colors"
                   @click="close"
                 >
                   <span class="sr-only">Close</span>

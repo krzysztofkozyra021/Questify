@@ -42,10 +42,9 @@ onUnmounted(() => {
   <div class="relative">
     <!-- Hamburger Button - Only visible on mobile -->
     <button
-      id="hamburger-button"
       ref="buttonRef"
       @click="toggleMenu"
-      class="sm:hidden p-2 rounded-lg hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-600"
+      class="md:hidden p-2 rounded-lg hover:bg-stone-700 focus:outline-none focus:ring-2 focus:ring-amber-600"
       aria-label="Toggle menu"
     >
       <svg
@@ -71,46 +70,64 @@ onUnmounted(() => {
     <!-- Backdrop - Only visible on mobile -->
     <div
       v-show="isOpen"
-      class="sm:hidden fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-300 ease-in-out z-40"
+      class="md:hidden fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-300 ease-in-out z-40"
       @click="toggleMenu"
     ></div>
 
     <!-- Mobile Menu - Only visible on mobile -->
     <div
-      id="mobile-menu"
       ref="menuRef"
       v-show="isOpen"
-      class="sm:hidden fixed top-0 left-0 h-full w-64 bg-slate-800 shadow-xl transform transition-transform duration-300 ease-in-out z-50"
+      class="md:hidden fixed top-0 left-0 h-full w-64 bg-stone-800 shadow-xl transform transition-transform duration-300 ease-in-out z-50"
       :class="{ 'translate-x-0': isOpen, '-translate-x-full': !isOpen }"
     >
       <div class="flex flex-col h-full">
         <!-- Menu Header -->
-        <div class="p-4 border-b border-slate-700">
+        <div class="p-4 border-b border-stone-700">
           <img src="/images/logo.png" alt="Questify Logo" class="h-8 w-auto" />
         </div>
 
         <!-- Menu Content -->
         <div class="flex-1 overflow-y-auto">
-          <div class="p-4">
-            <LanguageSwitcher />
-          </div>
-          <div class="border-t border-slate-700">
-            <slot></slot>
-          </div>
+          <nav class="p-4 space-y-2">
+            <Link 
+              :href="route('dashboard')" 
+              class="block px-4 py-2 text-stone-100 hover:bg-stone-700 rounded-lg transition-colors"
+              @click="toggleMenu"
+            >
+              {{ trans('Tasks') }}
+            </Link>
+            <Link 
+              :href="route('character')" 
+              class="block px-4 py-2 text-stone-100 hover:bg-stone-700 rounded-lg transition-colors"
+              @click="toggleMenu"
+            >
+              {{ trans('Stats') }}
+            </Link>
+            <Link 
+              :href="route('settings')" 
+              class="block px-4 py-2 text-stone-100 hover:bg-stone-700 rounded-lg transition-colors"
+              @click="toggleMenu"
+            >
+              {{ trans('Settings') }}
+            </Link>
+          </nav>
         </div>
 
         <!-- Menu Footer -->
-        <div class="p-4 border-t border-slate-700">
-          <div class="text-stone-100 text-sm">
-            © {{ new Date().getFullYear() }} Questify
-          </div>
+        <div class="p-4 border-t border-stone-700">
+          <button 
+            @click="logout" 
+            class="w-full text-left px-4 py-2 text-red-400 hover:bg-stone-700 rounded-lg transition-colors"
+          >
+            {{ trans('Log Out') }}
+          </button>
         </div>
       </div>
     </div>
 
     <!-- Tablet/Desktop Menu -->
     <div class="hidden sm:flex items-center space-x-4">
-      <LanguageSwitcher />
       <slot></slot>
     </div>
   </div>
@@ -124,7 +141,7 @@ onUnmounted(() => {
 }
 
 /* Ensure mobile menu is completely hidden on tablet and desktop */
-@media (min-width: 640px) {
+@media (min-width: 768px) {
   #mobile-menu {
     display: none !important;
   }
