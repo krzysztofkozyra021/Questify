@@ -96,33 +96,28 @@ onMounted(async () => {
 </script>
 <template>
   <div class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-
-
-    <!-- Motivational Quote -->
-    <Notification :showNotification="showMotivationalQuote" :textToDisplay="motivationalQuote" />
-
-    <div class="flex flex-col min-h-screen min-w-[620px]">
+    <div class="flex flex-col min-h-screen">
       <DashboardBar/>
       <PlayerPanel/>
-      <div class="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-[98%] bg-gradient-to-br from-slate-800/80 via-slate-700/80 to-slate-800/80 rounded-lg shadow-lg mx-auto my-4 p-2 gap-2">
-        <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-lg shadow-lg p-4 hover:shadow-xl transition-all duration-300 border border-amber-500/20 flex flex-col transform hover:scale-[1.01]">
-          <h2 class="text-xl md:text-2xl font-bold text-amber-200 mb-4 text-center fantasy-font tracking-wider drop-shadow-[0_0_8px_rgba(251,191,36,0.3)]">{{ trans('Obowiązki') }}</h2>
-          <div class="flex-1 overflow-y-auto custom-scrollbar max-h-[300px] md:max-h-[400px] lg:max-h-[500px]">
+      <div class="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-[98%] mx-auto my-4 p-2 gap-2">
+        <div class="rounded-lg pt-20 shadow-lg p-6 hover:shadow-xl transition-all duration-300 border border-amber-500/20 flex flex-col transform hover:scale-[1.01] scroll-bg">
+          <h2 class="text-xl md:text-2xl mb-20 font-bold text-amber-200 mb-6 text-center fantasy-font tracking-wider drop-shadow-[0_0_8px_rgba(251,191,36,0.3)]">{{ trans('Obowiązki') }}</h2>
+          <div class="mx-7 flex-1 overflow-y-auto custom-scrollbar max-h-[270px] md:max-h-[360px] lg:max-h-[450px] px-4">
             <ul class="space-y-2">
               <li v-for="task in obligations" :key="task.id" 
-                  class="bg-gradient-to-br from-slate-800/90 to-slate-700/90 p-3 rounded-lg border border-amber-500/20 hover:from-slate-700/90 hover:to-slate-600/90 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg hover:shadow-amber-500/20"
-                  :class="{ 'opacity-50': task.completed }">
-                <div class="flex items-center gap-3">
+                  class="transition-all duration-300 transform hover:scale-[1.01]"
+                  :class="{ 'opacity-20': task.completed }">
+                <div class="flex items-center gap-2">
                   <input type="checkbox" 
                          :checked="task.completed"
                          @change="toggleTask(obligations, task.id)"
-                         class="w-5 h-5 rounded border-amber-500/50 bg-slate-800 text-amber-500 focus:ring-amber-500 focus:ring-offset-slate-900 transition-all duration-300 hover:scale-110">
+                         class="w-4 h-4 rounded border-slate-800 text-slate-800 bg-transparent shadow-sm checked:bg-slate-800 checked:border-slate-800 checked:text-amber-300 focus:ring-slate-800 focus:ring-offset-slate-200 transition-all duration-300 hover:scale-110">
                   <div class="flex-1">
                     <div class="flex items-center justify-between">
-                      <span class="text-amber-100 transition-all duration-300 fantasy-font-light" :class="{ 'line-through': task.completed }">{{ task.title }}</span>
-                      <span class="text-amber-300/90 text-sm transition-all duration-300">{{ task.due_date }}</span>
+                      <span class="text-slate-800 font-semibold text-base transition-all duration-300 fantasy-font-light drop-shadow-[0_1px_0_rgba(0,0,0,0.15)]" :class="{ 'line-through': task.completed }">{{ task.title }}</span>
+                      <span class="text-slate-800 font-semibold text-sm transition-all duration-300 drop-shadow-[0_1px_0_rgba(0,0,0,0.15)]">{{ task.due_date }}</span>
                     </div>
-                    <p class="text-slate-200 text-sm mt-1 transition-all duration-300" :class="{ 'line-through': task.completed }">{{ task.description }}</p>
+                    <p class="text-slate-800 text-sm mt-0.5 transition-all duration-300 drop-shadow-[0_1px_0_rgba(0,0,0,0.10)]" :class="{ 'line-through': task.completed }">{{ task.description }}</p>
                   </div>
                 </div>
               </li>
@@ -130,24 +125,24 @@ onMounted(async () => {
           </div>
         </div>
 
-        <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-lg shadow-lg p-4 hover:shadow-xl transition-all duration-300 border border-amber-500/20 flex flex-col transform hover:scale-[1.01]">
-          <h2 class="text-xl md:text-2xl font-bold text-amber-200 mb-4 text-center fantasy-font tracking-wider drop-shadow-[0_0_8px_rgba(251,191,36,0.3)]">{{ trans('Dzienne') }}</h2>
-          <div class="flex-1 overflow-y-auto custom-scrollbar max-h-[300px] md:max-h-[400px] lg:max-h-[500px]">
+        <div class="rounded-lg pt-20 shadow-lg p-6 hover:shadow-xl transition-all duration-300 border border-amber-500/20 flex flex-col transform hover:scale-[1.01] scroll-bg">
+          <h2 class="text-xl md:text-2xl mb-20 font-bold text-amber-200 mb-6 text-center fantasy-font tracking-wider drop-shadow-[0_0_8px_rgba(251,191,36,0.3)]">{{ trans('Dzienne') }}</h2>
+          <div class="mx-7 flex-1 overflow-y-auto custom-scrollbar max-h-[270px] md:max-h-[360px] lg:max-h-[450px] px-4">
             <ul class="space-y-2">
               <li v-for="task in dailyTasks" :key="task.id" 
-                  class="bg-gradient-to-br from-slate-800/90 to-slate-700/90 p-3 rounded-lg border border-amber-500/20 hover:from-slate-700/90 hover:to-slate-600/90 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg hover:shadow-amber-500/20"
-                  :class="{ 'opacity-50': task.completed }">
-                <div class="flex items-center gap-3">
+                  class="transition-all duration-300 transform hover:scale-[1.01]"
+                  :class="{ 'opacity-20': task.completed }">
+                <div class="flex items-center gap-2">
                   <input type="checkbox" 
                          :checked="task.completed"
                          @change="toggleTask(dailyTasks, task.id)"
-                         class="w-5 h-5 rounded border-amber-500/50 bg-slate-800 text-amber-500 focus:ring-amber-500 focus:ring-offset-slate-900 transition-all duration-300 hover:scale-110">
+                         class="w-4 h-4 rounded border-slate-800 text-slate-800 bg-transparent shadow-sm checked:bg-slate-800 checked:border-slate-800 checked:text-amber-300 focus:ring-slate-800 focus:ring-offset-slate-200 transition-all duration-300 hover:scale-110">
                   <div class="flex-1">
                     <div class="flex items-center justify-between">
-                      <span class="text-amber-100 transition-all duration-300 fantasy-font-light" :class="{ 'line-through': task.completed }">{{ task.title }}</span>
-                      <span class="text-amber-400 text-sm transition-all duration-300 fantasy-font-light">{{ task.reward }} XP</span>
+                      <span class="text-slate-800 font-semibold text-base transition-all duration-300 fantasy-font-light drop-shadow-[0_1px_0_rgba(0,0,0,0.15)]" :class="{ 'line-through': task.completed }">{{ task.title }}</span>
+                      <span class="text-slate-800 font-semibold text-sm transition-all duration-300 fantasy-font-light drop-shadow-[0_1px_0_rgba(0,0,0,0.15)]">{{ task.reward }} XP</span>
                     </div>
-                    <p class="text-slate-200 text-sm mt-1 transition-all duration-300" :class="{ 'line-through': task.completed }">{{ task.description }}</p>
+                    <p class="text-slate-800 text-sm mt-0.5 transition-all duration-300 drop-shadow-[0_1px_0_rgba(0,0,0,0.10)]" :class="{ 'line-through': task.completed }">{{ task.description }}</p>
                   </div>
                 </div>
               </li>
@@ -155,26 +150,26 @@ onMounted(async () => {
           </div>
         </div>
 
-        <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-lg shadow-lg p-4 hover:shadow-xl transition-all duration-300 border border-amber-500/20 flex flex-col transform hover:scale-[1.01]">
-          <h2 class="text-xl md:text-2xl font-bold text-amber-200 mb-4 text-center fantasy-font tracking-wider drop-shadow-[0_0_8px_rgba(251,191,36,0.3)]">{{ trans('Do zrobienia') }}</h2>
-          <div class="flex-1 overflow-y-auto custom-scrollbar max-h-[300px] md:max-h-[400px] lg:max-h-[500px]">
+        <div class="rounded-lg pt-20 shadow-lg p-6 hover:shadow-xl transition-all duration-300 border border-amber-500/20 flex flex-col transform hover:scale-[1.01] scroll-bg">
+          <h2 class="text-xl md:text-2xl mb-20 font-bold text-amber-200 mb-6 text-center fantasy-font tracking-wider drop-shadow-[0_0_8px_rgba(251,191,36,0.3)]">{{ trans('Do zrobienia') }}</h2>
+          <div class="  mx-7 flex-1 overflow-y-auto custom-scrollbar max-h-[270px] md:max-h-[360px] lg:max-h-[450px] px-4">
             <ul class="space-y-2">
               <li v-for="task in todoTasks" :key="task.id" 
-                  class="bg-gradient-to-br from-slate-800/90 to-slate-700/90 p-3 rounded-lg border border-amber-500/20 hover:from-slate-700/90 hover:to-slate-600/90 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg hover:shadow-amber-500/20"
-                  :class="{ 'opacity-50': task.completed }">
-                <div class="flex items-center gap-3">
+                  class="transition-all duration-300 transform hover:scale-[1.01]"
+                  :class="{ 'opacity-20': task.completed }">
+                <div class="flex items-center gap-2">
                   <input type="checkbox" 
                          :checked="task.completed"
                          @change="toggleTask(todoTasks, task.id)"
-                         class="w-5 h-5 rounded border-amber-500/50 bg-slate-800 text-amber-500 focus:ring-amber-500 focus:ring-offset-slate-900 transition-all duration-300 hover:scale-110">
+                         class="w-4 h-4 rounded border-slate-800 text-slate-800 bg-transparent shadow-sm checked:bg-slate-800 checked:border-slate-800 checked:text-amber-300 focus:ring-slate-800 focus:ring-offset-slate-200 transition-all duration-300 hover:scale-110">
                   <div class="flex-1">
                     <div class="flex items-center justify-between">
-                      <span class="text-amber-100 transition-all duration-300 fantasy-font-light" :class="{ 'line-through': task.completed }">{{ task.title }}</span>
-                      <span class="text-amber-400 text-sm transition-all duration-300 fantasy-font-light">{{ task.priority }}</span>
+                      <span class="text-slate-800 font-semibold text-base transition-all duration-300 fantasy-font-light drop-shadow-[0_1px_0_rgba(0,0,0,0.15)]" :class="{ 'line-through': task.completed }">{{ task.title }}</span>
+                      <span class="text-slate-800 font-semibold text-sm transition-all duration-300 fantasy-font-light drop-shadow-[0_1px_0_rgba(0,0,0,0.15)]">{{ task.priority }}</span>
                     </div>
-                    <p class="text-slate-200 text-sm mt-1 transition-all duration-300" :class="{ 'line-through': task.completed }">{{ task.description }}</p>
+                    <p class="text-slate-800 text-sm mt-0.5 transition-all duration-300 drop-shadow-[0_1px_0_rgba(0,0,0,0.10)]" :class="{ 'line-through': task.completed }">{{ task.description }}</p>
                   </div>
-                </div>
+            </div>
               </li>
             </ul>
           </div>
@@ -196,6 +191,32 @@ onMounted(async () => {
 .fantasy-font-light {
   font-family: 'MedievalSharp', cursive;
   letter-spacing: 0.5px;
+}
+
+.scroll-bg {
+  background-image: url('/images/scroll(1).png');
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  aspect-ratio: 1/1.4;
+}
+
+.scroll-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, rgba(15, 23, 42, 0.1), rgba(30, 41, 59, 0.1));
+  border-radius: 0.5rem;
+  z-index: 0;
+}
+
+.scroll-bg > * {
+  position: relative;
+  z-index: 1;
 }
 
 /* Custom scrollbar */
