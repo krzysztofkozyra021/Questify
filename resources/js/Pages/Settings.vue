@@ -1,11 +1,12 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useForm } from '@inertiajs/vue3'
 import Modal from '@/Components/Modal.vue'
 import { router } from '@inertiajs/vue3'
 import { useTranslation } from '@/Composables/useTranslation';
 import DashboardBar from '@/Components/DashboardBar.vue'
 import Footer from '@/Components/Footer.vue'
+import Header from '@/Components/Header.vue'
 
 const { trans } = useTranslation()
 
@@ -22,6 +23,14 @@ const imagePreview = ref(null)
 const uploadError = ref(null)
 const isUploading = ref(false)
 const fileInput = ref(null)
+const fileInputLabel = ref(trans('No file selected'))
+const fileInputButton = ref(trans('Browse...'))
+
+// Add watch effect to update translations when locale changes
+watch(() => props.currentLocale, () => {
+  fileInputLabel.value = trans('No file selected')
+  fileInputButton.value = trans('Browse...')
+})
 
 const form = useForm({
   profile_image: null
@@ -50,6 +59,7 @@ const previewImage = (event) => {
   const file = event.target.files[0]
   if (file) {
     uploadError.value = null
+    fileInputLabel.value = file.name
 
     const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif']
     if (!validTypes.includes(file.type)) {
@@ -181,184 +191,169 @@ const closeMenu = () => {
 }
 </script>
 
+<style scoped>
+input[type="file"]::file-selector-button {
+  content: attr(data-browse-text);
+}
+
+input[type="file"]::before {
+  content: attr(data-placeholder);
+}
+
+.custom-file-input {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.custom-file-input input[type="file"] {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.file-input-label {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.375rem;
+  background-color: white;
+}
+
+.file-input-button {
+  padding: 0.5rem 1rem;
+  margin-right: 0.5rem;
+  background-color: #e5e7eb;
+  border-radius: 0.375rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.file-input-button:hover {
+  background-color: #d1d5db;
+}
+</style>
+
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-    <div class="flex flex-col min-h-screen">
-      <DashboardBar/>
+  <div class="min-h-screen bg-white">
+    <Header />
+    <main class="max-w-2xl mx-auto py-8 px-2">
+      <h1 class="text-2xl font-bold text-stone-800 mb-8">{{ trans('Settings') }}</h1>
+      <div class="space-y-8">
 
-      <div class="flex-1 w-[98%] bg-slate-600 rounded-lg shadow-lg mx-auto my-4 p-2">
-        <div class="bg-slate-800 rounded-lg shadow-lg p-4 hover:shadow-xl transition-shadow duration-300 border border-slate-700">
-          <h1 class="text-2xl font-bold text-slate-200 mb-6 text-center">{{ trans('Settings') }}</h1>
-
-            <!-- Account Settings Section -->
-            <div class="space-y-6">
-              <!-- Locale Section -->
-            <div class="bg-slate-700/50 rounded-lg p-4 border border-slate-600">
-                <h2 class="text-xl font-semibold text-slate-200 mb-4">{{ trans('Locale') }}</h2>
+        <!-- Profile Information Section -->
+        <div class="rounded-lg p-4">
+          <h2 class="text-xl font-semibold text-stone-800 mb-4">{{ trans('Profile Information') }}</h2>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-lg font-bold text-stone-800 mb-1">{{ trans('Name') }}</label>
+              <p class="text-stone-800 text-lg">{{ user.name }}</p>
+            </div>
+            <div>
+              <label class="block text-lg font-bold text-stone-800 mb-1">{{ trans('Email') }}</label>
+              <p class="text-stone-800 text-lg">{{ user.email }}</p>
+            </div>
+          <button @click="confirmDeleteAccount" class="text-sm bg-red-500 text-white px-4 py-2 rounded font-bold shadow hover:bg-red-600">{{ trans('Delete Account') }}</button>
+        </div>
+        </div>
+      </div>
+      <Modal :show="showDeleteModal" @close="closeDeleteModal">
+        <div class="p-6 bg-white rounded-lg">
+          <h2 class="text-xl font-semibold text-stone-800 mb-6">{{ trans('Are you sure you want to delete your account?') }}</h2>
+          <p class="text-stone-600 mb-6">{{ trans('This action cannot be undone. Please enter your password to confirm.') }}</p>
+          <form @submit.prevent="deleteAccount" class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-stone-800 mb-1">{{ trans('Password') }}</label>
+              <input 
+                v-model="deleteForm.password" 
+                type="password" 
+                class="w-full px-3 py-2 rounded border border-stone-300 focus:outline-none focus:ring-2 focus:ring-stone-600" 
+                :placeholder="trans('Enter your password')"
+              />
+            </div>
+            <div class="flex justify-end gap-3 mt-6">
+              <button 
+                type="button" 
+                @click="closeDeleteModal" 
+                class="px-4 py-2 rounded font-bold shadow bg-stone-200 text-stone-800 hover:bg-stone-300 transition-colors"
+              >
+                {{ trans('Cancel') }}
+              </button>
+              <button 
+                type="submit" 
+                class="px-4 py-2 rounded font-bold shadow bg-red-500 text-white hover:bg-red-600 transition-colors"
+              >
+                {{ trans('Delete Account') }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </Modal>
+        <div class="border-t-2 border-stone-400"></div>
+        <!-- Locale Section -->
+        <div class="rounded-lg p-4">
+                <h2 class="text-xl font-semibold text-stone-800 mb-4">{{ trans('Locale') }}</h2>
                 <div class="space-y-4">
                   <div>
-                    <label class="block text-sm font-medium text-slate-300 mb-1">{{ trans('Locale') }}</label>
-                  <select v-bind:value="currentLocale" 
-                          class="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                          @change="changeLocale">
+                    <select v-bind:value="currentLocale" class="w-full px-3 py-2 bg-stone-100 border border-stone-600 rounded-lg text-stone-800 focus:outline-none focus:ring-2 focus:ring-stone-600" @change="changeLocale">
                       <option v-for="locale in locales" :key="locale" :value="locale">{{ trans(locale) }}</option>
                     </select>
                   </div>
                 </div>
+        </div>
+        <div class="border-t-2 border-stone-400 "></div>
+        <!-- Profile Image Section -->
+        <div class="rounded-lg p-4">
+          <h2 class="text-xl font-semibold text-stone-800 mb-4">{{ trans('Profile Image') }}</h2>
+          <div class="flex items-center gap-4 mb-4">
+            <img :src="profileImageUrl" alt="Profile" class="w-20 h-20 rounded-lg border-2 border-stone-900 bg-white shadow" />
+            <div class="custom-file-input">
+              <div class="file-input-label">
+                <span class="file-input-button">{{ fileInputButton }}</span>
+                <span>{{ fileInputLabel }}</span>
               </div>
-
-               <!-- Profile Information -->
-            <div class="bg-slate-700/50 rounded-lg p-4 border border-slate-600">
-                <h2 class="text-xl font-semibold text-slate-200 mb-4">{{ trans('Profile Information') }}</h2>
-                
-                <!-- Profile Picture Section -->
-                <div class="mb-6">
-                  <label class="block text-sm font-medium text-slate-300 mb-2">{{ trans('Profile Picture') }}</label>
-                  
-                  <div class="flex items-center space-x-4 mb-4">
-                    <div class="w-24 h-24 rounded-full bg-slate-800 overflow-hidden border border-slate-600">
-                      <img 
-                        :src="imagePreview || profileImageUrl" 
-                        alt="Profile Picture" 
-                        class="w-full h-full object-cover"
-                      />
-                    </div>
-                    
-                    <div class="space-y-2">
-                      <p class="text-sm text-slate-400">{{ trans('JPG, PNG or GIF. Max 2MB.') }}</p>
-                      <input 
-                        type="file" 
-                        ref="fileInput"
-                        @change="previewImage"
-                        accept="image/*"
-                        class="hidden"
-                      />
-                      <div class="flex space-x-2">
-                        <button 
-                          @click="$refs.fileInput.click()" 
-                          type="button"
-                          class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition-colors"
-                          :disabled="isUploading"
-                        >
-                          {{ trans('Select Image') }}
-                        </button>
-                        <button 
-                          v-if="selectedFile"
-                          @click="uploadImage" 
-                          type="button"
-                          class="px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-sm rounded transition-colors"
-                          :disabled="isUploading"
-                        >
-                          {{ isUploading ? trans('Uploading...') : trans('Upload') }}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                <div class="space-y-4">
-                  <div>
-                    <label class="block text-sm font-medium text-slate-300 mb-1">{{ trans('Name') }}</label>
-                  <input type="text" 
-                         class="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                         :value="user?.name" 
-                         disabled />
-                  </div>
-                  <div>
-                    <label class="block text-sm font-medium text-slate-300 mb-1">{{ trans('Email') }}</label>
-                  <input type="email" 
-                         class="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                         :value="user?.email" 
-                         disabled />
-                  </div>
-                  <div v-if="!user.email_verified_at" class="text-red-400">
-                    {{ trans('Email not verified. Please verify your email address.') }}
-                  </div>
-                </div>
-              </div>
-
-              <!-- Password Section -->
-            <div class="bg-slate-700/50 rounded-lg p-4 border border-slate-600">
-                <h2 class="text-xl font-semibold text-slate-200 mb-4">{{ trans('Update Password') }}</h2>
-                <form @submit.prevent="updatePassword" class="space-y-4">
-                  <div>
-                    <label class="block text-sm font-medium text-slate-300 mb-1">{{ trans('Current Password') }}</label>
-                  <input type="password" 
-                         v-model="passwordForm.current_password" 
-                         class="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                  </div>
-                  <div>
-                    <label class="block text-sm font-medium text-slate-300 mb-1">{{ trans('New Password') }}</label>
-                  <input type="password" 
-                         v-model="passwordForm.password" 
-                         class="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                  </div>
-                  <div>
-                    <label class="block text-sm font-medium text-slate-300 mb-1">{{ trans('Confirm New Password') }}</label>
-                  <input type="password" 
-                         v-model="passwordForm.password_confirmation" 
-                         class="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                  </div>
-                <button type="submit" 
-                        class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
-                    {{ trans('Update Password') }}
-                  </button>
-                </form>
-              </div>
-
-              <!-- Delete Account Section -->
-            <div class="bg-slate-700/50 rounded-lg p-4 border border-slate-600">
-                <h2 class="text-xl font-semibold text-slate-200 mb-4">{{ trans('Delete Account') }}</h2>
-                <p class="text-slate-300 mb-4">{{ trans('Once your account is deleted, all of its resources and data will be permanently deleted.') }}</p>
-              <button @click="confirmDeleteAccount" 
-                      class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors">
-                  {{ trans('Delete Account') }}
-                </button>
-              </div>
+              <input 
+                ref="fileInput" 
+                type="file" 
+                accept="image/*" 
+                @change="previewImage" 
+                class="block w-full text-sm text-stone-800"
+              />
             </div>
           </div>
+          <div v-if="imagePreview" class="mb-2 flex flex-row gap-4  items-center">
+            <img :src="imagePreview" alt="Preview" class="w-20 h-20 rounded-lg border-2 border-stone-900 bg-white shadow" />
+            <p class="text-m font-semibold text-stone-800">{{ trans('Preview') }}</p>
+          </div>
+          <div v-if="uploadError" class="text-red-500 text-sm mb-2">{{ uploadError }}</div>
+          <button @click="uploadImage" :disabled="isUploading" class="bg-stone-600 text-white px-4 py-2 rounded font-bold shadow hover:bg-stone-700 disabled:opacity-50">{{ trans('Upload') }}</button>
         </div>
-      <Footer/>
-    </div>
-
-    <!-- Delete Account Confirmation Modal -->
-    <Modal :show="showDeleteModal" @close="closeDeleteModal">
-      <div class="p-6">
-        <h2 class="text-lg font-medium text-slate-200 mb-4">{{ trans('Are you sure you want to delete your account?') }}</h2>
-        <p class="text-slate-300 mb-4">{{ trans('Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.') }}</p>
-        <form @submit.prevent="deleteAccount" class="space-y-4">
-          <div>
-            <label class="block text-sm font-medium text-slate-300 mb-1">{{ trans('Password') }}</label>
-            <input 
-              type="password" 
-              v-model="deleteForm.password" 
-              class="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
-          <div class="flex justify-end space-x-4">
-            <button 
-              type="button" 
-              @click="closeDeleteModal" 
-              class="px-4 py-2 bg-slate-600 hover:bg-slate-700 text-white rounded-lg transition-colors"
-            >
-              {{ trans('Cancel') }}
-            </button>
-            <button 
-              type="submit" 
-              class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
-              :disabled="deleteForm.processing"
-            >
-              {{ trans('Delete Account') }}
-            </button>
-          </div>
-        </form>
-      </div>
-    </Modal>
-
-    <!-- Upload Error Notification -->
-    <div v-if="uploadError" class="mt-2">
-      <p class="text-sm text-red-500">{{ uploadError }}</p>
-    </div>
+        <div class="border-t-2 border-stone-400"></div>
+        <!-- Password Section -->
+        <div class="rounded-lg p-4">
+          <h2 class="text-xl font-semibold text-stone-800 mb-4">{{ trans('Change Password') }}</h2>
+          <form @submit.prevent="updatePassword" class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-stone-800 mb-1">{{ trans('Current Password') }}</label>
+              <input v-model="passwordForm.current_password" type="password" class="w-full px-3 py-2 rounded border border-stone-300 focus:outline-none focus:ring-2 focus:ring-stone-600" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-stone-800 mb-1">{{ trans('New Password') }}</label>
+              <input v-model="passwordForm.password" type="password" class="w-full px-3 py-2 rounded border border-stone-300 focus:outline-none focus:ring-2 focus:ring-stone-600" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-stone-800 mb-1">{{ trans('Confirm Password') }}</label>
+              <input v-model="passwordForm.password_confirmation" type="password" class="w-full px-3 py-2 rounded border border-stone-300 focus:outline-none focus:ring-2 focus:ring-stone-600" />
+            </div>
+            <button type="submit" class="bg-stone-600 text-white px-4 py-2 rounded font-bold shadow hover:bg-stone-700">{{ trans('Update Password') }}</button>
+          </form>
+        </div>
+        
+    </main>
   </div>
 </template>
