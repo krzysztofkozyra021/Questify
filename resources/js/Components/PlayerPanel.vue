@@ -3,6 +3,7 @@ import { computed, ref, onMounted, watch, watchEffect } from 'vue';
 import { useTranslation } from '@/Composables/useTranslation';
 import { usePage } from '@inertiajs/vue3';
 
+
 const { trans } = useTranslation();
 const page = usePage();
 
@@ -80,70 +81,47 @@ const experiencePercentage = computed(() => {
 </script>
 
 <template>
-  <div class="flex flex-col sm:flex-row w-[98%] mx-auto bg-gradient-to-br from-slate-800/95 via-slate-700/95 to-slate-800/95 h-auto sm:h-80 rounded-lg shadow-lg my-4 transform transition-all duration-300 hover:shadow-xl hover:scale-[1.01] border border-amber-500/20">
-    <!-- Player Avatar Section -->
-    <div class="flex flex-col items-center justify-center w-full sm:w-1/4 p-4 border-b sm:border-b-0 sm:border-r border-amber-500/20">
-      <div class="relative group">
-        <div class="w-36 h-36 rounded-3xl bg-gradient-to-br duration-300 from-slate-900/95 to-slate-800/95 flex items-center justify-center overflow-hidden border-4 border-amber-500/50 group-hover:border-amber-400 group-hover:shadow-lg group-hover:shadow-amber-500/40">
-          <img 
-            :src="profileImageUrl" 
-            alt="Player Avatar" 
-            class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-            @error="profileImageUrl = '/images/default-profile.png'"
-          >
-        </div>
-        <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-amber-600 to-amber-500 px-3 py-1 rounded-full border border-amber-400/50 transition-all duration-300 group-hover:border-amber-300 group-hover:bg-gradient-to-r group-hover:from-amber-500 group-hover:to-amber-400 shadow-lg shadow-amber-500/30 hover:scale-105">
-          <span class="text-white font-bold fantasy-font tracking-wider drop-shadow-[0_0_8px_rgba(251,191,36,0.3)]">Level {{ userLevel }}</span>
+  <div class="flex items-center rounded-xl shadow px-4 py-2 gap-4 min-w-[260px]">
+    <img :src="profileImageUrl" alt="Player Avatar" class="w-12 h-12 rounded-lg border-amber-400 shadow-md" @error="profileImageUrl = '/images/default-profile.png'" />
+    <div class="flex-1">
+      <div class="flex flex-col gap-1">
+        <span class="text-lg text-white font-bold">{{ page.props.user?.name }}</span>
+        <div class="flex items-center gap-2">
+          <span class="bg-amber-400 text-stone-900 font-bold px-2 py-0.5 rounded text-sm">Lv {{ userLevel }}</span>
+          <span class="text-amber-400 text-sm font-semibold">{{ trans(userClassName) }}</span>
         </div>
       </div>
-      <h2 class="mt-4 text-xl font-bold text-amber-200 transition-colors duration-300 group-hover:text-amber-100 fantasy-font tracking-wider drop-shadow-[0_0_8px_rgba(251,191,36,0.3)]">{{ page.props.user?.name }}</h2>
-      <p class="text-slate-200 transition-colors duration-300 group-hover:text-slate-100 fantasy-font-light">{{ trans(userClassName) }}</p>
     </div>
-
-    <!-- Stats Section -->
-    <div class="flex-1 p-6">
-      <div class="space-y-4">
-        <!-- Health Bar -->
-        <div class="group">
-          <div class="flex justify-between text-sm mb-1">
-            <span class="text-red-300 font-medium transition-colors duration-300 group-hover:text-red-200 fantasy-font-light">{{ trans('Health') }}</span>
-            <span class="text-slate-200 transition-colors duration-300 group-hover:text-slate-100 fantasy-font-light">{{ currentPlayerHealth }}/{{ maxPlayerHealth }}</span>
-          </div>
-          <div class="h-3 bg-slate-900/80 rounded-full overflow-hidden transition-all duration-300 group-hover:shadow-inner group-hover:shadow-red-500/40">
-            <div
-              class="h-full bg-gradient-to-r from-red-600 to-red-500 rounded-full transition-all duration-500 ease-out"
-              :style="{ width: `${(currentPlayerHealth / maxPlayerHealth * 100) || 0}%` }"
-            ></div>
-          </div>
+    <div class="flex flex-col gap-1">
+      <!-- Health bar -->
+      <div class="flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-red-500" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+        </svg>
+        <div class="w-32 h-3 bg-gray-100 overflow-hidden">
+          <div class="h-full bg-red-500" :style="{ width: ((currentPlayerHealth / maxPlayerHealth * 100) || 0) + '%' }"></div>
         </div>
-
-        <!-- Energy Bar -->
-        <div class="group">
-          <div class="flex justify-between text-sm mb-1">
-            <span class="text-blue-300 font-medium transition-colors duration-300 group-hover:text-blue-200 fantasy-font-light">{{ trans('Energy') }}</span>
-            <span class="text-slate-200 transition-colors duration-300 group-hover:text-slate-100 fantasy-font-light">{{ currentPlayerEnergy }}/{{ maxPlayerEnergy }}</span>
-          </div>
-          <div class="h-3 bg-slate-900/80 rounded-full overflow-hidden transition-all duration-300 group-hover:shadow-inner group-hover:shadow-blue-500/40">
-            <div
-              class="h-full bg-gradient-to-r from-blue-600 to-blue-500 rounded-full transition-all duration-500 ease-out"
-              :style="{ width: `${(currentPlayerEnergy / maxPlayerEnergy * 100) || 0}%` }"
-            ></div>
-          </div>
+        <span class="text-sm text-white font-normal">{{ currentPlayerHealth }}/{{ maxPlayerHealth }}</span>
+      </div>
+      <!-- Energy bar -->
+      <div class="flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-500" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+        <div class="w-32 h-3 bg-gray-100 overflow-hidden">
+          <div class="h-full bg-blue-500" :style="{ width: ((currentPlayerEnergy / maxPlayerEnergy * 100) || 0) + '%' }"></div>
         </div>
-
-        <!-- Experience Bar -->
-        <div class="group">
-          <div class="flex justify-between text-sm mb-1">
-            <span class="text-emerald-300 font-medium transition-colors duration-300 group-hover:text-emerald-200 fantasy-font-light">{{ trans('Experience') }}</span>
-            <span class="text-slate-200 transition-colors duration-300 group-hover:text-slate-100 fantasy-font-light">{{ currentPlayerExperience }}/{{ maxPlayerExperience }}</span>
-          </div>
-          <div class="h-3 bg-slate-900/80 rounded-full overflow-hidden transition-all duration-300 group-hover:shadow-inner group-hover:shadow-emerald-500/40">
-            <div
-              class="h-full bg-gradient-to-r from-emerald-600 to-emerald-500 rounded-full transition-all duration-500 ease-out"
-              :style="{ width: experiencePercentage }"
-            ></div>
-          </div>
+        <span class="text-sm text-white font-normal">{{ currentPlayerEnergy }}/{{ maxPlayerEnergy }}</span>
+      </div>
+      <!-- XP bar -->
+      <div class="flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-amber-400" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+        </svg>
+        <div class="w-32 h-3 bg-gray-100 overflow-hidden">
+          <div class="h-full bg-amber-400" :style="{ width: ((currentPlayerExperience / maxPlayerExperience * 100) || 0) + '%' }"></div>
         </div>
+        <span class="text-sm text-white font-normal">{{ currentPlayerExperience }}/{{ maxPlayerExperience }}</span>
       </div>
     </div>
   </div>

@@ -1,239 +1,184 @@
 <script setup>
-import { ref } from "vue";
-import DashboardBar from "@/Components/DashboardBar.vue";
-import { onMounted } from "vue";
-import { getMotivationalQuote } from "@/Composables/getMotivationalQuote";
-import Notification from "@/Components/Notification.vue";
+import { ref, computed } from 'vue';
 import { usePage } from '@inertiajs/vue3';
-import Footer from "@/Components/Footer.vue";
-import PlayerPanel from "@/Components/PlayerPanel.vue";
 import { useTranslation } from '@/Composables/useTranslation';
-
+import Header from '@/Components/Header.vue';
+import Footer from '@/Components/Footer.vue';
 const { trans } = useTranslation();
 const page = usePage();
 
-const isTaskListVisible = ref(true);
-const showMotivationalQuote = ref(false);
-const motivationalQuote = ref(page.props.motivationalQuote);
+const habits = computed(() => page.props.tasks?.habits || []);
+const dailies = computed(() => page.props.tasks?.dailies || []);
+const todos = computed(() => page.props.tasks?.todos || []);
 
-// Dodajemy funkcje do obsługi zadań
-const toggleTask = (taskList, taskId) => {
-  const task = taskList.value.find(t => t.id === taskId);
-  if (task) {
-    task.completed = !task.completed;
-  }
+const user = computed(() => page.props.user ?? { name: 'Player' });
+const stats = computed(() => page.props.userStatistics ?? { level: 1, current_health: 0, max_health: 100, current_experience: 0, next_level_experience: 100 });
+const userClassName = computed(() => page.props.userClassName ?? '');
+
+const newHabit = ref('');
+const newDaily = ref('');
+const newTodo = ref('');
+
+const addTask = (type) => {
+  // Placeholder: implement backend call
+  if (type === 'habit' && newHabit.value.trim()) newHabit.value = '';
+  if (type === 'daily' && newDaily.value.trim()) newDaily.value = '';
+  if (type === 'todo' && newTodo.value.trim()) newTodo.value = '';
 };
 
-// Modyfikujemy przykładowe dane, dodając pole completed
-const obligations = ref([
-  {
-    id: 1,
-    title: "Zadanie domowe z matematyki",
-    description: "Rozwiąż zadania 1-5 ze strony 45",
-    due_date: "2024-03-20",
-    completed: false
-  },
-  {
-    id: 2,
-    title: "Projekt na informatykę",
-    description: "Dokończ prezentację",
-    due_date: "2024-03-25",
-    completed: false
-  }
-]);
+const toggleTask = (task) => {
+  task.is_completed = !task.is_completed;
+};
 
-const dailyTasks = ref([
-  {
-    id: 1,
-    title: "Poranny trening",
-    description: "30 minut ćwiczeń",
-    reward: 50,
-    completed: false
-  },
-  {
-    id: 2,
-    title: "Czytanie książki",
-    description: "Przeczytaj 30 stron",
-    reward: 30,
-    completed: false
-  }
-]);
-
-const todoTasks = ref([
-  {
-    id: 1,
-    title: "Zrobić zakupy",
-    description: "Mleko, chleb, jajka",
-    priority: "Wysoki",
-    completed: false
-  },
-  {
-    id: 2,
-    title: "Zadzwonić do babci",
-    description: "Umówić się na weekend",
-    priority: "Średni",
-    completed: false
-  }
-]);
-
-// Show motivational quote after user visits dashboard
-onMounted(async () => {
-  // Only show if not already shown (prevents double popup if page reloads quickly)
-  if (!showMotivationalQuote.value) {
-    // Fetch the quote
-    motivationalQuote.value = await getMotivationalQuote();
-
-    if (motivationalQuote.value) {
-      showMotivationalQuote.value = true;
-    }
-    // Hide after 5 seconds
-    setTimeout(() => {
-      showMotivationalQuote.value = false;
-    }, 5000);
-  }
-});
-
+const profileImageUrl = computed(() => '/images/default-profile.png'); // Replace with real avatar if available
 </script>
+
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-    <div class="flex flex-col min-h-screen">
-      <DashboardBar/>
-      <PlayerPanel/>
-      <div class="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-[98%] mx-auto my-4 p-2 gap-2">
-        <div class="rounded-lg pt-20 shadow-lg p-6 hover:shadow-xl transition-all duration-300 border border-amber-500/20 flex flex-col transform hover:scale-[1.01] scroll-bg">
-          <h2 class="text-xl md:text-2xl mb-20 font-bold text-amber-200 mb-6 text-center fantasy-font tracking-wider drop-shadow-[0_0_8px_rgba(251,191,36,0.3)]">{{ trans('Obowiązki') }}</h2>
-          <div class="mx-7 flex-1 overflow-y-auto custom-scrollbar max-h-[270px] md:max-h-[360px] lg:max-h-[450px] px-4">
-            <ul class="space-y-2">
-              <li v-for="task in obligations" :key="task.id" 
-                  class="transition-all duration-300 transform hover:scale-[1.01]"
-                  :class="{ 'opacity-20': task.completed }">
-                <div class="flex items-center gap-2">
-                  <input type="checkbox" 
-                         :checked="task.completed"
-                         @change="toggleTask(obligations, task.id)"
-                         class="w-4 h-4 rounded border-slate-800 text-slate-800 bg-transparent shadow-sm checked:bg-slate-800 checked:border-slate-800 checked:text-amber-300 focus:ring-slate-800 focus:ring-offset-slate-200 transition-all duration-300 hover:scale-110">
-                  <div class="flex-1">
-                    <div class="flex items-center justify-between">
-                      <span class="text-slate-800 font-semibold text-base transition-all duration-300 fantasy-font-light drop-shadow-[0_1px_0_rgba(0,0,0,0.15)]" :class="{ 'line-through': task.completed }">{{ task.title }}</span>
-                      <span class="text-slate-800 font-semibold text-sm transition-all duration-300 drop-shadow-[0_1px_0_rgba(0,0,0,0.15)]">{{ task.due_date }}</span>
-                    </div>
-                    <p class="text-slate-800 text-sm mt-0.5 transition-all duration-300 drop-shadow-[0_1px_0_rgba(0,0,0,0.10)]" :class="{ 'line-through': task.completed }">{{ task.description }}</p>
-                  </div>
-                </div>
-              </li>
-            </ul>
-          </div>
+  <div class="min-h-screen bg-white">
+    <Header />
+    <main class="max-w-[1920px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 py-12 px-4 md:px-8">
+      <!-- Habits -->
+      <section class="bg-stone-100 rounded-xl shadow-lg p-6 flex flex-col min-h-[500px]">
+        <h2 class="text-xl font-bold text-stone-800 border-b-2 border-stone-600 pb-2 mb-3 ">{{ trans('Habits') }}</h2>
+        <div class="flex mb-3 gap-2">
+          <input v-model="newHabit" @keyup.enter="addTask('habit')" type="text" :placeholder="trans('Add a Habit')" class="flex-1 px-3 py-1 rounded border border-stone-300 bg-white text-stone-800 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-600" />
+          <button @click="addTask('habit')" class="bg-stone-600 text-stone-50 px-3 py-1 rounded font-bold shadow hover:bg-stone-700">+</button>
         </div>
-
-        <div class="rounded-lg pt-20 shadow-lg p-6 hover:shadow-xl transition-all duration-300 border border-amber-500/20 flex flex-col transform hover:scale-[1.01] scroll-bg">
-          <h2 class="text-xl md:text-2xl mb-20 font-bold text-amber-200 mb-6 text-center fantasy-font tracking-wider drop-shadow-[0_0_8px_rgba(251,191,36,0.3)]">{{ trans('Dzienne') }}</h2>
-          <div class="mx-7 flex-1 overflow-y-auto custom-scrollbar max-h-[270px] md:max-h-[360px] lg:max-h-[450px] px-4">
-            <ul class="space-y-2">
-              <li v-for="task in dailyTasks" :key="task.id" 
-                  class="transition-all duration-300 transform hover:scale-[1.01]"
-                  :class="{ 'opacity-20': task.completed }">
+        <ul class="flex-1 space-y-2 overflow-y-auto pr-1">  
+          <li v-for="task in habits" :key="task.id" class="bg-white rounded-lg shadow">
+            <div class="flex items-stretch gap-2 pr-4">
+              <div class="flex items-center justify-center px-3 py-2 rounded-l-lg"
+              :class="{'bg-stone-600': !task.difficulty}" :style="task.difficulty ? { backgroundColor: task.difficulty.color || '#57534e' } : {}">
+                <input type="checkbox" :checked="task.is_completed" @change="toggleTask(task)" 
+                  class="w-6 h-6 rounded-md border-2 border-white cursor-pointer transition-all duration-200 ease-in-out
+                  checked:bg-white checked:border-white focus:ring-2 focus:ring-offset-2 focus:ring-white focus:outline-none
+                  hover:scale-110" 
+                  :style="{ 
+                    accentColor: task.difficulty ? task.difficulty.color : '#57534e',
+                    backgroundColor: task.is_completed ? 'transparent' : 'transparent'
+                  }" />
+              </div>
+              <div class="flex-1 py-2">
                 <div class="flex items-center gap-2">
-                  <input type="checkbox" 
-                         :checked="task.completed"
-                         @change="toggleTask(dailyTasks, task.id)"
-                         class="w-4 h-4 rounded border-slate-800 text-slate-800 bg-transparent shadow-sm checked:bg-slate-800 checked:border-slate-800 checked:text-amber-300 focus:ring-slate-800 focus:ring-offset-slate-200 transition-all duration-300 hover:scale-110">
-                  <div class="flex-1">
-                    <div class="flex items-center justify-between">
-                      <span class="text-slate-800 font-semibold text-base transition-all duration-300 fantasy-font-light drop-shadow-[0_1px_0_rgba(0,0,0,0.15)]" :class="{ 'line-through': task.completed }">{{ task.title }}</span>
-                      <span class="text-slate-800 font-semibold text-sm transition-all duration-300 fantasy-font-light drop-shadow-[0_1px_0_rgba(0,0,0,0.15)]">{{ task.reward }} XP</span>
-                    </div>
-                    <p class="text-slate-800 text-sm mt-0.5 transition-all duration-300 drop-shadow-[0_1px_0_rgba(0,0,0,0.10)]" :class="{ 'line-through': task.completed }">{{ task.description }}</p>
-                  </div>
+                  <div class="font-semibold text-stone-800" :class="{ 'line-through text-stone-400': task.is_completed }">{{ task.title }}</div>
+                  <span v-if="task.difficulty" class="ml-2 px-2 py-0.5 rounded text-xs font-bold" :style="{ backgroundColor: task.difficulty.color || '#57534e', color: '#ffffff' }">
+                    <span v-if="task.difficulty.icon" v-html="task.difficulty.icon" class="mr-1"></span>{{ task.difficulty.name }}
+                  </span>
+                  <span v-if="task.progress !== undefined" class="ml-2 text-xs text-stone-600 font-bold">{{ trans('Streak') }}: {{ task.progress }}</span>
                 </div>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="rounded-lg pt-20 shadow-lg p-6 hover:shadow-xl transition-all duration-300 border border-amber-500/20 flex flex-col transform hover:scale-[1.01] scroll-bg">
-          <h2 class="text-xl md:text-2xl mb-20 font-bold text-amber-200 mb-6 text-center fantasy-font tracking-wider drop-shadow-[0_0_8px_rgba(251,191,36,0.3)]">{{ trans('Do zrobienia') }}</h2>
-          <div class="  mx-7 flex-1 overflow-y-auto custom-scrollbar max-h-[270px] md:max-h-[360px] lg:max-h-[450px] px-4">
-            <ul class="space-y-2">
-              <li v-for="task in todoTasks" :key="task.id" 
-                  class="transition-all duration-300 transform hover:scale-[1.01]"
-                  :class="{ 'opacity-20': task.completed }">
-                <div class="flex items-center gap-2">
-                  <input type="checkbox" 
-                         :checked="task.completed"
-                         @change="toggleTask(todoTasks, task.id)"
-                         class="w-4 h-4 rounded border-slate-800 text-slate-800 bg-transparent shadow-sm checked:bg-slate-800 checked:border-slate-800 checked:text-amber-300 focus:ring-slate-800 focus:ring-offset-slate-200 transition-all duration-300 hover:scale-110">
-                  <div class="flex-1">
-                    <div class="flex items-center justify-between">
-                      <span class="text-slate-800 font-semibold text-base transition-all duration-300 fantasy-font-light drop-shadow-[0_1px_0_rgba(0,0,0,0.15)]" :class="{ 'line-through': task.completed }">{{ task.title }}</span>
-                      <span class="text-slate-800 font-semibold text-sm transition-all duration-300 fantasy-font-light drop-shadow-[0_1px_0_rgba(0,0,0,0.15)]">{{ task.priority }}</span>
-                    </div>
-                    <p class="text-slate-800 text-sm mt-0.5 transition-all duration-300 drop-shadow-[0_1px_0_rgba(0,0,0,0.10)]" :class="{ 'line-through': task.completed }">{{ task.description }}</p>
-                  </div>
+                <div v-if="task.description" class="text-xs text-stone-600">{{ task.description }}</div>
+                <div v-if="task.tags && task.tags.length" class="flex flex-wrap gap-1 mt-1">
+                  <span v-for="tag in task.tags" :key="tag.id" class="bg-stone-100 text-stone-700 px-2 py-0.5 rounded text-xs font-semibold">#{{ tag.name }}</span>
+                </div>
+              </div>
             </div>
-              </li>
-            </ul>
-          </div>
+          </li>
+        </ul>
+      </section>
+      <!-- Dailies -->
+      <section class="bg-stone-100 rounded-xl shadow-lg p-6 flex flex-col min-h-[500px]">
+        <h2 class="text-xl font-bold text-stone-800 border-b-2 border-stone-600 pb-2 mb-3 ">{{ trans('Dailies') }}</h2>
+        <div class="flex mb-3 gap-2">
+          <input v-model="newDaily" @keyup.enter="addTask('daily')" type="text" :placeholder="trans('Add a Daily')" class="flex-1 px-3 py-1 rounded border border-stone-300 bg-white text-stone-800 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-600" />
+          <button @click="addTask('daily')" class="bg-stone-600 text-stone-50 px-3 py-1 rounded font-bold shadow hover:bg-stone-700">+</button>
         </div>
-      </div>
-    </div>
-    <Footer/>
+        <ul class="flex-1 space-y-2 overflow-y-auto pr-1">
+          <li v-for="task in dailies" :key="task.id" class="bg-white rounded-lg shadow">
+            <div class="flex items-stretch gap-2 pr-4">
+              <div class="flex items-center justify-center px-3 py-2 rounded-l-lg"
+              :class="{'bg-stone-600': !task.difficulty}" :style="task.difficulty ? { backgroundColor: task.difficulty.color || '#57534e' } : {}">
+                <input type="checkbox" :checked="task.is_completed" @change="toggleTask(task)" 
+                  class="w-6 h-6 rounded-md border-2 border-white cursor-pointer transition-all duration-200 ease-in-out
+                  checked:bg-white checked:border-white focus:ring-2 focus:ring-offset-2 focus:ring-white focus:outline-none
+                  hover:scale-110" 
+                  :style="{ 
+                    accentColor: task.difficulty ? task.difficulty.color : '#57534e',
+                    backgroundColor: task.is_completed ? 'transparent' : 'transparent'
+                  }" />
+              </div>
+              <div class="flex-1 py-2">
+                <div class="flex items-center gap-2">
+                  <div class="font-semibold text-stone-800" :class="{ 'line-through text-stone-400': task.is_completed }">{{ task.title }}</div>
+                  <span v-if="task.difficulty" class="ml-2 px-2 py-0.5 rounded text-xs font-bold" :style="{ backgroundColor: task.difficulty.color || '#57534e', color: '#ffffff' }">
+                    <span v-if="task.difficulty.icon" v-html="task.difficulty.icon" class="mr-1"></span>{{ task.difficulty.name }}
+                  </span>
+                  <span v-if="task.progress !== undefined" class="ml-2 text-xs text-stone-600 font-bold">{{ trans('Streak') }}: {{ task.progress }}</span>
+                  <span v-if="task.experience_reward" class="ml-2 text-xs font-bold text-stone-600">+{{ task.experience_reward }} XP</span>
+                  <span v-if="task.due_date" class="ml-2 text-xs text-stone-600">{{ new Date(task.due_date).toLocaleDateString() }}</span>
+                </div>
+                <div v-if="task.description" class="text-xs text-stone-600">{{ task.description }}</div>
+                <div v-if="task.tags && task.tags.length" class="flex flex-wrap gap-1 mt-1">
+                  <span v-for="tag in task.tags" :key="tag.id" class="bg-stone-100 text-stone-700 px-2 py-0.5 rounded text-xs font-semibold">#{{ tag.name }}</span>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </section>
+      <!-- To Do's -->
+      <section class="bg-stone-100 rounded-xl shadow-lg p-6 flex flex-col min-h-[500px]">
+        <h2 class="text-xl font-bold text-stone-800 border-b-2 border-stone-600 pb-2 mb-3 ">{{ trans("To Do's") }}</h2>
+        <div class="flex mb-3 gap-2">
+          <input v-model="newTodo" @keyup.enter="addTask('todo')" type="text" :placeholder="trans('Add a To Do')" class="flex-1 px-3 py-1 rounded border border-stone-300 bg-white text-stone-800 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-600" />
+          <button @click="addTask('todo')" class="bg-stone-600 text-stone-50 px-3 py-1 rounded font-bold shadow hover:bg-stone-700">+</button>
+        </div>
+        <ul class="flex-1 space-y-2 overflow-y-auto pr-1">
+          <li v-for="task in todos" :key="task.id" class="bg-white rounded-lg shadow">
+            <div class="flex items-stretch gap-2 pr-4">
+              <div class="flex items-center justify-center px-3 py-2 rounded-l-lg"
+              :class="{'bg-stone-600': !task.difficulty}" :style="task.difficulty ? { backgroundColor: task.difficulty.color || '#57534e' } : {}">
+                <input type="checkbox" :checked="task.is_completed" @change="toggleTask(task)" 
+                  class="w-6 h-6 rounded-md border-2 border-white cursor-pointer transition-all duration-200 ease-in-out
+                  checked:bg-white checked:border-white focus:ring-2 focus:ring-offset-2 focus:ring-white focus:outline-none
+                  hover:scale-110" 
+                  :style="{ 
+                    accentColor: task.difficulty ? task.difficulty.color : '#57534e',
+                    backgroundColor: task.is_completed ? 'transparent' : 'transparent'
+                  }" />
+              </div>
+              <div class="flex-1 py-2">
+                <div class="flex items-center gap-2">
+                  <div class="font-semibold text-stone-800" :class="{ 'line-through text-stone-400': task.is_completed }">{{ task.title }}</div>
+                  <span v-if="task.difficulty" class="ml-2 px-2 py-0.5 rounded text-xs font-bold text-center" :style="{ backgroundColor: task.difficulty.color || '#57534e', color: '#ffffff' }">
+                    <span v-if="task.difficulty.icon" v-html="task.difficulty.icon" class="mr-1"></span>{{ task.difficulty.name }}
+                  </span>
+                </div>
+                <div class="flex items-center gap-2 mt-1">
+                  <span v-if="task.experience_reward" class="text-xs font-bold text-stone-600">+{{ task.experience_reward }} XP</span>
+                  <span v-if="task.due_date" class="text-xs text-stone-600">{{ new Date(task.due_date).toLocaleDateString() }}</span>
+                </div>
+                <div v-if="task.description" class="text-xs text-stone-600 mt-1">{{ task.description }}</div>
+                <div v-if="task.tags && task.tags.length" class="flex flex-wrap gap-1 mt-1">
+                  <span v-for="tag in task.tags" :key="tag.id" class="bg-stone-100 text-stone-700 px-2 py-0.5 rounded text-xs font-semibold">#{{ tag.name }}</span>
+                </div>
+                <ul v-if="task.checklist_items && task.checklist_items.length" class="mt-2 ml-2 pl-2 border-l-2" :style="{ borderLeftColor: task.difficulty ? task.difficulty.color : '#57534e' }">
+                  <li v-for="(item, idx) in task.checklist_items" :key="idx" class="flex items-center gap-2 text-xs text-stone-600 mb-1">
+                    <input type="checkbox" :checked="item.completed" disabled class="w-4 h-4 rounded" :style="{ accentColor: task.difficulty ? task.difficulty.color : '#57534e' }" />
+                    <span :class="{ 'line-through text-stone-400': item.completed }">{{ item.text || item }}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </section>
+    </main>
   </div>
+  <Footer />
 </template>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
-
-.fantasy-font {
-  font-family: 'MedievalSharp', cursive;
-  text-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
+body {
+  background: #ffffff;
 }
-
-.fantasy-font-light {
-  font-family: 'MedievalSharp', cursive;
-  letter-spacing: 0.5px;
-}
-
-.scroll-bg {
-  background-image: url('/images/scroll(1).png');
-  background-size: 100% 100%;
-  background-position: center;
-  background-repeat: no-repeat;
-  position: relative;
-  aspect-ratio: 1/1.4;
-}
-
-.scroll-bg::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(to bottom, rgba(15, 23, 42, 0.1), rgba(30, 41, 59, 0.1));
-  border-radius: 0.5rem;
-  z-index: 0;
-}
-
-.scroll-bg > * {
-  position: relative;
-  z-index: 1;
-}
-
-/* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 7px;
 }
-
-::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
-}
-
 ::-webkit-scrollbar-thumb {
-  background: rgba(251, 191, 36, 0.3);
-  border-radius: 3px;
+  background: #57534e;
+  border-radius: 4px;
 }
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(251, 191, 36, 0.5);
+::-webkit-scrollbar-track {
+  background: #f3f4f6;
 }
 </style>
