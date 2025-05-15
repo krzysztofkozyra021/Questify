@@ -80,66 +80,66 @@ const experiencePercentage = computed(() => {
 </script>
 
 <template>
-  <div class="flex flex-col sm:flex-row w-[98%] mx-auto bg-slate-600 h-auto sm:h-80 rounded-lg shadow-lg my-4">
+  <div class="flex flex-col sm:flex-row w-[98%] mx-auto bg-gradient-to-br from-slate-800/95 via-slate-700/95 to-slate-800/95 h-auto sm:h-80 rounded-lg shadow-lg my-4 transform transition-all duration-300 hover:shadow-xl hover:scale-[1.01] border border-amber-500/20">
     <!-- Player Avatar Section -->
-    <div class="flex flex-col items-center justify-center w-full sm:w-1/4 p-4 border-b sm:border-b-0 sm:border-r border-slate-500">
-      <div class="relative">
-        <div class="w-36 h-36 rounded-3xl bg-slate-700 flex items-center justify-center overflow-hidden border-4 border-slate-500">
+    <div class="flex flex-col items-center justify-center w-full sm:w-1/4 p-4 border-b sm:border-b-0 sm:border-r border-amber-500/20">
+      <div class="relative group">
+        <div class="w-36 h-36 rounded-3xl bg-gradient-to-br duration-300 from-slate-900/95 to-slate-800/95 flex items-center justify-center overflow-hidden border-4 border-amber-500/50 group-hover:border-amber-400 group-hover:shadow-lg group-hover:shadow-amber-500/40">
           <img 
             :src="profileImageUrl" 
             alt="Player Avatar" 
-            class="w-full h-full object-cover"
+            class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
             @error="profileImageUrl = '/images/default-profile.png'"
           >
         </div>
-        <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-slate-800 px-3 py-1 rounded-full border border-slate-500">
-          <span class="text-emerald-400 font-bold">Level {{ userLevel }}</span>
+        <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-amber-600 to-amber-500 px-3 py-1 rounded-full border border-amber-400/50 transition-all duration-300 group-hover:border-amber-300 group-hover:bg-gradient-to-r group-hover:from-amber-500 group-hover:to-amber-400 shadow-lg shadow-amber-500/30 hover:scale-105">
+          <span class="text-white font-bold fantasy-font tracking-wider drop-shadow-[0_0_8px_rgba(251,191,36,0.3)]">Level {{ userLevel }}</span>
         </div>
       </div>
-      <h2 class="mt-4 text-xl font-bold text-white">{{ page.props.user?.name }}</h2>
-      <p class="text-slate-300">{{ trans(userClassName) }}</p>
+      <h2 class="mt-4 text-xl font-bold text-amber-200 transition-colors duration-300 group-hover:text-amber-100 fantasy-font tracking-wider drop-shadow-[0_0_8px_rgba(251,191,36,0.3)]">{{ page.props.user?.name }}</h2>
+      <p class="text-slate-200 transition-colors duration-300 group-hover:text-slate-100 fantasy-font-light">{{ trans(userClassName) }}</p>
     </div>
 
     <!-- Stats Section -->
     <div class="flex-1 p-6">
       <div class="space-y-4">
         <!-- Health Bar -->
-        <div>
+        <div class="group">
           <div class="flex justify-between text-sm mb-1">
-            <span class="text-red-400 font-medium">{{ trans('Health') }}</span>
-            <span class="text-slate-300">{{ currentPlayerHealth }}/{{ maxPlayerHealth }}</span>
+            <span class="text-red-300 font-medium transition-colors duration-300 group-hover:text-red-200 fantasy-font-light">{{ trans('Health') }}</span>
+            <span class="text-slate-200 transition-colors duration-300 group-hover:text-slate-100 fantasy-font-light">{{ currentPlayerHealth }}/{{ maxPlayerHealth }}</span>
           </div>
-          <div class="h-3 bg-slate-700 rounded-full overflow-hidden">
+          <div class="h-3 bg-slate-900/80 rounded-full overflow-hidden transition-all duration-300 group-hover:shadow-inner group-hover:shadow-red-500/40">
             <div
-              class="h-full bg-red-500 rounded-full transition-all duration-300"
+              class="h-full bg-gradient-to-r from-red-600 to-red-500 rounded-full transition-all duration-500 ease-out"
               :style="{ width: `${(currentPlayerHealth / maxPlayerHealth * 100) || 0}%` }"
             ></div>
           </div>
         </div>
 
         <!-- Energy Bar -->
-        <div>
+        <div class="group">
           <div class="flex justify-between text-sm mb-1">
-            <span class="text-blue-400 font-medium">{{ trans('Energy') }}</span>
-            <span class="text-slate-300">{{ currentPlayerEnergy }}/{{ maxPlayerEnergy }}</span>
+            <span class="text-blue-300 font-medium transition-colors duration-300 group-hover:text-blue-200 fantasy-font-light">{{ trans('Energy') }}</span>
+            <span class="text-slate-200 transition-colors duration-300 group-hover:text-slate-100 fantasy-font-light">{{ currentPlayerEnergy }}/{{ maxPlayerEnergy }}</span>
           </div>
-          <div class="h-3 bg-slate-700 rounded-full overflow-hidden">
+          <div class="h-3 bg-slate-900/80 rounded-full overflow-hidden transition-all duration-300 group-hover:shadow-inner group-hover:shadow-blue-500/40">
             <div
-              class="h-full bg-blue-500 rounded-full transition-all duration-300"
+              class="h-full bg-gradient-to-r from-blue-600 to-blue-500 rounded-full transition-all duration-500 ease-out"
               :style="{ width: `${(currentPlayerEnergy / maxPlayerEnergy * 100) || 0}%` }"
             ></div>
           </div>
         </div>
 
         <!-- Experience Bar -->
-        <div>
+        <div class="group">
           <div class="flex justify-between text-sm mb-1">
-            <span class="text-emerald-400 font-medium">{{ trans('Experience') }}</span>
-            <span class="text-slate-300">{{ currentPlayerExperience }}/{{ maxPlayerExperience }}</span>
+            <span class="text-emerald-300 font-medium transition-colors duration-300 group-hover:text-emerald-200 fantasy-font-light">{{ trans('Experience') }}</span>
+            <span class="text-slate-200 transition-colors duration-300 group-hover:text-slate-100 fantasy-font-light">{{ currentPlayerExperience }}/{{ maxPlayerExperience }}</span>
           </div>
-          <div class="h-3 bg-slate-700 rounded-full overflow-hidden">
+          <div class="h-3 bg-slate-900/80 rounded-full overflow-hidden transition-all duration-300 group-hover:shadow-inner group-hover:shadow-emerald-500/40">
             <div
-              class="h-full bg-emerald-500 rounded-full transition-all duration-300"
+              class="h-full bg-gradient-to-r from-emerald-600 to-emerald-500 rounded-full transition-all duration-500 ease-out"
               :style="{ width: experiencePercentage }"
             ></div>
           </div>
@@ -147,62 +147,38 @@ const experiencePercentage = computed(() => {
       </div>
     </div>
   </div>
-  <!--
-  <div class="bg-slate-800/80 rounded-lg border border-slate-700 p-4">
-    <div class="flex items-center space-x-3 mb-4">
-      <div class="w-12 h-12 rounded-full bg-slate-700 flex items-center justify-center">  
-        <img :src="profileImageUrl" alt="Profile Image" class="w-full h-full object-cover rounded-full">
-      </div>
-      <div class="flex-1 min-w-0">
-        <h2 class="text-slate-200 font-medium truncate">{{ page.props.user?.name }}</h2>
-        <p :class="['text-slate-400 text-sm truncate']">
-          {{ trans('Level') }} {{ userLevel }} - {{ trans(userClassName) }}
-        </p>
-      </div>
-    </div>
-    
-    <div class="space-y-3">
-      <div>
-        <div class="flex justify-between text-sm mb-1">
-          <span class="text-red-400">{{ trans('Health') }}</span>
-          <span class="text-slate-300">{{ currentPlayerHealth }}/{{ maxPlayerHealth }}</span>
-        </div>
-        <div class="h-2 bg-slate-700 rounded-full overflow-hidden">
-          <div
-            class="h-full bg-red-500 rounded-full transition-all duration-300"
-            :style="{ width: `${(currentPlayerHealth / maxPlayerHealth * 100) || 0}%` }"
-          ></div>
-        </div>
-      </div>
-      
 
-      <div>
-        <div class="flex justify-between text-sm mb-1">
-          <span class="text-blue-400">{{ trans('Energy') }} </span>
-          <span class="text-slate-300">{{ currentPlayerEnergy }}/{{ maxPlayerEnergy }}</span>
-        </div>
-        <div class="h-2 bg-slate-700 rounded-full overflow-hidden">
-          <div
-            class="h-full bg-blue-500 rounded-full transition-all duration-300"
-            :style="{ width: `${(currentPlayerEnergy / maxPlayerEnergy * 100) || 0}%` }"
-          ></div>
-        </div>
-      </div>
-      
-
-      <div>
-        <div class="flex justify-between text-sm mb-1">
-          <span class="text-emerald-400">{{ trans('Experience') }}</span>
-          <span class="text-slate-300">{{ currentPlayerExperience }}/{{ maxPlayerExperience }}</span>
-        </div>
-        <div class="h-2 bg-slate-700 rounded-full overflow-hidden">
-          <div
-            class="h-full bg-emerald-500 rounded-full transition-all duration-300"
-            :style="{ width: experiencePercentage }"
-          ></div>
-        </div>
-      </div>
-    </div>
-  </div>
--->
 </template>
+
+<style scoped>
+@import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
+
+.fantasy-font {
+  font-family: 'MedievalSharp', cursive;
+  text-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
+}
+
+.fantasy-font-light {
+  font-family: 'MedievalSharp', cursive;
+  letter-spacing: 0.5px;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.02);
+  }
+}
+
+.group:hover .bg-gradient-to-r {
+  animation: pulse 2s infinite;
+}
+
+.group:hover {
+  transform: translateY(-1px);
+}
+</style>
