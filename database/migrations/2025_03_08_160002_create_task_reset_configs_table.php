@@ -15,6 +15,7 @@ return new class() extends Migration {
             $table->string("name");
             $table->string("frequency_type");
             $table->integer("period")->default(1);
+            $table->integer("period_to_days")->nullable();
             $table->string("period_unit")->default("day");
             $table->json("days_of_week")->nullable();
             $table->integer("day_of_month")->nullable();
@@ -29,6 +30,7 @@ return new class() extends Migration {
                 "frequency_type" => "daily",
                 "period" => 1,
                 "period_unit" => "day",
+                "period_to_days" => 1,
                 "days_of_week" => null,
                 "day_of_month" => null,
                 "month" => null,
@@ -41,6 +43,7 @@ return new class() extends Migration {
                 "frequency_type" => "weekly",
                 "period" => 1,
                 "period_unit" => "week",
+                "period_to_days" => 7,
                 "days_of_week" => json_encode([1]),
                 "day_of_month" => null,
                 "month" => null,
@@ -53,6 +56,7 @@ return new class() extends Migration {
                 "frequency_type" => "monthly",
                 "period" => 1,
                 "period_unit" => "month",
+                "period_to_days" => 30,
                 "days_of_week" => null,
                 "day_of_month" => 1,
                 "month" => null,
@@ -65,6 +69,7 @@ return new class() extends Migration {
                 "frequency_type" => "yearly",
                 "period" => 1,
                 "period_unit" => "year",
+                "period_to_days" => 365,
                 "days_of_week" => null,
                 "day_of_month" => 1,
                 "month" => 1,
@@ -77,6 +82,7 @@ return new class() extends Migration {
                 "frequency_type" => "custom",
                 "period" => 2,
                 "period_unit" => "day",
+                "period_to_days" => 2,
                 "days_of_week" => null,
                 "day_of_month" => null,
                 "month" => null,
@@ -89,6 +95,7 @@ return new class() extends Migration {
                 "frequency_type" => "custom",
                 "period" => 2,
                 "period_unit" => "week",
+                "period_to_days" => 14,
                 "days_of_week" => json_encode([1]),
                 "day_of_month" => null,
                 "month" => null,
