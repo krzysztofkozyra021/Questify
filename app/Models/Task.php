@@ -25,7 +25,9 @@ class Task extends Model
         "is_completed",
         "is_deadline_task",
         "experience_reward",
-        "checklist_items"
+        "checklist_items",
+        "type",
+        "next_reset_at"
     ];
     protected $casts = [
         "due_date" => "datetime",
@@ -33,7 +35,8 @@ class Task extends Model
         "is_completed" => "boolean",
         "is_deadline_task" => "boolean",
         "experience_reward" => "float",
-        "checklist_items" => "array"
+        "checklist_items" => "array",
+        "next_reset_at" => "datetime"
     ];
 
     /**

@@ -8,10 +8,6 @@ import HamburgerMenu from '@/Components/HamburgerMenu.vue';
 const { trans } = useTranslation();
 const page = usePage();
 
-const user = computed(() => page.props.user ?? { name: 'Player' });
-const userStatistics = computed(() => page.props.userStatistics ?? { level: 1, current_health: 0, max_health: 100, current_experience: 0, next_level_experience: 100 });
-const userClassName = computed(() => page.props.userClassName ?? '');
-
 const showDropdown = ref(false);
 const toggleDropdown = () => { showDropdown.value = !showDropdown.value; };
 const closeDropdown = () => { showDropdown.value = false; };
@@ -22,7 +18,6 @@ const isActive = (routeName) => {
   return currentUrl.includes(routeName);
 };
 
-const profileImageUrl = '/images/default-profile.png'; // Replace with real avatar if available
 </script>
 
 <template>
@@ -65,7 +60,7 @@ const profileImageUrl = '/images/default-profile.png'; // Replace with real avat
     <!-- Bottom Row: PlayerPanel -->
     <div class="bg-stone-800 px-2 md:px-4 py-2">
       <div class="max-w-7xl mx-auto">
-        <PlayerPanel minimal />
+        <PlayerPanel />
       </div>
     </div>
   </header>

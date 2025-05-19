@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http;
 
 use App\Http\Middleware\Authenticate;
+use App\Http\Middleware\CheckTaskResets;
 use App\Http\Middleware\EncryptCookies;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\RedirectIfAuthenticated;
@@ -50,6 +51,7 @@ class Kernel extends HttpKernel
             SubstituteBindings::class,
             HandleInertiaRequests::class,
             SetLocale::class,
+            CheckTaskResets::class,
         ],
 
         "api" => [
@@ -78,4 +80,14 @@ class Kernel extends HttpKernel
         "throttle" => ThrottleRequests::class,
         "verified" => EnsureEmailIsVerified::class,
     ];
+
+    protected function schedule(Schedule $schedule)
+{
+    // Check for tasks that need to be reset every 10 minutes
+    $schedule->call(function () {
+        $taskService = app(\App\Services\TaskService::class);
+        $resetCount = $taskService->resetDueTasks();
+        \Log::info("Reset {$resetCount} tasks");
+    })->everyTenMinutes();
+}
 }
