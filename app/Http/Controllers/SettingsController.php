@@ -22,12 +22,14 @@ class SettingsController extends Controller
         $userStatistics = $user->userStatistics;
         $locales = config("app.available_locales", ["en"]);
         $currentLocale = app()->getLocale();
+        $userClassName = $userStatistics->classAttributes->class_name;
 
         return Inertia::render("Settings", [
             "user" => $user,
             "userStatistics" => $userStatistics,
             "locales" => $locales,
             "currentLocale" => $currentLocale,
+            "userClassName" => $userClassName,
         ]);
     }
 

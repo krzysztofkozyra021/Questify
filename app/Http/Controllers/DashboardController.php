@@ -9,6 +9,8 @@ use App\Services\QuoteService;
 use App\Services\TagService;
 use App\Services\TaskService;
 use App\Services\TranslationService;
+use App\Models\TaskDifficulty;
+use App\Models\TaskResetConfig;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -26,7 +28,10 @@ class DashboardController extends Controller
         $user = auth()->user();
         $userStatistics = $user->userStatistics;
         $userClassName = $userStatistics->classAttributes->class_name;
-
+        $userClassExpMultiplier = $userStatistics->classAttributes->exp_multiplier;
+        $difficulties = TaskDifficulty::all();
+        $resetConfigs = TaskResetConfig::all();
+        
         // Get tasks using TaskService
         $tasks = $this->taskService->getUserTasks($user);
         
@@ -39,6 +44,9 @@ class DashboardController extends Controller
             "userStatistics" => $userStatistics,
             "user" => $user,
             "userClassName" => $userClassName,
+            "userClassExpMultiplier" => $userClassExpMultiplier,
+            "difficulties" => $difficulties,
+            "resetConfigs" => $resetConfigs,
         ]);
     }
 
