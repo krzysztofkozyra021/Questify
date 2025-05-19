@@ -34,8 +34,6 @@ class TaskFactory extends Factory
             'reset_frequency' => $resetConfig,
             'start_date' => now(),
             'due_date' => $this->faker->optional()->dateTimeBetween('now', '+1 month'),
-            'repeat_every' => $this->faker->numberBetween(1, 7),
-            'repeat_unit' => $this->faker->randomElement(['day', 'week', 'month']),
             'is_completed' => false,
             'is_deadline_task' => $this->faker->boolean,
             'experience_reward' => $this->faker->numberBetween(5, 50),
