@@ -88,7 +88,7 @@
               <option v-for="r in resetConfigs" :key="r.id" :value="r.id">{{ trans(r.name) }}</option>
             </select>
           </div>
-          <button type="submit" class="w-full bg-purple-600 text-white py-2 rounded font-bold mt-2" :disabled="loading">
+          <button type="submit" class="w-full bg-amber-800 text-white py-2 rounded font-bold mt-2" :disabled="loading">
             {{ loading ? trans('Creating...') : trans('Create') }}
           </button>
         </form>
