@@ -28,12 +28,11 @@ const newHabit = ref('');
 const newDaily = ref('');
 const newTodo = ref('');
 
-const taskHealthPenalty = computed(() => userStats.max_health * 0.1 * task.difficulty.health_penalty);
-const taskEnergyPenalty = computed(() => userStats.max_energy * 0.1 * task.difficulty.energy_cost);
-
 const completeTask = (task) => {
-  const remainingHealth = userStats.current_health;
-  const remainingEnergy = userStats.current_energy;
+  const taskHealthPenalty = userStats.max_health * 0.1 * task.difficulty.health_penalty;
+  const taskEnergyPenalty = userStats.max_energy * 0.1 * task.difficulty.energy_cost;
+  const remainingHealth = userStats.current_health - taskHealthPenalty;
+  const remainingEnergy = userStats.current_energy - taskEnergyPenalty;
   
   if(remainingHealth <= 0 || remainingHealth < taskHealthPenalty) {
     errorMessage.value = trans('You do not have enough health to complete this task.');

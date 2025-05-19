@@ -70,7 +70,7 @@ class UserStatistics extends Model
     /**
      * Calculate health increase based on current level and tier
      */
-    protected function calculateHealthIncrease(int $level): int
+    protected function calculateHealthIncrease(int $level)
     {
         if ($level <= 10) {
             // Tier 1: Modest health increases
@@ -87,7 +87,7 @@ class UserStatistics extends Model
     /**
      * Calculate energy increase based on current level and tier
      */
-    protected function calculateEnergyIncrease(int $level): int
+    protected function calculateEnergyIncrease(int $level)
     {
         if ($level <= 10) {
             // Tier 1: Modest energy increases
@@ -139,8 +139,8 @@ class UserStatistics extends Model
         $baseXP = 100;
     
         if ($level <= 10) {
-            // Easy early progression - Formula: 100 * level
-            return $baseXP * $level;
+            // Easy early progression - Formula: 100 * level + 25 * level
+            return $baseXP * $level + $baseXP * 0.25 * $level;
         } elseif ($level <= 25) {
             // Medium difficulty mid-game - Formula: 100 + 150 * (level - 10)
             return $baseXP * 10 + $baseXP * 1.5 * ($level - 10);
