@@ -7,31 +7,12 @@ use App\Models\TaskDifficulty;
 use App\Models\TaskResetConfig;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-
+use App\Services\TaskService;
 class TaskController extends Controller
 {
-    public function index()
+    public function __construct(private TaskService $taskService)
     {
-        $user = auth()->user();
-        
-        // Get all tasks with their relations
-        $tasks = $user->tasks()
-            ->with(['tags', 'difficulty', 'resetConfig'])
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        // Separate tasks by type
-        $dailies = $tasks->filter(fn($task) => $task->resetConfig->frequency_type === 'daily');
-        $todos = $tasks->filter(fn($task) => $task->is_deadline_task);
-        $habits = $tasks->filter(fn($task) => $task->resetConfig->frequency_type === 'custom');
-
-        return Inertia::render('Tasks/Index', [
-            'dailies' => $dailies,
-            'todos' => $todos,
-            'habits' => $habits,
-            'difficulties' => TaskDifficulty::all(),
-            'resetConfigs' => TaskResetConfig::all(),
-        ]);
+        $this->taskService = $taskService;
     }
 
     public function store(Request $request)
@@ -43,26 +24,19 @@ class TaskController extends Controller
             'reset_frequency' => 'required|integer|exists:task_reset_configs,id',
             'start_date' => 'required|date',
             'due_date' => 'nullable|date|after:start_date',
-            'repeat_every' => 'required|integer|min:1',
-            'repeat_unit' => 'required|in:day,week,month',
             'is_completed' => 'boolean',
             'is_deadline_task' => 'boolean',
             'experience_reward' => 'required|integer|min:1',
             'tags' => 'array',
             'tags.*' => 'string|max:50',
+            'type' => 'required|string|in:habit,daily,todo',
         ]);
 
         // Create task and attach to user
-        $task = auth()->user()->tasks()->create($validated);
+        $user = auth()->user();
+        $task = $this->taskService->createTask($user, $validated);
 
-        // Create and attach tags if provided
-        if (!empty($validated['tags'])) {
-            $task->tags()->createMany(
-                collect($validated['tags'])->map(fn($tag) => ['name' => $tag])->toArray()
-            );
-        }
-
-        return redirect()->route('tasks.index');
+        return redirect()->back();
     }
 
     public function update(Request $request, Task $task)
@@ -82,25 +56,40 @@ class TaskController extends Controller
         return back();
     }
 
-    public function complete(Task $task)
+    public function completeTask(Task $task)
     {
-        $task->update([
-            'is_completed' => true,
-            'completed_at' => now(),
-        ]);
-
-        // Award experience to user
-        $user = auth()->user();
-        $userStats = $user->userStatistics;
-        $expGain = $task->experience_reward * $task->difficulty->exp_multiplier;
-        
-        $userStats->current_experience += $expGain;
-        $userStats->save();
-
+        if($this->getUserRemainingHealth() <= 0) {
+            return back()->with('error', 'You do not have enough health to complete this task.');
+        }
+        if($this->getUserRemainingEnergy() <= 0) {
+            return back()->with('error', 'You do not have enough energy to complete this task.');
+        }
+        $this->taskService->completeTask($task);
+        return back();
+    }
+    
+    public function taskNotCompleted(Task $task)
+    {
+        $this->taskService->taskNotCompleted($task);
         return back();
     }
 
-    public function reset(Task $task)
+    public function getUserRemainingHealth()
+    {
+        $user = auth()->user();
+        $userStats = $user->userStatistics;
+        return $userStats->current_health;
+    }
+
+    public function getUserRemainingEnergy()
+    {
+        $user = auth()->user();
+        $userStats = $user->userStatistics;
+        return $userStats->current_energy;
+    }
+
+
+    public function resetTask(Task $task)
     {
         $task->update([
             'is_completed' => false,

@@ -17,12 +17,12 @@ return new class() extends Migration {
             $table->unsignedBigInteger("reset_frequency")->nullable(); 
             $table->timestamp("due_date")->nullable();
             $table->timestamp("start_date")->nullable();
-            $table->integer("repeat_every")->default(1);
-            $table->string("repeat_unit")->default("day");
             $table->boolean("is_completed")->default(false);
             $table->boolean("is_deadline_task")->default(false);
             $table->float("experience_reward")->default(10.0);
             $table->json("checklist_items")->nullable();
+            $table->string("type")->default("habit");
+            $table->timestamp("next_reset_at")->nullable();
             $table->timestamps();
         });
 

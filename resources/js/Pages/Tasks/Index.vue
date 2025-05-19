@@ -57,7 +57,7 @@
           <!-- Additional information -->
           <div class="grid grid-cols-2 gap-2 text-sm text-gray-500 mt-4 border-t border-blue-50 pt-3">
             <div v-if="task.experience_reward">
-              <span class="font-medium text-blue-700">XP Reward:</span> {{ task.experience_reward }}
+              <span class="font-medium text-blue-700">XP Reward:</span> {{ Math.round(task.experience_reward * task.difficulty.exp_multiplier * userStats?.classAttributes?.exp_multiplier || 1) }}
             </div>
             <div v-if="task.resetConfig">
               <span class="font-medium text-blue-700">Repeats:</span> {{ task.resetConfig.name }}

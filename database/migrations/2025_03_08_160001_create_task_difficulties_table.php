@@ -26,7 +26,7 @@ return new class() extends Migration {
                 "difficulty_level" => 1,
                 "name" => "Very easy",
                 "color" => "#44CF6C", // green
-                "exp_multiplier" => 1.0,
+                "exp_multiplier" => 0.75,
                 "energy_cost" => 0.5,
                 "health_penalty" => 0.0,
                 "created_at" => now(),
@@ -36,7 +36,7 @@ return new class() extends Migration {
                 "difficulty_level" => 2,
                 "name" => "Easy",
                 "color" => "#3A9BDC", // blue
-                "exp_multiplier" => 1.5,
+                "exp_multiplier" => 1.0,
                 "energy_cost" => 1.0,
                 "health_penalty" => 0.25,
                 "created_at" => now(),
@@ -46,9 +46,9 @@ return new class() extends Migration {
                 "difficulty_level" => 3,
                 "name" => "Medium",
                 "color" => "#E6BC2F", // yellow
-                "exp_multiplier" => 2.0,
+                "exp_multiplier" => 1.5,
                 "energy_cost" => 1.5,
-                "health_penalty" => 0.75,
+                "health_penalty" => 0.5,
                 "created_at" => now(),
                 "updated_at" => now(),
             ],
@@ -56,9 +56,9 @@ return new class() extends Migration {
                 "difficulty_level" => 4,
                 "name" => "Hard",
                 "color" => "#E03F3F", // red
-                "exp_multiplier" => 3.0,
+                "exp_multiplier" => 2.5,
                 "energy_cost" => 2.0,
-                "health_penalty" => 1.25,
+                "health_penalty" => 1.0,
                 "created_at" => now(),
                 "updated_at" => now(),
             ],

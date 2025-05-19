@@ -16,6 +16,7 @@ class TaskResetConfig extends Model
         "name",
         "frequency_type",
         "period",
+        "period_to_days",
         "period_unit",
         "days_of_week",
         "day_of_month",

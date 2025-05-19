@@ -1,13 +1,11 @@
 <script setup>
-import GuestLayout from '@/Layouts/GuestLayout.vue'
 import InputError from '@/Components/InputError.vue'
 import InputLabel from '@/Components/InputLabel.vue'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import TextInput from '@/Components/TextInput.vue'
 import Preloader from '@/Components/Preloader.vue'
-import { Head, Link, useForm } from '@inertiajs/vue3'
+import { Link, useForm } from '@inertiajs/vue3'
 import { useTranslation } from '@/Composables/useTranslation'
-import LanguageSwitcher from '@/Components/LanguageSwitcher.vue'
 import HamburgerMenu from '@/Components/HamburgerMenu.vue'
 import Footer from '@/Components/Footer.vue'
 const { trans } = useTranslation()
@@ -33,7 +31,7 @@ const submit = () => {
     <header class="bg-slate-800 shadow-lg">
       <div class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
         <div class="flex items-center">
-          <Link :href="route('dashboard')">
+          <Link :href="route('register')">
             <img src="/images/logo.png" alt="Questify Logo" class="h-10 w-auto" />
           </Link>
         </div>
