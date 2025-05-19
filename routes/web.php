@@ -15,8 +15,8 @@ use App\Http\Controllers\UserStatisticsController;
 use Illuminate\Support\Facades\Route;
 
 // Public routes
-Route::get("/", fn() => redirect()->route("register"));
 
+Route::get("/", fn() => redirect()->route("register"));
 Route::inertia("/about", "About");
 
 Route::get("/language/{locale}", [LanguageController::class, "switch"])->name("language.switch");
@@ -30,17 +30,16 @@ Route::middleware(["auth"])->group(function (): void {
     Route::post("/select-class", [ClassSelectionController::class, "store"])->name("select-class.store");
 
     // Dashboard - Main game interface
-    Route::get("/dashboard", [DashboardController::class, "index"])->middleware(["auth"])->name("dashboard");
-    Route::post("/user/health", [DashboardController::class, "updateHealth"])->name("user.health");
-    Route::post("/user/addExperience", [DashboardController::class, "addExperience"])->name("user.addExperience");
-    Route::get("/dashboard/motivational-quote/{locale}", [DashboardController::class, "getMotivationalQuote"])->name("dashboard.motivational-quote");
+    Route::get("/", [DashboardController::class, "index"])->name("dashboard");
+    Route::get("/motivational-quote/{locale}", [DashboardController::class, "getMotivationalQuote"])->name("motivational-quote");
 
     // Tasks - User-specific tasks
     Route::prefix("tasks")->name("tasks.")->group(function (): void {
-        Route::get("/create", [DashboardController::class, "create"])->name("create");
-        Route::post("/", [DashboardController::class, "store"])->name("store");
-        Route::post("/{task}/complete", [DashboardController::class, "completeTask"])->name("complete");
-        Route::post("/{task}/reset", [DashboardController::class, "resetTask"])->name("reset");
+        Route::get("/create", [TaskController::class, "create"])->name("create");
+        Route::post("/", [TaskController::class, "store"])->name("store");
+        Route::post("/{task}/complete", [TaskController::class, "completeTask"])->name("complete");
+        Route::post("/{task}/reset", [TaskController::class, "resetTask"])->name("reset");
+        Route::post("/{task}/not-completed", [TaskController::class, "taskNotCompleted"])->name("not-completed");
     });
 
     // Tags - User-specific tags
