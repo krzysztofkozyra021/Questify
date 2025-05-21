@@ -88,8 +88,14 @@ class TaskService
         // Calculate energy penalty based on player 10% of max energy and task difficulty multiplier
         $playerMaxEnergy = $userStats->max_energy;
         $energyPenalty = ($playerMaxEnergy * 0.1) * $task->difficulty->energy_cost;
+        
+        // Calculate health penalty based on player 10% of max health and task difficulty multiplier
+        $playerMaxHealth = $userStats->max_health;
+        $healthPenalty = ($playerMaxHealth * 0.1) * $task->difficulty->health_penalty;
+
 
         $userStats->current_experience += $expGain;
+        $userStats->current_health = max(0, $userStats->current_health - $healthPenalty);
         $userStats->current_energy = max(0, $userStats->current_energy - $energyPenalty);
         $userStats->save();
     }
@@ -104,12 +110,7 @@ class TaskService
         $user = $task->users()->first();
         $userStats = $user->userStatistics;
 
-        // Calculate health penalty based on player 10% of max health and task difficulty multiplier
-        $playerMaxHealth = $userStats->max_health;
-        $healthPenalty = ($playerMaxHealth * 0.1) * $task->difficulty->health_penalty;
-
-        $userStats->current_health = max(0, $userStats->current_health - $healthPenalty);
-        $userStats->save();
+        
     }
 
     public function resetTask(Task $task): void

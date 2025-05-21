@@ -331,5 +331,16 @@
     "Describe the steps to reproduce the bug in detail": "Opisz dokładnie kroki prowadzące do błędu",
     "Provide information about your environment (browser, operating system)": "Podaj informacje o środowisku (przeglądarka, system operacyjny)",
     "Include screenshots or recordings if possible": "Dołącz zrzuty ekranu lub nagrania, jeśli to możliwe",
-    "Set the priority according to the impact on the application": "Określ priorytet zgodnie z wpływem błędu na działanie aplikacji"
+    "Set the priority according to the impact on the application": "Określ priorytet zgodnie z wpływem błędu na działanie aplikacji",
+    "Not enough health to complete this task": "Za mało zdrowia, aby wykonać to zadanie",
+    "Not enough energy to complete this task": "Za mało energii, aby wykonać to zadanie",
+    "Failed to create habit": "Nie udało się utworzyć nawyku",
+    "Failed to create daily task": "Nie udało się utworzyć zadania dziennego",
+    "Failed to create todo task": "Nie udało się utworzyć zadania do wykonania",
+    "Failed to complete task": "Nie udało się wykonać zadania",
+    "Failed to update task": "Nie udało się zaktualizować zadania",
+    "Streak": "Seria",
+    "XP": "PD",
+    "HP": "PZ",
+    "EP": "PE"
 }

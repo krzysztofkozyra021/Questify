@@ -330,5 +330,16 @@
     "Describe the steps to reproduce the bug in detail": "Describe the steps to reproduce the bug in detail",
     "Provide information about your environment (browser, operating system)": "Provide information about your environment (browser, operating system)",
     "Include screenshots or recordings if possible": "Include screenshots or recordings if possible",
-    "Set the priority according to the impact on the application": "Set the priority according to the impact on the application"
+    "Set the priority according to the impact on the application": "Set the priority according to the impact on the application",
+    "Not enough health to complete this task": "Not enough health to complete this task",
+    "Not enough energy to complete this task": "Not enough energy to complete this task",
+    "Failed to create habit": "Failed to create habit",
+    "Failed to create daily task": "Failed to create daily task",
+    "Failed to create todo task": "Failed to create todo task",
+    "Failed to complete task": "Failed to complete task",
+    "Failed to update task": "Failed to update task",
+    "Streak": "Streak",
+    "XP": "XP",
+    "HP": "HP",
+    "EP": "EP"
 }
