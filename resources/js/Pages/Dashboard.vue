@@ -34,6 +34,39 @@ const newHabit = ref('');
 const newDaily = ref('');
 const newTodo = ref('');
 
+// Habits search functionality
+const searchQuery = ref('');
+const isSearchMode = ref(false);
+const tempInputValue = ref('');
+
+const filteredHabits = computed(() => {
+  if (!isSearchMode.value || !searchQuery.value) return habits.value;
+  const query = searchQuery.value.toLowerCase();
+  return habits.value.filter(habit => 
+    habit.title.toLowerCase().includes(query) || 
+    habit.description?.toLowerCase().includes(query) ||
+    habit.tags?.some(tag => tag.name.toLowerCase().includes(query))
+  );
+});
+
+const toggleSearchMode = () => {
+  // Store the current input value before switching modes
+  if (isSearchMode.value) {
+    tempInputValue.value = searchQuery.value;
+  } else {
+    tempInputValue.value = newHabit.value;
+  }
+  
+  isSearchMode.value = !isSearchMode.value;
+  
+  // Restore the stored value to the appropriate input
+  if (isSearchMode.value) {
+    searchQuery.value = tempInputValue.value;
+  } else {
+    newHabit.value = tempInputValue.value;
+  }
+};
+
 const completeTask = (task) => {
   const taskHealthPenalty = userStats.max_health * 0.1 * task.difficulty.health_penalty;
   const taskEnergyPenalty = userStats.max_energy * 0.1 * task.difficulty.energy_cost;
@@ -110,7 +143,6 @@ const getTaskExperience = (task) => {
   return Math.round(task.experience_reward * task.difficulty.exp_multiplier * userClassExpMultiplier);
 };
 
-const profileImageUrl = computed(() => '/images/default-profile.png'); // Replace with real avatar if available
 </script>
 
 <template>
@@ -126,8 +158,68 @@ const profileImageUrl = computed(() => '/images/default-profile.png'); // Replac
       <section class="bg-stone-100 rounded-xl shadow-lg p-4 md:p-6 lg:p-8 flex flex-col min-h-[300px] md:min-h-[400px] lg:min-h-[500px]">
         <h2 class="text-lg md:text-xl font-bold text-stone-800 border-b-2 border-stone-600 pb-2 mb-3">{{ trans('Habits') }}</h2>
         <div class="flex mb-3 gap-2">
-          <input v-model="newHabit" @keyup.enter="addTask('habit')" type="text" :placeholder="trans('Add a Habit')" class="flex-1 px-2 md:px-3 py-1 rounded border border-stone-300 bg-white text-stone-800 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-600 text-sm md:text-base" />
-          <button @click="showCreateHabitModal = true" class="bg-stone-600 text-stone-50 px-2 md:px-3 py-1 rounded font-bold shadow hover:bg-stone-700 text-sm md:text-base">{{ trans('+') }}</button>
+          <input 
+            v-if="!isSearchMode"
+            v-model="newHabit" 
+            @keyup.enter="addTask('habit')" 
+            type="text" 
+            :placeholder="trans('Add a Habit')" 
+            class="flex-1 px-2 md:px-3 py-1 rounded border border-stone-300 bg-white text-stone-800 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-600 text-sm md:text-base" 
+          />
+          <input 
+            v-else
+            v-model="searchQuery" 
+            type="text" 
+            :placeholder="trans('Search habits...')" 
+            class="flex-1 px-2 md:px-3 py-1 rounded border border-stone-300 bg-white text-stone-800 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-600 text-sm md:text-base" 
+          />
+          <button 
+            v-if="!isSearchMode"
+            @click="showCreateHabitModal = true" 
+            class="bg-stone-600 text-stone-50 px-2 md:px-3 py-1 rounded font-bold shadow hover:bg-stone-700 text-sm md:text-base"
+          >
+            {{ trans('+') }}
+          </button>
+          <button 
+            v-else
+            @click="toggleSearchMode" 
+            class="bg-stone-600 text-stone-50 px-2 md:px-3 py-1 rounded font-bold shadow hover:bg-stone-700 text-sm md:text-base"
+          >
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              class="h-4 w-4" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor"
+            >
+              <path 
+                stroke-linecap="round" 
+                stroke-linejoin="round" 
+                stroke-width="2" 
+                d="M6 18L18 6M6 6l12 12" 
+              />
+            </svg>
+          </button>
+          <button 
+            v-if="!isSearchMode"
+            @click="toggleSearchMode" 
+            class="bg-stone-600 text-stone-50 px-2 md:px-3 py-1 rounded font-bold shadow hover:bg-stone-700 text-sm md:text-base"
+          >
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              class="h-4 w-4" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor"
+            >
+              <path 
+                stroke-linecap="round" 
+                stroke-linejoin="round" 
+                stroke-width="2" 
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" 
+              />
+            </svg>
+          </button>
           <CreateHabitModal
             :show="showCreateHabitModal"
             :difficulties="difficulties"
@@ -136,7 +228,7 @@ const profileImageUrl = computed(() => '/images/default-profile.png'); // Replac
           />
         </div>
         <ul class="flex-1 space-y-2 overflow-y-auto pr-1">  
-          <li v-for="task in habits" :key="task.id" class="bg-white rounded-lg shadow">
+          <li v-for="task in filteredHabits" :key="task.id" class="bg-white rounded-lg shadow">
             <div class="flex items-stretch gap-2 ">
               <div class="flex items-center justify-center px-2 md:px-3 py-2 rounded-l-lg"
               :class="{'bg-stone-600': !task.difficulty}" :style="task.difficulty ? { backgroundColor: task.difficulty.color || '#57534e' } : {}">
@@ -282,9 +374,6 @@ const profileImageUrl = computed(() => '/images/default-profile.png'); // Replac
 </template>
 
 <style>
-body {
-  background: #ffffff;
-}
 ::-webkit-scrollbar {
   width: 7px;
 }
