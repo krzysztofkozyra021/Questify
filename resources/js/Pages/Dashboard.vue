@@ -11,6 +11,8 @@ import { router } from '@inertiajs/vue3';
 const { trans } = useTranslation();
 const page = usePage();
 
+const DEFAULT_EXPERIENCE_REWARD = 5;
+
 const showCreateHabitModal = ref(false);
 const showErrorModal = ref(false);
 const errorMessage = ref('');
@@ -24,6 +26,10 @@ const todos = computed(() => page.props.tasks?.todos || []);
 const userStats = page.props.userStatistics;
 const userClassExpMultiplier = page.props.userClassExpMultiplier;
 
+// Add computed properties for remaining stats
+const remainingHealth = computed(() => userStats.current_health);
+const remainingEnergy = computed(() => userStats.current_energy);
+
 const newHabit = ref('');
 const newDaily = ref('');
 const newTodo = ref('');
@@ -31,15 +37,13 @@ const newTodo = ref('');
 const completeTask = (task) => {
   const taskHealthPenalty = userStats.max_health * 0.1 * task.difficulty.health_penalty;
   const taskEnergyPenalty = userStats.max_energy * 0.1 * task.difficulty.energy_cost;
-  const remainingHealth = userStats.current_health - taskHealthPenalty;
-  const remainingEnergy = userStats.current_energy - taskEnergyPenalty;
   
-  if(remainingHealth <= 0 || remainingHealth < taskHealthPenalty) {
+  if(remainingHealth.value <= 0 || remainingHealth.value <= taskHealthPenalty) {
     errorMessage.value = trans('You do not have enough health to complete this task.');
     showErrorModal.value = true;
     return;
   }
-  if(remainingEnergy <= 0 || remainingEnergy < taskEnergyPenalty) {
+  if(remainingEnergy.value <= 0 || remainingEnergy.value <= taskEnergyPenalty) {
     errorMessage.value = trans('You do not have enough energy to complete this task.');
     showErrorModal.value = true;
     return;
@@ -47,6 +51,12 @@ const completeTask = (task) => {
   task.is_completed = !task.is_completed;
   router.post(`/tasks/${task.id}/complete`, {
     is_completed: task.is_completed,
+  }, {
+    onSuccess: () => {
+      // Update local stats after successful completion
+      userStats.current_health = remainingHealth.value - taskHealthPenalty;
+      userStats.current_energy = remainingEnergy.value - taskEnergyPenalty;
+    }
   });
 };
 
@@ -54,8 +64,15 @@ const taskNotCompleted = (task) => {
     task.is_completed = !task.is_completed;
     router.post(`/tasks/${task.id}/not-completed`, {
       is_completed: !task.is_completed,
+    }, {
+      onSuccess: () => {
+        // Update local stats after successful uncompletion
+        const taskHealthPenalty = userStats.max_health * 0.1 * task.difficulty.health_penalty;
+        const taskEnergyPenalty = userStats.max_energy * 0.1 * task.difficulty.energy_cost;
+        userStats.current_health = remainingHealth.value + taskHealthPenalty;
+        userStats.current_energy = remainingEnergy.value + taskEnergyPenalty;
+      }
     });
- 
 };
 
 const form = ref({
@@ -68,7 +85,7 @@ const form = ref({
     difficulty_level: 2,
     is_completed: false,
     is_deadline_task: false,
-    experience_reward: 10,
+    experience_reward: DEFAULT_EXPERIENCE_REWARD,
     type: 'habit',
   });
 
@@ -78,6 +95,7 @@ const addTask = (type) => {
       ...form.value,
       title: newHabit.value.trim(),
       tags: form.value.tags.split(',').map(t => t.trim()).filter(Boolean),
+      experience_reward: DEFAULT_EXPERIENCE_REWARD,
     };
     
     router.post('/tasks', formData, {
@@ -139,7 +157,26 @@ const profileImageUrl = computed(() => '/images/default-profile.png'); // Replac
                 <div v-if="task.tags && task.tags.length" class="flex flex-wrap gap-1 mt-1">
                   <span v-for="tag in task.tags" :key="tag.id" class="bg-stone-100 text-stone-700 px-1.5 md:px-2 py-0.5 rounded text-xs font-semibold">#{{ tag.name }}</span>
                 </div>
-                <span v-if="task.experience_reward" class="ml-1 md:ml-2 text-xs font-bold text-stone-600">+{{ getTaskExperience(task) }} {{ trans('XP') }}</span>
+                <div class="flex flex-wrap items-center gap-2 mt-1">
+                  <span v-if="task.experience_reward" class="text-xs font-bold text-stone-600 bg-amber-100 px-2 py-0.5 rounded flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 md:h-4 md:w-4 text-amber-400 mr-1" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                    </svg>
+                    +{{ getTaskExperience(task) }} {{ trans('XP') }}
+                  </span>
+                  <span v-if="task.difficulty" class="text-xs font-bold text-stone-600 bg-red-100 px-2 py-0.5 rounded flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 md:h-4 md:w-4 text-red-500 mr-1" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
+                    -{{ Math.round(userStats.max_health * 0.1 * task.difficulty.health_penalty) }} {{ trans('HP') }}
+                  </span>
+                  <span v-if="task.difficulty" class="text-xs font-bold text-stone-600 bg-blue-100 px-2 py-0.5 rounded flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 md:h-4 md:w-4 text-blue-500 mr-1" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                    -{{ Math.round(userStats.max_energy * 0.1 * task.difficulty.energy_cost) }} {{ trans('EP') }}
+                  </span>
+                </div>
               </div>
               <div class="flex items-center justify-center px-2 md:px-3 py-2 rounded-r-lg"
               :class="{'bg-stone-600': !task.difficulty}" :style="task.difficulty ? { backgroundColor: task.difficulty.color || '#57534e' } : {}">

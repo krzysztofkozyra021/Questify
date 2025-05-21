@@ -5,6 +5,8 @@
 
   const { trans } = useTranslation();
 
+  const DEFAULT_EXPERIENCE_REWARD = 5;
+
   const props = defineProps({
     show: Boolean,
     onClose: Function,
@@ -24,7 +26,7 @@
     start_date: new Date().toISOString().slice(0, 10),
     is_completed: false,
     is_deadline_task: false,
-    experience_reward: 10,
+    experience_reward: DEFAULT_EXPERIENCE_REWARD,
     type: 'habit',
   });
   
@@ -45,6 +47,7 @@
     router.post('/tasks', {
       ...form.value,
       tags: form.value.tags.split(',').map(t => t.trim()).filter(Boolean),
+      experience_reward: DEFAULT_EXPERIENCE_REWARD,
     }, {
       onSuccess: () => {
         loading.value = false;
