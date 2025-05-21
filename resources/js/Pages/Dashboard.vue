@@ -139,7 +139,7 @@ const profileImageUrl = computed(() => '/images/default-profile.png'); // Replac
                 <div v-if="task.tags && task.tags.length" class="flex flex-wrap gap-1 mt-1">
                   <span v-for="tag in task.tags" :key="tag.id" class="bg-stone-100 text-stone-700 px-1.5 md:px-2 py-0.5 rounded text-xs font-semibold">#{{ tag.name }}</span>
                 </div>
-                <span v-if="task.experience_reward" class="ml-1 md:ml-2 text-xs font-bold text-stone-600">+{{ getTaskExperience(task) }} XP </span>
+                <span v-if="task.experience_reward" class="ml-1 md:ml-2 text-xs font-bold text-stone-600">+{{ getTaskExperience(task) }} {{ trans('XP') }}</span>
               </div>
               <div class="flex items-center justify-center px-2 md:px-3 py-2 rounded-r-lg"
               :class="{'bg-stone-600': !task.difficulty}" :style="task.difficulty ? { backgroundColor: task.difficulty.color || '#57534e' } : {}">

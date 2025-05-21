@@ -43,7 +43,7 @@ const { socialLinks } = usePage().props
           </div>
 
           <!-- Copyright -->
-          <div class="text-xs text-stone-400">
+          <div class="text-xs text-stone-400 mr-16">
             © {{ new Date().getFullYear() }} Questify. {{ trans('All rights reserved.') }}
           </div>
 
