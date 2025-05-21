@@ -9,32 +9,32 @@ const { socialLinks } = usePage().props
 <template>
   <footer class="bg-stone-800 text-white py-4">
     <div class="max-w-7xl mx-auto px-4">
-      <!-- Logo i opis -->
+        <!-- Logo i opis -->
       <div class="text-center mb-4">
         <p class="text-lg font-bold mb-1">Questify</p>
-        <p class="text-xs text-stone-400">Questify to narzędzie do zarządzania zadaniami, które pomaga Ci osiągać cele.</p>
+        <p class="text-xs text-stone-400">{{ trans('Questify is a tool for managing tasks that helps you achieve goals.') }}</p>
       </div>
-      <!-- Linki -->
+      <!-- Links -->
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
         <div class="flex flex-col items-center gap-1">
-          <Link :href="route('about')" class="text-stone-400 hover:text-white transition-colors text-sm">O nas</Link>
-          <Link :href="route('faq')" class="text-stone-400 hover:text-white transition-colors text-sm">FAQ</Link>
+          <Link :href="route('about')" class="text-stone-400 hover:text-white transition-colors text-sm">{{ trans('About us') }}</Link>
+          <Link :href="route('faq')" class="text-stone-400 hover:text-white transition-colors text-sm">{{ trans('FAQ') }}</Link>
         </div>
         <div class="flex flex-col items-center gap-1">
-          <Link :href="route('terms')" class="text-stone-400 hover:text-white transition-colors text-sm">Regulamin</Link>
-          <Link :href="route('policy')" class="text-stone-400 hover:text-white transition-colors text-sm">Polityka prywatności</Link>
+          <Link :href="route('terms')" class="text-stone-400 hover:text-white transition-colors text-sm">{{ trans('Terms') }}</Link>
+          <Link :href="route('policy')" class="text-stone-400 hover:text-white transition-colors text-sm">{{ trans('Privacy policy') }}</Link>
         </div>
         <div class="flex flex-col items-center gap-1">
-          <Link :href="route('contact')" class="text-stone-400 hover:text-white transition-colors text-sm">Kontakt</Link>
-          <Link :href="route('support')" class="text-stone-400 hover:text-white transition-colors text-sm">Wsparcie</Link>
+          <Link :href="route('contact')" class="text-stone-400 hover:text-white transition-colors text-sm">{{ trans('Contact') }}</Link>
+          <Link :href="route('support')" class="text-stone-400 hover:text-white transition-colors text-sm">{{ trans('Support') }}</Link>
         </div>
         <div class="flex flex-col items-center gap-1">
-          <Link :href="route('report.feature')" class="text-stone-400 hover:text-white transition-colors text-sm">Zgłoś funkcję</Link>
-          <Link :href="route('report.bug')" class="text-stone-400 hover:text-white transition-colors text-sm">Zgłoś błąd</Link>
+          <Link :href="route('report.feature')" class="text-stone-400 hover:text-white transition-colors text-sm">{{ trans('Report a feature') }}</Link>
+          <Link :href="route('report.bug')" class="text-stone-400 hover:text-white transition-colors text-sm">{{ trans('Report a bug') }}</Link>
         </div>
       </div>
 
-      <!-- Dolna sekcja -->
+      <!-- Bottom section -->
       <div class="border-t border-stone-700 pt-4">
         <div class="flex flex-col md:flex-row justify-between items-center gap-2">
           <!-- Logo -->
