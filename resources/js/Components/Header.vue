@@ -4,6 +4,7 @@ import { usePage, Link, router } from '@inertiajs/vue3';
 import { useTranslation } from '@/Composables/useTranslation';
 import PlayerPanel from '@/Components/PlayerPanel.vue';
 import HamburgerMenu from '@/Components/HamburgerMenu.vue';
+import LanguageSwitcher from '@/Components/LanguageSwitcher.vue';
 
 const props = defineProps({
   showPlayerPanel: {
@@ -36,6 +37,7 @@ const togglePlayerPanel = () => {
 
 <template>
   <header class="bg-stone-900 shadow-md">
+    <LanguageSwitcher />
     <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between px-2 md:px-4 py-2 relative">
       <!-- Left: Logo and Navigation -->
       <div class="flex items-center gap-2 md:gap-4 w-full md:w-auto justify-between md:justify-start">
