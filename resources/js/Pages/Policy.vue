@@ -1,118 +1,118 @@
 <template>
   <div class="flex flex-col min-h-screen">
     <Header :showPlayerPanel="false" />
-    <main class="flex-1 max-w-4xl mx-auto px-4 py-8">
-      <h1 class="text-3xl font-bold text-center mb-8">Polityka Prywatności</h1>
+    <main class="flex-1 max-w-4xl mx-auto p-12">
+      <h1 class="text-3xl font-bold text-center mb-8">{{ trans('Privacy Policy') }}</h1>
       
       <div class="bg-white rounded-lg shadow-md p-6 space-y-8">
         <section>
-          <h2 class="text-2xl font-semibold mb-4">1. Informacje ogólne</h2>
+          <h2 class="text-2xl font-semibold mb-4">{{ trans('1. General information') }}</h2>
           <div class="prose prose-stone max-w-none">
-            <p>Niniejsza polityka prywatności określa zasady przetwarzania i ochrony danych osobowych w serwisie Questify.</p>
-            <p>Administratorem danych osobowych jest Questify.</p>
+            <p>{{ trans('This privacy policy outlines the rules for processing and protecting personal data in the Questify service.') }}</p>
+            <p>{{ trans('The administrator of personal data is ') }} Questify</p>
           </div>
         </section>
 
         <section>
-          <h2 class="text-2xl font-semibold mb-4">2. Zakres przetwarzanych danych</h2>
+          <h2 class="text-2xl font-semibold mb-4">{{ trans('2. Scope of processed data') }}</h2>
           <div class="prose prose-stone max-w-none">
-            <p>Przetwarzamy następujące dane osobowe:</p>
-            <ul>
-              <li>Adres email</li>
-              <li>Imię i nazwisko</li>
-              <li>Dane logowania</li>
-              <li>Dane dotyczące aktywności w serwisie</li>
+            <p>{{ trans('We process the following personal data:') }}</p>
+            <ul class="list-disc list-inside">
+              <li>{{ trans('Email address') }}</li>
+              <li>{{ trans('Username') }}</li>
+              <li>{{ trans('Login data') }}</li>
+              <li>{{ trans('Data about activity on the service') }}</li>
             </ul>
           </div>
         </section>
 
         <section>
-          <h2 class="text-2xl font-semibold mb-4">3. Cel przetwarzania danych</h2>
+          <h2 class="text-2xl font-semibold mb-4">{{ trans('3. Purpose of data processing') }}</h2>
           <div class="prose prose-stone max-w-none">
-            <p>Dane osobowe są przetwarzane w celu:</p>
-            <ul>
-              <li>Świadczenia usług przez serwis</li>
-              <li>Komunikacji z użytkownikami</li>
-              <li>Analizy i poprawy działania serwisu</li>
-              <li>Zapewnienia bezpieczeństwa</li>
+            <p>{{ trans('Personal data is processed for the following purposes:') }}</p>
+            <ul class="list-disc list-inside">
+              <li>{{ trans('Providing services through the service') }}</li>
+              <li>{{ trans('Communication with users') }}</li>
+              <li>{{ trans('Analysis and improvement of the service') }}</li>
+              <li>{{ trans('Ensuring security') }}</li>
             </ul>
           </div>
         </section>
 
         <section>
-          <h2 class="text-2xl font-semibold mb-4">4. Podstawa prawna przetwarzania</h2>
+          <h2 class="text-2xl font-semibold mb-4">{{ trans('4. Legal basis for processing') }}</h2>
           <div class="prose prose-stone max-w-none">
-            <p>Przetwarzanie danych odbywa się na podstawie:</p>
-            <ul>
-              <li>Zgody użytkownika</li>
-              <li>Wykonania umowy</li>
-              <li>Prawnie uzasadnionych interesów administratora</li>
-              <li>Obowiązku prawnego</li>
+            <p>{{ trans('Processing of data is based on:') }}</p>
+            <ul class="list-disc list-inside">
+              <li>{{ trans('User consent') }}</li>
+              <li>{{ trans('Performance of a contract') }}</li>
+              <li>{{ trans('Legally justified interests of the administrator') }}</li>
+              <li>{{ trans('Legal obligation') }}</li>
             </ul>
           </div>
         </section>
 
         <section>
-          <h2 class="text-2xl font-semibold mb-4">5. Okres przechowywania danych</h2>
+          <h2 class="text-2xl font-semibold mb-4">{{ trans('5. Period of data storage') }}</h2>
           <div class="prose prose-stone max-w-none">
-            <p>Dane osobowe są przechowywane przez okres:</p>
-            <ul>
-              <li>Niezbędny do realizacji celów</li>
-              <li>Wymagany przez przepisy prawa</li>
-              <li>Do momentu wycofania zgody</li>
+            <p>{{ trans('Personal data is stored for a period of:') }}</p>
+            <ul class="list-disc list-inside">
+              <li>{{ trans('Required to achieve the purposes') }}</li>
+              <li>{{ trans('Required by law') }}</li>
+              <li>{{ trans('Until the user withdraws consent') }}</li>
             </ul>
           </div>
         </section>
 
         <section>
-          <h2 class="text-2xl font-semibold mb-4">6. Prawa użytkownika</h2>
+          <h2 class="text-2xl font-semibold mb-4">{{ trans('6. User rights') }}</h2>
           <div class="prose prose-stone max-w-none">
-            <p>Użytkownik ma prawo do:</p>
-            <ul>
-              <li>Dostępu do swoich danych</li>
-              <li>Sprostowania danych</li>
-              <li>Usunięcia danych</li>
-              <li>Ograniczenia przetwarzania</li>
-              <li>Przenoszenia danych</li>
-              <li>Sprzeciwu wobec przetwarzania</li>
+            <p>{{ trans('The user has the right to:') }}</p>
+            <ul class="list-disc list-inside">
+              <li>{{ trans('Access to their data') }}</li>
+              <li>{{ trans('Rectification of data') }}</li>
+              <li>{{ trans('Deletion of data') }}</li>
+              <li>{{ trans('Restriction of processing') }}</li>
+              <li>{{ trans('Data transfer') }}</li>
+              <li>{{ trans('Opposition to processing') }}</li>
             </ul>
           </div>
         </section>
 
         <section>
-          <h2 class="text-2xl font-semibold mb-4">7. Bezpieczeństwo danych</h2>
+          <h2 class="text-2xl font-semibold mb-4">{{ trans('7. Data security') }}</h2>
           <div class="prose prose-stone max-w-none">
-            <p>Zapewniamy bezpieczeństwo danych poprzez:</p>
-            <ul>
-              <li>Szyfrowanie transmisji</li>
-              <li>Regularne kopie zapasowe</li>
-              <li>Kontrolę dostępu</li>
-              <li>Monitorowanie systemu</li>
+            <p>{{ trans('We ensure data security through:') }}</p>
+            <ul class="list-disc list-inside">
+              <li>{{ trans('Encryption of transmission') }}</li>
+              <li>{{ trans('Regular backups') }}</li>
+              <li>{{ trans('Access control') }}</li>
+              <li>{{ trans('Monitoring the system') }}</li>
             </ul>
           </div>
         </section>
 
         <section>
-          <h2 class="text-2xl font-semibold mb-4">8. Pliki cookies</h2>
+          <h2 class="text-2xl font-semibold mb-4">{{ trans('8. Cookies') }}</h2>
           <div class="prose prose-stone max-w-none">
-            <p>Serwis wykorzystuje pliki cookies do:</p>
-            <ul>
-              <li>Utrzymania sesji użytkownika</li>
-              <li>Zapamiętywania preferencji</li>
-              <li>Analizy ruchu</li>
-              <li>Personalizacji treści</li>
+            <p>{{ trans('The service uses cookies for:') }}</p>
+            <ul class="list-disc list-inside">
+              <li>{{ trans('Maintaining user sessions') }}</li>
+              <li>{{ trans('Remembering preferences') }}</li>
+              <li>{{ trans('Traffic analysis') }}</li>
+              <li>{{ trans('Personalization of content') }}</li>
             </ul>
           </div>
         </section>
 
         <section>
-          <h2 class="text-2xl font-semibold mb-4">9. Kontakt</h2>
+          <h2 class="text-2xl font-semibold mb-4">{{ trans('9. Contact') }}</h2>
           <div class="prose prose-stone max-w-none">
-            <p>W sprawach związanych z ochroną danych można kontaktować się:</p>
+            <p>{{ trans('For matters related to data protection, you can contact:') }}</p>
             <ul>
-              <li>Email: privacy@questify.com</li>
-              <li>Telefon: +48 123 456 789</li>
-              <li>Adres: ul. Przykładowa 123, 00-000 Warszawa</li>
+              <li>{{ trans('Email:') }} <a href="mailto:questify@gmail.com">questify@gmail.com</a></li>
+              <li>{{ trans('Phone:') }} <a href="tel:+48123456789">+48 123 456 789</a></li>
+              <li>{{ trans('Address:') }} <a href="https://goo.gl/maps/1234567890">ul. Przykładowa 123, 00-000 Warszawa</a></li>
             </ul>
           </div>
         </section>
