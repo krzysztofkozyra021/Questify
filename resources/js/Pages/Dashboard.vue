@@ -96,16 +96,16 @@ const profileImageUrl = computed(() => '/images/default-profile.png'); // Replac
 </script>
 
 <template>
-  <div class="min-h-screen bg-white">
-    <Header />
+  <div class="min-h-screen bg-white flex flex-col">
+    <Header :showPlayerPanel="true" />
     <ErrorModal 
       :show="showErrorModal"
       :message="errorMessage"
       @close="showErrorModal = false"
     />
-    <main class="max-w-[1920px] mx-auto grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-8 lg:gap-12 py-4 md:py-8 lg:py-12 px-2 md:px-4 lg:px-8">
+    <main class="flex-1 w-full mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-12 py-6 md:py-8 lg:py-12 px-4 md:px-6 lg:px-8">
       <!-- Habits -->
-      <section class="bg-stone-100 rounded-xl shadow-lg p-3 md:p-4 lg:p-6 flex flex-col min-h-[300px] md:min-h-[400px] lg:min-h-[500px]">
+      <section class="bg-stone-100 rounded-xl shadow-lg p-4 md:p-6 lg:p-8 flex flex-col min-h-[300px] md:min-h-[400px] lg:min-h-[500px]">
         <h2 class="text-lg md:text-xl font-bold text-stone-800 border-b-2 border-stone-600 pb-2 mb-3">{{ trans('Habits') }}</h2>
         <div class="flex mb-3 gap-2">
           <input v-model="newHabit" @keyup.enter="addTask('habit')" type="text" :placeholder="trans('Add a Habit')" class="flex-1 px-2 md:px-3 py-1 rounded border border-stone-300 bg-white text-stone-800 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-600 text-sm md:text-base" />
@@ -153,7 +153,7 @@ const profileImageUrl = computed(() => '/images/default-profile.png'); // Replac
         </ul>
       </section>
       <!-- Dailies -->
-      <section class="bg-stone-100 rounded-xl shadow-lg p-3 md:p-4 lg:p-6 flex flex-col min-h-[300px] md:min-h-[400px] lg:min-h-[500px]">
+      <section class="bg-stone-100 rounded-xl shadow-lg p-4 md:p-6 lg:p-8 flex flex-col min-h-[300px] md:min-h-[400px] lg:min-h-[500px]">
         <h2 class="text-lg md:text-xl font-bold text-stone-800 border-b-2 border-stone-600 pb-2 mb-3">{{ trans('Dailies') }}</h2>
         <div class="flex mb-3 gap-2">
           <input v-model="newDaily" @keyup.enter="addTask('daily')" type="text" :placeholder="trans('Add a Daily')" class="flex-1 px-2 md:px-3 py-1 rounded border border-stone-300 bg-white text-stone-800 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-600 text-sm md:text-base" />
@@ -193,7 +193,7 @@ const profileImageUrl = computed(() => '/images/default-profile.png'); // Replac
         </ul>
       </section>
       <!-- To Do's -->
-      <section class="bg-stone-100 rounded-xl shadow-lg p-3 md:p-4 lg:p-6 flex flex-col min-h-[300px] md:min-h-[400px] lg:min-h-[500px]">
+      <section class="bg-stone-100 rounded-xl shadow-lg p-4 md:p-6 lg:p-8 flex flex-col min-h-[300px] md:min-h-[400px] lg:min-h-[500px]">
         <h2 class="text-lg md:text-xl font-bold text-stone-800 border-b-2 border-stone-600 pb-2 mb-3">{{ trans("To Do's") }}</h2>
         <div class="flex mb-3 gap-2">
           <input v-model="newTodo" @keyup.enter="addTask('todo')" type="text" :placeholder="trans('Add a To Do')" class="flex-1 px-2 md:px-3 py-1 rounded border border-stone-300 bg-white text-stone-800 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-600 text-sm md:text-base" />
@@ -240,8 +240,8 @@ const profileImageUrl = computed(() => '/images/default-profile.png'); // Replac
         </ul>
       </section>
     </main>
+    <Footer />
   </div>
-  <Footer />
 </template>
 
 <style>

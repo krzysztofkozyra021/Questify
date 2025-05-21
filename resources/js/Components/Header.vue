@@ -5,6 +5,13 @@ import { useTranslation } from '@/Composables/useTranslation';
 import PlayerPanel from '@/Components/PlayerPanel.vue';
 import HamburgerMenu from '@/Components/HamburgerMenu.vue';
 
+const props = defineProps({
+  showPlayerPanel: {
+    type: Boolean,
+    default: false
+  }
+});
+
 const { trans } = useTranslation();
 const page = usePage();
 
@@ -18,6 +25,13 @@ const isActive = (routeName) => {
   return currentUrl.includes(routeName);
 };
 
+const userStats = page.props.userStatistics;
+const userClassExpMultiplier = page.props.userClassExpMultiplier;
+
+const togglePlayerPanel = () => {
+  props.showPlayerPanel = !props.showPlayerPanel;
+};
+
 </script>
 
 <template>
@@ -25,7 +39,13 @@ const isActive = (routeName) => {
     <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between px-2 md:px-4 py-2 relative">
       <!-- Left: Logo and Navigation -->
       <div class="flex items-center gap-2 md:gap-4 w-full md:w-auto justify-between md:justify-start">
+        <Link 
+            :href="route('dashboard')" 
+            class="hover:scale-105 transition-all duration-300" 
+           
+          >
         <img src="/images/logo.png" alt="Logo" class="w-32 md:w-40 h-8 md:h-10" />
+        </Link>
         <!-- Navigation -->
         <nav class="hidden md:flex gap-4 lg:gap-6">
           <Link 
@@ -58,7 +78,7 @@ const isActive = (routeName) => {
       </div>
     </div>
     <!-- Bottom Row: PlayerPanel -->
-    <div class="bg-stone-800 px-2 md:px-4 py-2">
+    <div v-if="props.showPlayerPanel" class="bg-stone-800 px-2 md:px-4 py-2">
       <div class="max-w-7xl mx-auto">
         <PlayerPanel />
       </div>
