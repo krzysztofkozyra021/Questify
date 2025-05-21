@@ -19,7 +19,7 @@
             <p>{{ trans('We process the following personal data:') }}</p>
             <ul class="list-disc list-inside">
               <li>{{ trans('Email address') }}</li>
-              <li>{{ trans('Username') }}</li>
+              <li>{{ trans('Name and surname') }}</li>
               <li>{{ trans('Login data') }}</li>
               <li>{{ trans('Data about activity on the service') }}</li>
             </ul>

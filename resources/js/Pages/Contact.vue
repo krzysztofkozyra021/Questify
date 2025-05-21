@@ -1,13 +1,13 @@
 <template>
   <div class="flex flex-col min-h-screen">
     <Header :showPlayerPanel="false" />
-    <main class="flex-1 max-w-4xl mx-auto px-4 py-8">
-      <h1 class="text-3xl font-bold text-center mb-8">Kontakt</h1>
+    <main class="flex-1 max-w-4xl mx-auto p-12">
+      <h1 class="text-4xl font-bold text-center mb-8">{{ trans('Contact') }}</h1>
       
       <div class="bg-white rounded-lg shadow-md p-6">
         <form @submit.prevent="submitForm" class="space-y-6">
           <div>
-            <label for="name" class="block text-sm font-medium text-stone-700">Imię i nazwisko</label>
+            <label for="name" class="block text-m font-bold text-stone-700">{{ trans('Name and surname') }}</label>
             <input
               type="text"
               id="name"
@@ -18,7 +18,7 @@
           </div>
 
           <div>
-            <label for="email" class="block text-sm font-medium text-stone-700">Email</label>
+            <label for="email" class="block text-m font-bold text-stone-700">{{ trans('Email') }}</label>
             <input
               type="email"
               id="email"
@@ -29,7 +29,7 @@
           </div>
 
           <div>
-            <label for="subject" class="block text-sm font-medium text-stone-700">Temat</label>
+            <label for="subject" class="block text-m font-bold text-stone-700">{{ trans('Subject') }}</label>
             <input
               type="text"
               id="subject"
@@ -40,7 +40,7 @@
           </div>
 
           <div>
-            <label for="message" class="block text-sm font-medium text-stone-700">Wiadomość</label>
+            <label for="message" class="block text-m font-bold text-stone-700">{{ trans('Message') }}</label>
             <textarea
               id="message"
               v-model="form.message"
@@ -53,9 +53,9 @@
           <div class="flex justify-end">
             <button
               type="submit"
-              class="bg-stone-600 text-white px-6 py-3 rounded-lg hover:bg-stone-700 transition-colors"
+              class="inline-block bg-stone-600 text-white px-6 py-3 font-bold rounded-lg hover:bg-stone-700 transition-colors"
             >
-              Wyślij wiadomość
+              {{ trans('Send message') }}
             </button>
           </div>
         </form>
@@ -63,7 +63,7 @@
 
       <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
         <div class="bg-white rounded-lg shadow-md p-6">
-          <h2 class="text-xl font-semibold mb-4">Informacje kontaktowe</h2>
+          <h2 class="text-xl font-semibold mb-4">{{ trans('Contact information') }}</h2>
           <div class="space-y-4">
             <p class="flex items-center text-stone-600">
               <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -81,11 +81,11 @@
         </div>
 
         <div class="bg-white rounded-lg shadow-md p-6">
-          <h2 class="text-xl font-semibold mb-4">Godziny pracy</h2>
+          <h2 class="text-xl font-semibold mb-4">{{ trans('Working hours') }}</h2>
           <div class="space-y-2">
-            <p class="text-stone-600">Poniedziałek - Piątek: 9:00 - 17:00</p>
-            <p class="text-stone-600">Sobota: 10:00 - 14:00</p>
-            <p class="text-stone-600">Niedziela: Zamknięte</p>
+            <p class="text-stone-600">{{ trans('Monday - Friday: 9:00 - 17:00') }}</p>
+            <p class="text-stone-600">{{ trans('Saturday: 10:00 - 14:00') }}</p>
+            <p class="text-stone-600">{{ trans('Sunday: Closed') }}</p>
           </div>
         </div>
       </div>

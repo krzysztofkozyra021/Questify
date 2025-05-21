@@ -268,5 +268,14 @@
     "For matters related to data protection, you can contact:": "W sprawach związanych z ochroną danych możesz kontaktować się:",
     "Email:": "Email:",
     "Phone:": "Telefon:",
-    "Address:": "Adres:"
+    "Address:": "Adres:",
+    "Name and surname": "Imię i nazwisko",
+    "Subject": "Temat",
+    "Message": "Wiadomość",
+    "Send message": "Wyślij wiadomość",
+    "Contact information": "Informacje kontaktowe",
+    "Working hours": "Godziny pracy",
+    "Monday - Friday: 9:00 - 17:00": "Poniedziałek - Piątek: 9:00 - 17:00",
+    "Saturday: 10:00 - 14:00": "Sobota: 10:00 - 14:00",
+    "Sunday: Closed": "Niedziela: Zamknięte"
 }

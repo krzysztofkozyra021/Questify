@@ -267,5 +267,14 @@
     "For matters related to data protection, you can contact:": "For matters related to data protection, you can contact:",
     "Email:": "Email:",
     "Phone:": "Phone:",
-    "Address:": "Address:"
+    "Address:": "Address:",
+    "Name and surname": "Name and surname",
+    "Subject": "Subject",
+    "Message": "Message",
+    "Send message": "Send message",
+    "Contact information": "Contact information",
+    "Working hours": "Working hours",
+    "Monday - Friday: 9:00 - 17:00": "Monday - Friday: 9:00 - 17:00",
+    "Saturday: 10:00 - 14:00": "Saturday: 10:00 - 14:00",
+    "Sunday: Closed": "Sunday: Closed"
 }
