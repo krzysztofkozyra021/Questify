@@ -19,7 +19,7 @@
           </Link>
         </div>
 
-        <!-- Kontakt -->
+        <!-- Contact -->
         <div class="bg-white rounded-lg shadow-md p-6">
           <h2 class="text-xl font-semibold mb-4">{{ trans('Contact') }}</h2>
           <p class="text-stone-600 mb-4">
@@ -33,7 +33,7 @@
           </Link>
         </div>
 
-        <!-- Zgłoś błąd -->
+        <!-- Report a bug -->
         <div class="bg-white rounded-lg shadow-md p-6">
           <h2 class="text-xl font-semibold mb-4">{{ trans('Report a bug') }}</h2>
           <p class="text-stone-600 mb-4">
@@ -47,7 +47,7 @@
           </Link>
         </div>
 
-        <!-- Zaproponuj funkcję -->
+        <!-- Suggest a feature -->
         <div class="bg-white rounded-lg shadow-md p-6">
           <h2 class="text-xl font-semibold mb-4">{{ trans('Suggest a feature') }}</h2>
           <p class="text-stone-600 mb-4">
@@ -62,9 +62,9 @@
         </div>
       </div>
 
-      <!-- Dokumentacja -->
+      <!-- Documentation -->
       <div class="mt-8 bg-white rounded-lg shadow-md p-6">
-        <h2 class="text-xl font-semibold mb-4">Dokumentacja</h2>
+        <h2 class="text-xl font-semibold mb-4">{{ trans('Documentation') }}</h2>
         <div class="prose prose-stone max-w-none">
           <p class="text-stone-600 mb-4">
             {{ trans('Read our documentation to better understand how to use Questify:') }}
@@ -86,7 +86,7 @@
         </div>
       </div>
 
-      <!-- Status usługi -->
+      <!-- Service status -->
       <div class="mt-8 bg-white rounded-lg shadow-md p-6">
         <h2 class="text-xl font-semibold mb-4">{{ trans('Service status') }}</h2>
         <div class="flex items-center gap-2">

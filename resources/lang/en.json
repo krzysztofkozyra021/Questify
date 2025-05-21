@@ -310,6 +310,7 @@
     "Other": "Other",
     "Low": "Low",
     "High": "High",
+    "Documentation": "Documentation",
     "Short description of the bug": "Short description of the bug",
     "Detailed description of the bug": "Detailed description of the bug",
     "Steps to reproduce": "Steps to reproduce",
