@@ -31,9 +31,9 @@ class SupportController extends Controller
             'message' => 'required|string',
         ]);
 
-        // TODO: Implementacja wysyłania wiadomości (np. przez mail)
+        // TODO: Implement send message (email)
 
-        return back()->with('success', 'Wiadomość została wysłana.');
+        return back()->with('success', 'Message sent.');
     }
 
     public function storeFeature(Request $request)
@@ -45,9 +45,9 @@ class SupportController extends Controller
             'category' => 'required|in:ui,functionality,performance,other',
         ]);
 
-        // TODO: Implementacja zapisywania zgłoszenia funkcji
+        // TODO: Implement save feature report
 
-        return back()->with('success', 'Zgłoszenie funkcji zostało wysłane.');
+        return back()->with('success', 'Feature report sent.');
     }
 
     public function storeBug(Request $request)
@@ -64,8 +64,8 @@ class SupportController extends Controller
             'screenshots.*' => 'nullable|image|max:10240', // max 10MB
         ]);
 
-        // TODO: Implementacja zapisywania zgłoszenia błędu i obsługi zrzutów ekranu
+        // TODO: Implement save bug report and handle screenshots
 
-        return back()->with('success', 'Zgłoszenie błędu zostało wysłane.');
+        return back()->with('success', 'Bug report sent.');
     }
 } 
