@@ -8,28 +8,28 @@ const { trans } = useTranslation()
 
 const faqs = ref([
   {
-    question: 'Czym jest Questify?',
-    answer: 'Questify to innowacyjne narzędzie do zarządzania zadaniami, które łączy w sobie elementy grywalizacji z efektywnym zarządzaniem czasem. Pomaga użytkownikom osiągać cele poprzez przekształcenie codziennych zadań w ekscytującą przygodę.'
+    question: 'What is Questify?',
+    answer: 'Questify is an innovative task management tool that combines elements of gamification with effective time management. It helps users achieve goals by transforming everyday tasks into an exciting adventure.'
   },
   {
-    question: 'Jak działa system poziomów?',
-    answer: 'System poziomów w Questify opiera się na zdobywaniu doświadczenia poprzez wykonywanie zadań. Każde zadanie daje określoną ilość XP, a po osiągnięciu wymaganego progu doświadczenia, Twój poziom wzrasta.'
+    question: 'How does the level system work?',
+    answer: 'The level system in Questify is based on gaining experience by completing tasks. Each task gives a specific amount of XP, and when the required experience threshold is reached, your level increases.'
   },
   {
-    question: 'Jakie są typy zadań?',
-    answer: 'W Questify mamy trzy główne typy zadań: Habits (nawyki), Dailies (zadania dzienne) i To Do\'s (zadania do wykonania). Każdy typ ma swoje unikalne cechy i mechaniki.'
+    question: 'What are the types of tasks?',
+    answer: 'In Questify, we have three main types of tasks: Habits (habits), Dailies (daily tasks) and To Do\'s (tasks to do). Each type has its own unique features and mechanics.'
   },
   {
-    question: 'Jak działa system zdrowia i energii?',
-    answer: 'Zdrowie i energia to kluczowe statystyki w Questify. Wykonywanie zadań kosztuje energię, a niektóre zadania mogą wpływać na zdrowie. Ważne jest utrzymanie tych statystyk na odpowiednim poziomie.'
+    question: 'How does the health and energy system work?',
+    answer: 'Health and energy are key statistics in Questify. Completing tasks costs energy, and some tasks can affect health. It is important to maintain these statistics at the appropriate level.'
   },
   {
-    question: 'Czy mogę współpracować z innymi użytkownikami?',
-    answer: 'Tak! Questify oferuje funkcje społecznościowe, które pozwalają na współpracę z innymi użytkownikami, dzielenie się zadaniami i wspólne osiąganie celów.'
+    question: 'Can I collaborate with other users?',
+    answer: 'At this moment, Questify is a single-player game. You can invite your friends to join you in the game, but you cannot collaborate with other users.'
   },
   {
-    question: 'Jak mogę zgłosić błąd lub zaproponować nową funkcję?',
-    answer: 'Możesz to zrobić na dwa sposoby: poprzez formularz "Zgłoś błąd" lub "Zgłoś funkcję" dostępny w stopce strony, lub kontaktując się z naszym zespołem wsparcia.'
+    question: 'How can I report a bug or suggest a new feature?',
+    answer: 'You can do this in two ways: by using the (Report a bug) or (Report a feature) form available in the footer of the page, or by contacting our support team.'
   }
 ])
 
@@ -43,8 +43,8 @@ const toggleFaq = (index) => {
 <template>
   <div class="flex flex-col min-h-screen">
     <Header :showPlayerPanel="false" />
-    <main class="flex-1 max-w-4xl mx-auto px-4 py-8">
-      <h1 class="text-3xl font-bold text-center mb-8">Często Zadawane Pytania</h1>
+    <main class="flex-1 max-w-4xl mx-auto p-12">
+      <h1 class="text-3xl font-bold text-center mb-8">{{ trans('Frequently Asked Questions') }}</h1>
       
       <div class="space-y-4"> 
         <div v-for="(faq, index) in faqs" :key="index" class="bg-white rounded-lg shadow-md overflow-hidden">
@@ -52,7 +52,7 @@ const toggleFaq = (index) => {
             @click="toggleFaq(index)"
             class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-stone-50 transition-colors"
           >
-            <span class="font-medium text-lg">{{ faq.question }}</span>
+            <span class="font-medium text-lg">{{ trans(faq.question) }}</span>
             <svg
               class="w-5 h-5 transform transition-transform"
               :class="{ 'rotate-180': openFaq === index }"
@@ -67,18 +67,18 @@ const toggleFaq = (index) => {
             v-show="openFaq === index"
             class="px-6 py-4 bg-stone-50 border-t border-stone-200"
           >
-            <p class="text-stone-600">{{ faq.answer }}</p>
+            <p class="text-stone-600">{{ trans(faq.answer) }}</p>
           </div>
         </div>
       </div>
 
       <div class="mt-12 text-center">
-        <p class="text-stone-600 mb-4">Nie znalazłeś odpowiedzi na swoje pytanie?</p>
+        <p class="text-stone-600 mb-4">{{ trans('If you have any questions') }}</p>
         <a
           href="/contact"
-          class="inline-block bg-stone-600 text-white px-6 py-3 rounded-lg hover:bg-stone-700 transition-colors"
+          class="inline-block bg-stone-600 text-white px-6 py-3 font-bold rounded-lg hover:bg-stone-700 transition-colors"
         >
-          Skontaktuj się z nami
+          {{ trans('Contact us') }}
         </a>
       </div>
     </main>

@@ -148,6 +148,8 @@
     "Support": "Wsparcie",
     "Report a feature": "Zgłoś funkcję",
     "Report a bug": "Zgłoś błąd",
+    "Questify is a tool for managing tasks that helps you achieve goals.": "Questify to narzędzie do zarządzania zadaniami, które pomaga osiągnąć cele.",
+
 
     "About Questify": "O Questify",
     "Our mission": "Nasza misja",
@@ -165,5 +167,22 @@
     "We are a team of enthusiasts who believe in the power of gamification and effective time management. Each of us brings unique experience and perspective, creating together a platform that helps people achieve their goals.": "Jesteśmy zespołem entuzjastów, którzy wierzą w siłę gamifikacji i efektywnego zarządzania czasem. Każdy z nas dodaje unikalne doświadczenia i perspektywy, tworząc razem platformę, która pomaga ludziom osiągnąć swoje cele.",
     "Join us": "Dołącz do nas",
     "Start your journey with Questify today and discover how enjoyable it can be to achieve goals!": "Rozpocznij swoją podróż z Questify już dziś i odkryj, jak przyjemne może być osiąganie celów!",
-    "Start now": "Rozpocznij teraz"
+    "Start now": "Rozpocznij teraz",
+
+    "Frequently Asked Questions": "Często Zadawane Pytania",
+    "If you have any questions": "Jeśli masz pytania.",
+    "What is Questify?": "Czym jest Questify?",
+    "Questify is an innovative task management tool that combines elements of gamification with effective time management. It helps users achieve goals by transforming everyday tasks into an exciting adventure.": "Questify to innowacyjne narzędzie do zarządzania zadaniami, które łączy w sobie elementy grywalizacji z efektywnym zarządzaniem czasem. Pomaga użytkownikom osiągać cele poprzez przekształcenie codziennych zadań w ekscytującą przygodę.",
+    "How does the level system work?": "Jak działa system poziomów?",
+    "The level system in Questify is based on gaining experience by completing tasks. Each task gives a specific amount of XP, and when the required experience threshold is reached, your level increases.": "System poziomów w Questify opiera się na zdobywaniu doświadczenia poprzez wykonywanie zadań. Każde zadanie daje określoną ilość XP, a po osiągnięciu wymaganego progu doświadczenia, Twój poziom wzrasta.",
+    "What are the types of tasks?": "Jakie są typy zadań?",
+    "In Questify, we have three main types of tasks: Habits (habits), Dailies (daily tasks) and To Do's (tasks to do). Each type has its own unique features and mechanics.": "W Questify mamy trzy główne typy zadań: Habits (nawyki), Dailies (zadania dzienne) i To Do's (zadania do wykonania). Każdy typ ma swoje unikalne cechy i mechaniki.",
+    "How does the health and energy system work?": "Jak działa system zdrowia i energii?",
+    "Health and energy are key statistics in Questify. Completing tasks costs energy, and some tasks can affect health. It is important to maintain these statistics at the appropriate level.": "Zdrowie i energia są kluczowymi statystykami w Questify. Wykonywanie zadań kosztuje energię, a niektóre zadania mogą wpływać na zdrowie. Jest ważne, aby utrzymywać te statystyki na odpowiednim poziomie.",
+    "Can I collaborate with other users?": "Czy mogę współpracować z innymi użytkownikami?",
+    "At this moment, Questify is a single-player game. You can invite your friends to join you in the game, but you cannot collaborate with other users.": "W tej chwili Questify jest grą jednoosobową. Możesz zaprosić swoich znajomych do dołączenia do gry, ale nie możesz współpracować z innymi użytkownikami.",
+    "Yes! Questify offers community features that allow you to collaborate with other users, share tasks, and achieve common goals together.": "Tak! Questify oferuje funkcje społecznościowe, które pozwalają na współpracę z innymi użytkownikami, dzielenie się zadaniami i wspólne osiąganie celów.",
+    "How can I report a bug or suggest a new feature?": "Jak mogę zgłosić błąd lub zaproponować nową funkcję?",
+    "You can do this in two ways: by using the (Report a bug) or (Report a feature) form available in the footer of the page, or by contacting our support team.": "Możesz to zrobić na dwa sposoby: poprzez formularz (Zgłoś błąd) lub (Zgłoś funkcję) dostępny w stopce strony, lub kontaktując się z naszym zespołem wsparcia.",
+    "Contact us": "Skontaktuj się z nami"
 }

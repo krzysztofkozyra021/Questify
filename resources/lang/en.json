@@ -149,6 +149,7 @@
     "Support": "Support",
     "Report a feature": "Report a feature",
     "Report a bug": "Report a bug",
+    "Questify is a tool for managing tasks that helps you achieve goals.": "Questify is a tool for managing tasks that helps you achieve goals.",
 
     "About Questify": "About Questify",
     "Our mission": "Our mission",
@@ -166,5 +167,22 @@
     "We are a team of enthusiasts who believe in the power of gamification and effective time management. Each of us brings unique experience and perspective, creating together a platform that helps people achieve their goals.": "We are a team of enthusiasts who believe in the power of gamification and effective time management. Each of us brings unique experience and perspective, creating together a platform that helps people achieve their goals.",
     "Join us": "Join us",
     "Start your journey with Questify today and discover how enjoyable it can be to achieve goals!": "Start your journey with Questify today and discover how enjoyable it can be to achieve goals!",
-    "Start now": "Start now"
+    "Start now": "Start now",
+
+    "Frequently Asked Questions": "Frequently Asked Questions",
+    "If you have any questions": "If you have any questions",
+    "What is Questify?": "What is Questify?",
+    "Questify is an innovative task management tool that combines elements of gamification with effective time management. It helps users achieve goals by transforming everyday tasks into an exciting adventure.": "Questify is an innovative task management tool that combines elements of gamification with effective time management. It helps users achieve goals by transforming everyday tasks into an exciting adventure.",
+    "How does the level system work?": "How does the level system work?",
+    "The level system in Questify is based on gaining experience by completing tasks. Each task gives a specific amount of XP, and when the required experience threshold is reached, your level increases.": "The level system in Questify is based on gaining experience by completing tasks. Each task gives a specific amount of XP, and when the required experience threshold is reached, your level increases.",
+    "What are the types of tasks?": "What are the types of tasks?",
+    "In Questify, we have three main types of tasks: Habits (habits), Dailies (daily tasks) and To Do's (tasks to do). Each type has its own unique features and mechanics.": "In Questify, we have three main types of tasks: Habits (habits), Dailies (daily tasks) and To Do's (tasks to do). Each type has its own unique features and mechanics.",
+    "How does the health and energy system work?": "How does the health and energy system work?",
+    "Health and energy are key statistics in Questify. Completing tasks costs energy, and some tasks can affect health. It is important to maintain these statistics at the appropriate level.": "Health and energy are key statistics in Questify. Completing tasks costs energy, and some tasks can affect health. It is important to maintain these statistics at the appropriate level.",
+    "Can I collaborate with other users?": "Can I collaborate with other users?",
+    "Yes! Questify offers community features that allow you to collaborate with other users, share tasks, and achieve common goals together.": "Yes! Questify offers community features that allow you to collaborate with other users, share tasks, and achieve common goals together.",
+    "At this moment, Questify is a single-player game. You can invite your friends to join you in the game, but you cannot collaborate with other users.": "At this moment, Questify is a single-player game. You can invite your friends to join you in the game, but you cannot collaborate with other users.",
+    "How can I report a bug or suggest a new feature?": "How can I report a bug or suggest a new feature?",
+    "You can do this in two ways: by using the (Report a bug) or (Report a feature) form available in the footer of the page, or by contacting our support team.": "You can do this in two ways: by using the (Report a bug) or (Report a feature) form available in the footer of the page, or by contacting our support team.",
+    "Contact us": "Contact us"
 }
