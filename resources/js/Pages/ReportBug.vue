@@ -1,100 +1,100 @@
 <template>
   <div class="flex flex-col min-h-screen">
     <Header :showPlayerPanel="false" />
-    <main class="flex-1 max-w-4xl mx-auto px-4 py-8">
-      <h1 class="text-3xl font-bold text-center mb-8">Zgłoś błąd</h1>
+    <main class="flex-1 max-w-4xl mx-auto p-12">
+      <h1 class="text-4xl font-bold text-center mb-8">{{ trans('Report a bug') }}</h1>
       
       <div class="bg-white rounded-lg shadow-md p-6">
         <form @submit.prevent="submitForm" class="space-y-6">
           <div>
-            <label for="title" class="block text-sm font-medium text-stone-700">Tytuł</label>
+            <label for="title" class="block text-sm font-medium text-stone-700">{{ trans('Title') }}</label>
             <input
               type="text"
               id="title"
               v-model="form.title"
               class="mt-1 block w-full rounded-md border-stone-300 shadow-sm focus:border-stone-500 focus:ring-stone-500"
               required
-              placeholder="Krótki opis błędu"
+              :placeholder="trans('Short description of the bug')"
             />
           </div>
 
           <div>
-            <label for="description" class="block text-sm font-medium text-stone-700">Opis</label>
+            <label for="description" class="block text-sm font-medium text-stone-700">{{ trans('Description') }}</label>
             <textarea
               id="description"
               v-model="form.description"
               rows="4"
               class="mt-1 block w-full rounded-md border-stone-300 shadow-sm focus:border-stone-500 focus:ring-stone-500"
               required
-              placeholder="Szczegółowy opis błędu"
+              :placeholder="trans('Detailed description of the bug')"
             ></textarea>
           </div>
 
           <div>
-            <label for="steps" class="block text-sm font-medium text-stone-700">Kroki do odtworzenia</label>
+            <label for="steps" class="block text-sm font-medium text-stone-700">{{ trans('Steps to reproduce') }}</label>
             <textarea
               id="steps"
               v-model="form.steps"
               rows="4"
               class="mt-1 block w-full rounded-md border-stone-300 shadow-sm focus:border-stone-500 focus:ring-stone-500"
               required
-              placeholder="1. Otwórz stronę...&#10;2. Kliknij przycisk...&#10;3. Wprowadź dane..."
+              :placeholder="trans('1. Open page...\n2. Click button...\n3. Enter data...')"
             ></textarea>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label for="expected" class="block text-sm font-medium text-stone-700">Oczekiwane zachowanie</label>
+              <label for="expected" class="block text-sm font-medium text-stone-700">{{ trans('Expected behavior') }}</label>
               <textarea
                 id="expected"
                 v-model="form.expected"
                 rows="3"
                 class="mt-1 block w-full rounded-md border-stone-300 shadow-sm focus:border-stone-500 focus:ring-stone-500"
                 required
-                placeholder="Co powinno się stać?"
+                :placeholder="trans('What should happen?')"
               ></textarea>
             </div>
 
             <div>
-              <label for="actual" class="block text-sm font-medium text-stone-700">Rzeczywiste zachowanie</label>
+              <label for="actual" class="block text-sm font-medium text-stone-700">{{ trans('Actual behavior') }}</label>
               <textarea
                 id="actual"
                 v-model="form.actual"
                 rows="3"
                 class="mt-1 block w-full rounded-md border-stone-300 shadow-sm focus:border-stone-500 focus:ring-stone-500"
                 required
-                placeholder="Co się stało?"
+                :placeholder="trans('What happened?')"
               ></textarea>
             </div>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label for="browser" class="block text-sm font-medium text-stone-700">Przeglądarka</label>
+              <label for="browser" class="block text-sm font-medium text-stone-700">{{ trans('Browser') }}</label>
               <input
                 type="text"
                 id="browser"
                 v-model="form.browser"
                 class="mt-1 block w-full rounded-md border-stone-300 shadow-sm focus:border-stone-500 focus:ring-stone-500"
-                placeholder="np. Chrome 91.0.4472.124"
+                :placeholder="trans('e.g. Chrome 91.0.4472.124')"
               />
             </div>
 
             <div>
-              <label for="os" class="block text-sm font-medium text-stone-700">System operacyjny</label>
+              <label for="os" class="block text-sm font-medium text-stone-700">{{ trans('Operating system') }}</label>
               <input
                 type="text"
                 id="os"
                 v-model="form.os"
                 class="mt-1 block w-full rounded-md border-stone-300 shadow-sm focus:border-stone-500 focus:ring-stone-500"
-                placeholder="np. Windows 10 Pro"
+                :placeholder="trans('e.g. Windows 10 Pro')"
               />
             </div>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label for="category" class="block text-sm font-medium text-stone-700">Kategoria</label>
+              <label for="category" class="block text-sm font-medium text-stone-700">{{ trans('Category') }}</label>
               <select
                 id="category"
                 v-model="form.category"
@@ -102,13 +102,13 @@
                 required
               >
                 <option v-for="category in categories" :key="category.value" :value="category.value">
-                  {{ category.label }}
+                  {{ trans(category.label) }}
                 </option>
               </select>
             </div>
 
             <div>
-              <label for="priority" class="block text-sm font-medium text-stone-700">Priorytet</label>
+              <label for="priority" class="block text-sm font-medium text-stone-700">{{ trans('Priority') }}</label>
               <select
                 id="priority"
                 v-model="form.priority"
@@ -116,7 +116,7 @@
                 required
               >
                 <option v-for="priority in priorities" :key="priority.value" :value="priority.value">
-                  {{ priority.label }}
+                  {{ trans(priority.label) }}
                 </option>
               </select>
             </div>
@@ -125,23 +125,23 @@
           <div class="flex justify-end">
             <button
               type="submit"
-              class="bg-stone-600 text-white px-6 py-3 rounded-lg hover:bg-stone-700 transition-colors"
+              class="bg-stone-600 text-white font-bold px-6 py-3 rounded-lg hover:bg-stone-700 transition-colors"
             >
-              Wyślij zgłoszenie
+              {{ trans('Send report') }}
             </button>
           </div>
         </form>
       </div>
 
       <div class="mt-8 bg-stone-50 rounded-lg p-6">
-        <h2 class="text-xl font-semibold mb-4">Wskazówki</h2>
+        <h2 class="text-xl font-semibold mb-4">{{ trans('Tips') }}</h2>
         <div class="prose prose-stone max-w-none">
-          <p>Aby Twoje zgłoszenie zostało rozpatrzone jak najszybciej:</p>
-          <ul>
-            <li>Opisz dokładnie kroki prowadzące do błędu</li>
-            <li>Podaj informacje o środowisku (przeglądarka, system operacyjny)</li>
-            <li>Dołącz zrzuty ekranu lub nagrania, jeśli to możliwe</li>
-            <li>Określ priorytet zgodnie z wpływem błędu na działanie aplikacji</li>
+          <p>{{ trans('To ensure your report is processed as quickly as possible:') }}</p>
+          <ul class="list-disc list-inside">
+            <li>{{ trans('Describe the steps to reproduce the bug in detail') }}</li>
+            <li>{{ trans('Provide information about your environment (browser, operating system)') }}</li>
+            <li>{{ trans('Include screenshots or recordings if possible') }}</li>
+            <li>{{ trans('Set the priority according to the impact on the application') }}</li>
           </ul>
         </div>
       </div>
@@ -171,19 +171,19 @@ const form = ref({
 })
 
 const categories = [
-  { value: 'general', label: 'Ogólne' },
-  { value: 'ui', label: 'Interfejs użytkownika' },
-  { value: 'functionality', label: 'Funkcjonalność' },
-  { value: 'performance', label: 'Wydajność' },
-  { value: 'security', label: 'Bezpieczeństwo' },
-  { value: 'other', label: 'Inne' }
+  { value: 'general', label: 'General' },
+  { value: 'ui', label: 'User interface' },
+  { value: 'functionality', label: 'Functionality' },
+  { value: 'performance', label: 'Performance' },
+  { value: 'security', label: 'Security' },
+  { value: 'other', label: 'Other' }
 ]
 
 const priorities = [
-  { value: 'low', label: 'Niski' },
-  { value: 'medium', label: 'Średni' },
-  { value: 'high', label: 'Wysoki' },
-  { value: 'critical', label: 'Krytyczny' }
+  { value: 'low', label: 'Low' },
+  { value: 'medium', label: 'Medium' },
+  { value: 'high', label: 'High' },
+  { value: 'critical', label: 'Critical' }
 ]
 
 const submitForm = () => {
