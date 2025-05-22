@@ -17,7 +17,21 @@ use Illuminate\Support\Facades\Route;
 // Public routes
 
 Route::get("/", fn() => redirect()->route("register"));
-Route::inertia("/about", "About");
+
+// Information pages
+Route::inertia("/about", "About")->name("about");
+Route::inertia("/faq", "Faq")->name("faq");
+Route::inertia("/terms", "Terms")->name("terms");
+Route::inertia("/policy", "Policy")->name("policy");
+Route::inertia("/contact", "Contact")->name("contact");
+
+// Support and reports
+Route::get("/support", [SupportController::class, "index"])->name("support");
+Route::post("/support/contact", [SupportController::class, "contact"])->name("support.contact");
+Route::get("/report/feature", [SupportController::class, "feature"])->name("report.feature");
+Route::post("/report/feature", [SupportController::class, "storeFeature"])->name("report.feature.store");
+Route::get("/report/bug", [SupportController::class, "bug"])->name("report.bug");
+Route::post("/report/bug", [SupportController::class, "storeBug"])->name("report.bug.store");
 
 Route::get("/language/{locale}", [LanguageController::class, "switch"])->name("language.switch");
 
@@ -68,12 +82,10 @@ Route::middleware(["auth"])->group(function (): void {
     Route::delete("/profile", [ProfileController::class, "destroy"])->name("profile.destroy");
     Route::post("/profile/image", [ProfileController::class, "updateProfileImage"])->name("profile.image");
     Route::get("/profile/image", [ProfileController::class, "getProfileImage"])->name("profile.image");
+
     // Settings
     Route::get("/settings", [SettingsController::class, "index"])->name("settings");
     Route::put("/settings", [SettingsController::class, "update"])->name("settings.update");
     Route::post("/settings/locale", [SettingsController::class, "changeLocale"])->name("settings.changeLocale");
 
-    // Support
-    Route::get("/support", [SupportController::class, "index"])->name("support");
-    Route::post("/support/contact", [SupportController::class, "contact"])->name("support.contact");
 });

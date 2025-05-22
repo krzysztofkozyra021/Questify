@@ -1,14 +1,14 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
-import { Link } from '@inertiajs/vue3'
-import LanguageSwitcher from '@/Components/LanguageSwitcher.vue'
+import { Link, usePage } from '@inertiajs/vue3'
 import { useTranslation } from '@/Composables/useTranslation'
+import { router } from '@inertiajs/vue3'
 
 const { trans } = useTranslation()
 const isOpen = ref(false)
 const menuRef = ref(null)
 const buttonRef = ref(null)
-
+const page = usePage()
 const toggleMenu = () => {
   isOpen.value = !isOpen.value
   if (isOpen.value) {
@@ -27,6 +27,7 @@ const handleClickOutside = (event) => {
     document.body.style.overflow = ''
   }
 }
+
 
 onMounted(() => {
   document.addEventListener('click', handleClickOutside)
@@ -115,9 +116,11 @@ onUnmounted(() => {
         </div>
 
         <!-- Menu Footer -->
-        <div class="p-4 border-t border-stone-700">
+        <div class="p-4 border-t border-stone-700"
+        v-if="page.props.auth.user"
+        >
           <button 
-            @click="logout" 
+            @click="router.post(route('logout'))" 
             class="w-full text-left px-4 py-2 text-red-400 hover:bg-stone-700 rounded-lg transition-colors"
           >
             {{ trans('Log Out') }}

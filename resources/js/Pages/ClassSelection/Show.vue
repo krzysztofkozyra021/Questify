@@ -68,10 +68,10 @@ function getPercentage(multiplier, statType) {
       <div
         v-for="classItem in classesWithImages"
         :key="classItem.id"
-        class="flex flex-col justify-between bg-slate-600 bg-opacity-20 h-auto w-full rounded-lg shadow-md p-4 sm:p-6 cursor-pointer transition-all duration-300 relative"
+        class="flex flex-col justify-between bg-slate-600 bg-opacity-20 h-auto w-full rounded-lg shadow-md p-4 sm:p-6 ring-2 hover:-translate-y-2 ring-stone-500 hover:ring-amber-500 cursor-pointer transition-all duration-300 relative"
         :class="{
-          'ring-2 ring-amber-500 bg-slate-700': selectedClass === classItem.id,
-          'opacity-40 grayscale hover:-translate-y-2 hover:opacity-80 hover:grayscale-0 hover:shadow-lg': selectedClass && selectedClass !== classItem.id
+          'ring-2 ring-amber-400 bg-slate-700': selectedClass === classItem.id,
+          'opacity-40 grayscale hover:-translate-y-2 hover:opacity-80  hover:grayscale-0 hover:shadow-lg': selectedClass && selectedClass !== classItem.id
         }"
         @click="selectClass(classItem.id)"
       >
@@ -82,7 +82,7 @@ function getPercentage(multiplier, statType) {
             class="w-28 h-64 sm:w-36 sm:h-80 object-cover rounded-lg"
           />
         </div>
-        <h2 class="text-xl sm:text-2xl font-bold text-center text-amber-400 mb-4 sm:mb-6">{{ trans(classItem.name) }}</h2>
+        <h2 class="text-xl sm:text-3xl font-bold text-center text-amber-400 mb-4 sm:mb-6">{{ trans(classItem.name) }}</h2>
 
         <!-- Stats section with simplified bars -->
         <div class="space-y-3 sm:space-y-4 mb-4 sm:mb-6">
@@ -90,9 +90,9 @@ function getPercentage(multiplier, statType) {
           <div>
             <div class="flex items-center mb-1">
               <span class="font-medium text-stone-100 w-20 sm:w-24 text-sm sm:text-base">{{ trans('Health') }}:</span>
-              <div class="w-full bg-slate-700 rounded-full h-2 sm:h-2.5 ml-2">
+              <div class="w-full bg-slate-700  h-2 sm:h-2.5 ml-2">
                 <div
-                  class="bg-red-600 text-white h-2 sm:h-2.5 rounded-full"
+                  class="bg-red-600 text-white h-2 sm:h-2.5 "
                   :style="{ width: `${getPercentage(classItem.health_multiplier, 'health')}%` }"
                 ></div>
               </div>
@@ -103,9 +103,9 @@ function getPercentage(multiplier, statType) {
           <div>
             <div class="flex items-center mb-1">
               <span class="font-medium text-stone-100 w-20 sm:w-24 text-sm sm:text-base">{{ trans('Energy') }}:</span>
-              <div class="w-full bg-slate-700 rounded-full h-2 sm:h-2.5 ml-2">
+              <div class="w-full bg-slate-700  h-2 sm:h-2.5 ml-2">
                 <div
-                  class="bg-blue-600 h-2 sm:h-2.5 rounded-full"
+                  class="bg-blue-600 h-2 sm:h-2.5 "
                   :style="{ width: `${getPercentage(classItem.energy_multiplier, 'energy')}%` }"
                 ></div>
               </div>
@@ -116,9 +116,9 @@ function getPercentage(multiplier, statType) {
           <div>
             <div class="flex items-center mb-1">
               <span class="font-medium text-stone-100 w-20 sm:w-24 text-sm sm:text-base">{{ trans('EXP Gain') }}:</span>
-              <div class="w-full bg-slate-700 rounded-full h-2 sm:h-2.5 ml-2">
+              <div class="w-full bg-slate-700  h-2 sm:h-2.5 ml-2">
                 <div
-                  class="bg-amber-600 h-2 sm:h-2.5 rounded-full"
+                  class="bg-amber-600 h-2 sm:h-2.5 "
                   :style="{ width: `${getPercentage(classItem.exp_multiplier, 'exp')}%` }"
                 ></div>
               </div>
@@ -136,7 +136,7 @@ function getPercentage(multiplier, statType) {
 
     <div class="flex justify-center w-full px-4 pb-8">
       <button
-        class="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 font-medium text-base sm:text-lg rounded-lg text-stone-100 transition-all duration-300 border-2 border-amber-500 hover:bg-amber-500/10"
+        class="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 font-medium text-lg sm:text-xl rounded-lg text-stone-100 transition-all duration-300 hover:bg-amber-500/10"
         :class="{
           'opacity-50 cursor-not-allowed': !selectedClass,
           'hover:scale-105': selectedClass
