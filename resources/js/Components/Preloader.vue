@@ -12,7 +12,7 @@ onMounted(() => {
 
 <template>
   <Transition name="fade">
-    <div v-if="isLoading" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-800">
+    <div v-if="isLoading" class="fixed inset-0 z-50 flex items-center justify-center bg-stone-900">
       <div class="text-center">
         <!-- Animated shield icon -->
         <div class="mb-8 animate-bounce">
@@ -46,7 +46,7 @@ onMounted(() => {
           </svg>
         </div>
         <!-- Loading bar -->
-        <div class="w-64 h-2 mt-4 bg-slate-700 rounded-full overflow-hidden">
+        <div class="w-64 h-2 mt-4 bg-stone-800 rounded-full overflow-hidden">
           <div class="h-full bg-amber-600 rounded-full animate-[loading_1s_ease-in-out]"></div>
         </div>
       </div>

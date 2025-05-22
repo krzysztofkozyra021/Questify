@@ -4,6 +4,14 @@ import { usePage, Link, router } from '@inertiajs/vue3';
 import { useTranslation } from '@/Composables/useTranslation';
 import PlayerPanel from '@/Components/PlayerPanel.vue';
 import HamburgerMenu from '@/Components/HamburgerMenu.vue';
+import LanguageSwitcher from '@/Components/LanguageSwitcher.vue';
+
+const props = defineProps({
+  showPlayerPanel: {
+    type: Boolean,
+    default: false
+  }
+});
 
 const { trans } = useTranslation();
 const page = usePage();
@@ -18,6 +26,11 @@ const isActive = (routeName) => {
   return currentUrl.includes(routeName);
 };
 
+
+const togglePlayerPanel = () => {
+  props.showPlayerPanel = !props.showPlayerPanel;
+};
+
 </script>
 
 <template>
@@ -25,9 +38,15 @@ const isActive = (routeName) => {
     <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between px-2 md:px-4 py-2 relative">
       <!-- Left: Logo and Navigation -->
       <div class="flex items-center gap-2 md:gap-4 w-full md:w-auto justify-between md:justify-start">
+        <Link 
+            :href="route('dashboard')" 
+            class="hover:scale-105 transition-all duration-300" 
+           
+          >
         <img src="/images/logo.png" alt="Logo" class="w-32 md:w-40 h-8 md:h-10" />
+        </Link>
         <!-- Navigation -->
-        <nav class="hidden md:flex gap-4 lg:gap-6">
+        <nav class="hidden md:flex gap-4 lg:gap-6" v-if="page.props.auth.user">
           <Link 
             :href="route('dashboard')" 
             class="text-amber-50 text-base md:text-lg font-medium px-2 md:px-4 py-1 md:py-2 transition-colors hover:bg-amber-500 hover:text-amber-50" 
@@ -44,7 +63,7 @@ const isActive = (routeName) => {
         <HamburgerMenu class="md:hidden" />
       </div>
       <!-- Player Dropdown -->
-      <div class="hidden md:block relative min-w-[48px] flex justify-end">
+      <div class="hidden md:block relative min-w-[48px] flex justify-end" v-if="page.props.auth.user">
         <button @click="toggleDropdown" class="focus:outline-none">
           <svg class="w-8 h-8 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
             <path d="M10 10a4 4 0 100-8 4 4 0 000 8zm0 2c-3.314 0-6 1.343-6 3v1a1 1 0 001 1h10a1 1 0 001-1v-1c0-1.657-2.686-3-6-3z" />
@@ -58,7 +77,7 @@ const isActive = (routeName) => {
       </div>
     </div>
     <!-- Bottom Row: PlayerPanel -->
-    <div class="bg-stone-800 px-2 md:px-4 py-2">
+    <div v-if="props.showPlayerPanel" class="bg-stone-800 px-2 md:px-4 py-2">
       <div class="max-w-7xl mx-auto">
         <PlayerPanel />
       </div>
