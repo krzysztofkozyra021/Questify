@@ -27,7 +27,9 @@ class Task extends Model
         "experience_reward",
         "checklist_items",
         "type",
-        "next_reset_at"
+        "next_reset_at",
+        "completed_count",
+        "not_completed_count"
     ];
     protected $casts = [
         "due_date" => "datetime",

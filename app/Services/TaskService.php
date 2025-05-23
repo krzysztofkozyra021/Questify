@@ -62,6 +62,59 @@ class TaskService
         return $task;
     }
 
+    public function updateTask(Task $task, array $data, array $tags = []): void
+{
+    try {
+        $taskId = $task->id;
+        
+        if (!$taskId) {
+            throw new \Exception('Task ID is missing');
+        }
+        
+        \Log::info('UpdateTask called with:', [
+            'task_id' => $taskId,
+            'data' => $data,
+            'tags' => $tags
+        ]);
+        
+        // Update task
+        $task->update($data);
+        
+        // Re-fetch the task to ensure we have the latest instance
+        $task = Task::find($taskId);
+        
+        if (!$task) {
+            throw new \Exception('Task not found after update');
+        }
+        
+        // Process tags
+        $tagIds = [];
+        foreach ($tags as $tagName) {
+            $tagName = trim($tagName);
+            if (!empty($tagName)) {
+                $tag = Tag::firstOrCreate(
+                    ['name' => $tagName],
+                    ['user_id' => $task->user_id ?? auth()->id()]
+                );
+                $tagIds[] = $tag->id;
+            }
+        }
+        
+        // Sync tags using the fresh task instance
+        $task->tags()->sync($tagIds);
+        
+        // Load relationships
+        $task->load('tags', 'difficulty');
+        
+    } catch (\Exception $e) {
+        \Log::error('Error in updateTask:', [
+            'message' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        throw $e;
+    }
+}
+
     public function completeTask(Task $task): void
     {
         // Load the difficulty relationship if not already loaded
@@ -72,6 +125,7 @@ class TaskService
         $task->update([
             'is_completed' => true,
             'completed_at' => now(),
+            'completed_count' => $task->completed_count + 1,
         ]);
         
         // Calculate next reset date based on completion time
@@ -83,15 +137,15 @@ class TaskService
         $user = $task->users()->first();
         $userStats = $user->userStatistics;
         $userClassExpMultiplier = $userStats->classAttributes->exp_multiplier;
-        $expGain = $task->experience_reward * $task->difficulty->exp_multiplier * $userClassExpMultiplier;
+        $expGain = round($task->experience_reward * $task->difficulty->exp_multiplier * $userClassExpMultiplier);
 
         // Calculate energy penalty based on player 10% of max energy and task difficulty multiplier
         $playerMaxEnergy = $userStats->max_energy;
-        $energyPenalty = ($playerMaxEnergy * 0.1) * $task->difficulty->energy_cost;
+        $energyPenalty = round(($playerMaxEnergy * 0.1) * $task->difficulty->energy_cost);
         
         // Calculate health penalty based on player 10% of max health and task difficulty multiplier
         $playerMaxHealth = $userStats->max_health;
-        $healthPenalty = ($playerMaxHealth * 0.1) * $task->difficulty->health_penalty;
+        $healthPenalty = round(($playerMaxHealth * 0.1) * $task->difficulty->health_penalty);
 
 
         $userStats->current_experience += $expGain;
@@ -104,13 +158,12 @@ class TaskService
     {
         $task->update([
             'is_completed' => false,
-            'completed_at' => now(),
+            'completed_at' => null,
+            'not_completed_count' => $task->not_completed_count + 1,
         ]);
 
         $user = $task->users()->first();
         $userStats = $user->userStatistics;
-
-        
     }
 
     public function resetTask(Task $task): void

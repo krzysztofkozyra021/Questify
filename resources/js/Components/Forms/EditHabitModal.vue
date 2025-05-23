@@ -1,60 +1,48 @@
 <script setup>
-  import { ref, watch, onMounted } from 'vue';
+  import { ref } from 'vue';
   import { router } from '@inertiajs/vue3';
   import { useTranslation } from '@/Composables/useTranslation';
 
   const { trans } = useTranslation();
-
-  const DEFAULT_EXPERIENCE_REWARD = 5;
 
   const props = defineProps({
     show: Boolean,
     onClose: Function,
     difficulties: Array,
     resetConfigs: Array,
+    task: Object,
   });
-  
-  const emit = defineEmits(['created', 'close']);
+
+
+  const emit = defineEmits(['edited', 'close']);
   
   const form = ref({
-    title: '',
-    description: '',
-    difficulty_level: props.difficulties?.[0]?.difficulty_level || 2,
-    reset_frequency: props.resetConfigs?.[0]?.id || 1,
-    is_positive: true,
-    tags: '',
-    start_date: new Date().toISOString().slice(0, 10),
-    is_completed: false,
-    is_deadline_task: false,
-    experience_reward: DEFAULT_EXPERIENCE_REWARD,
-    type: 'habit',
+    title: props.task?.title || '',
+    description: props.task?.description || '',
+    difficulty_level: props.task?.difficulty_level || 2,
+    reset_frequency: props.task?.reset_frequency || 1,
+    tags: props.task?.tags?.map(tag => tag.name).join(',') || '',
   });
   
-  const initialFormState = { ...form.value };
   
   const loading = ref(false);
-
-  function resetForm() {
-    form.value = { ...initialFormState };
-}
-
+  
   function close() {
     emit('close');
   }
   
   function submit() {
     loading.value = true;
-    router.post('/tasks/store/habit', {
+    router.put(`/tasks/update/habit/${props.task.id}`, {
       ...form.value,
-      tags: form.value.tags.split(',').map(t => t.trim()).filter(Boolean),
-      experience_reward: DEFAULT_EXPERIENCE_REWARD,
+      tags: form.value.tags ? form.value.tags.split(',').map(t => t.trim()).filter(Boolean) : [],
     }, {
       onSuccess: () => {
         loading.value = false;
-        resetForm();
-        emit('created');
+        emit('edited');
       },
-      onError: () => {
+      onError: (errors) => {
+        console.error('Request failed with errors:', errors);
         loading.value = false;
       }
     });
@@ -65,7 +53,7 @@
     <div v-if="show" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
       <div class="bg-white rounded-xl shadow-lg w-full max-w-md p-6 relative">
         <button class="absolute top-2 right-2 text-gray-500" @click="close">✕</button>
-        <h2 class="text-xl font-bold mb-4">{{ trans('Create Habit') }}</h2>
+        <h2 class="text-xl font-bold mb-4">{{ trans('Edit Habit') }}</h2>
         <form @submit.prevent="submit">
           <div class="mb-3">
             <label class="block font-semibold mb-1">{{ trans('Title') }}*</label>
@@ -92,7 +80,7 @@
             </select>
           </div>
           <button type="submit" class="w-full bg-amber-800 text-white py-2 rounded font-bold mt-2" :disabled="loading">
-            {{ loading ? trans('Creating...') : trans('Create') }}
+            {{ loading ? trans('Editing...') : trans('Edit') }}
           </button>
         </form>
       </div>

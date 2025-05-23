@@ -15,57 +15,69 @@ class TaskController extends Controller
         $this->taskService = $taskService;
     }
 
-    public function store(Request $request)
+    public function storeHabit(Request $request)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'difficulty_level' => 'required|integer|exists:task_difficulties,difficulty_level',
-            'reset_frequency' => 'required|integer|exists:task_reset_configs,id',
-            'start_date' => 'required|date',
-            'due_date' => 'nullable|date|after:start_date',
-            'is_completed' => 'boolean',
-            'is_deadline_task' => 'boolean',
-            'experience_reward' => 'required|integer|min:1',
-            'tags' => 'array',
-            'tags.*' => 'string|max:50',
-            'type' => 'required|string|in:habit,daily,todo',
-        ]);
-
         // Create task and attach to user
         $user = auth()->user();
-        $task = $this->taskService->createTask($user, $validated);
+        $validated = $request->validate([
+            "title" => "required|string|max:255",
+            "description" => "nullable|string",
+            "difficulty_level" => "required|integer|exists:task_difficulties,difficulty_level",
+            "reset_frequency" => "required|integer|exists:task_reset_configs,id",
+            "start_date" => "required|date",
+            "is_deadline_task" => "boolean",
+            "experience_reward" => "required|integer|min:1",
+            "tags" => "array",
+            "tags.*" => "string|max:50",
+            "type" => "required|string|in:habit,daily,todo",
+            "is_completed" => "boolean",
+            "is_deadline_task" => "boolean",
+            "experience_reward" => "required|integer|min:1",
+            "type" => "required|string|in:habit,daily,todo",
+        ]);
 
+        $task = $this->taskService->createTask($user, $validated);
         return redirect()->back();
     }
 
-    public function update(Request $request, Task $task)
+    public function updateHabit(Request $request, Task $task)
     {
-        $validated = $request->validate([
-            'title' => 'sometimes|required|string|max:255',
-            'description' => 'nullable|string',
-            'difficulty_level' => 'sometimes|required|integer|exists:task_difficulties,difficulty_level',
-            'reset_frequency' => 'sometimes|required|integer|exists:task_reset_configs,id',
-            'due_date' => 'nullable|date',
-            'is_completed' => 'boolean',
-            'progress' => 'numeric|min:0|max:100',
-        ]);
-
-        $task->update($validated);
-
-        return back();
+        try {
+            $validated = $request->validate([
+                "title" => "required|string|max:255",
+                "description" => "nullable|string",
+                "difficulty_level" => "required|integer|exists:task_difficulties,difficulty_level",
+                "reset_frequency" => "required|integer|exists:task_reset_configs,id",
+                "tags" => "array",
+                "tags.*" => "string|max:50",
+            ]);
+            
+            \Log::info('Validated data:', $validated);
+            
+            // Extract and process tags
+            $tags = $validated['tags'] ?? [];
+            unset($validated['tags']);
+            
+            $this->taskService->updateTask($task, $validated, $tags);
+            
+            return back()->with('success', 'Habit updated successfully');
+            
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            \Log::error('Validation error:', ['errors' => $e->errors()]);
+            throw $e;
+        } catch (\Exception $e) {
+            \Log::error('Error updating habit:', [
+                'message' => $e->getMessage(),
+            ]);
+            
+            return back()->withErrors(['message' => $e->getMessage()]);
+        }
     }
 
     public function completeTask(Task $task)
     {
-        if($this->getUserRemainingHealth() <= 0) {
-            return back()->with('error', 'You do not have enough health to complete this task.');
-        }
-        if($this->getUserRemainingEnergy() <= 0) {
-            return back()->with('error', 'You do not have enough energy to complete this task.');
-        }
         $this->taskService->completeTask($task);
-        return back();
+        return back()->with("success", "Task completed successfully");
     }
     
     public function taskNotCompleted(Task $task)
@@ -105,4 +117,13 @@ class TaskController extends Controller
         $task->delete();
         return back();
     }
+
+    public function create()
+    {
+        $formData = $this->taskService->getTaskFormData();
+        
+        return Inertia::render("Tasks/Create", $formData);
+    }
+
+
 } 
