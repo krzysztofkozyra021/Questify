@@ -62,6 +62,59 @@ class TaskService
         return $task;
     }
 
+    public function updateTask(Task $task, array $data, array $tags = []): void
+{
+    try {
+        $taskId = $task->id;
+        
+        if (!$taskId) {
+            throw new \Exception('Task ID is missing');
+        }
+        
+        \Log::info('UpdateTask called with:', [
+            'task_id' => $taskId,
+            'data' => $data,
+            'tags' => $tags
+        ]);
+        
+        // Update task
+        $task->update($data);
+        
+        // Re-fetch the task to ensure we have the latest instance
+        $task = Task::find($taskId);
+        
+        if (!$task) {
+            throw new \Exception('Task not found after update');
+        }
+        
+        // Process tags
+        $tagIds = [];
+        foreach ($tags as $tagName) {
+            $tagName = trim($tagName);
+            if (!empty($tagName)) {
+                $tag = Tag::firstOrCreate(
+                    ['name' => $tagName],
+                    ['user_id' => $task->user_id ?? auth()->id()]
+                );
+                $tagIds[] = $tag->id;
+            }
+        }
+        
+        // Sync tags using the fresh task instance
+        $task->tags()->sync($tagIds);
+        
+        // Load relationships
+        $task->load('tags', 'difficulty');
+        
+    } catch (\Exception $e) {
+        \Log::error('Error in updateTask:', [
+            'message' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        throw $e;
+    }
+}
+
     public function completeTask(Task $task): void
     {
         // Load the difficulty relationship if not already loaded
@@ -84,7 +137,7 @@ class TaskService
         $user = $task->users()->first();
         $userStats = $user->userStatistics;
         $userClassExpMultiplier = $userStats->classAttributes->exp_multiplier;
-        $expGain = $task->experience_reward * $task->difficulty->exp_multiplier * $userClassExpMultiplier;
+        $expGain = round($task->experience_reward * $task->difficulty->exp_multiplier * $userClassExpMultiplier);
 
         // Calculate energy penalty based on player 10% of max energy and task difficulty multiplier
         $playerMaxEnergy = $userStats->max_energy;
@@ -111,8 +164,6 @@ class TaskService
 
         $user = $task->users()->first();
         $userStats = $user->userStatistics;
-
-        
     }
 
     public function resetTask(Task $task): void
