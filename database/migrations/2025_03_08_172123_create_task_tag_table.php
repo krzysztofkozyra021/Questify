@@ -11,8 +11,8 @@ return new class() extends Migration {
     {
         Schema::create("task_tag", function (Blueprint $table): void {
             $table->id();
-            $table->integer("task_id");
-            $table->integer("tag_id");
+            $table->unsignedBigInteger("task_id");
+            $table->unsignedBigInteger("tag_id");
             $table->timestamps();
         });
 

@@ -34,12 +34,17 @@ class DashboardController extends Controller
         
         // Get tasks using TaskService
         $tasks = $this->taskService->getUserTasks($user);
+        $habits = $tasks['habits'];
+        $dailyTasks = $tasks['dailies'];
+        $todoTasks = $tasks['todos'];
         
         // Get tags using TagService
         $tags = $this->tagService->getUserTags($user);
 
         return Inertia::render("Dashboard", [
-            "tasks" => $tasks,
+            "habits" => $habits,
+            "dailyTasks" => $dailyTasks,
+            "todoTasks" => $todoTasks,
             "tags" => $tags,
             "userStatistics" => $userStatistics,
             "user" => $user,
@@ -50,47 +55,6 @@ class DashboardController extends Controller
         ]);
     }
 
-    public function create()
-    {
-        $formData = $this->taskService->getTaskFormData();
-        
-        return Inertia::render("Tasks/Create", $formData);
-    }
-
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            "title" => "required|string|max:255",
-            "description" => "nullable|string",
-            "difficulty_level" => "required|integer|exists:task_difficulties,difficulty_level",
-            "reset_frequency" => "required|integer|exists:task_reset_configs,id",
-            "start_date" => "required|date",
-            "due_date" => "nullable|date|after:start_date",
-            "repeat_every" => "required|integer|min:1",
-            "repeat_unit" => "required|in:day,week,month",
-            "is_completed" => "boolean",
-            "is_deadline_task" => "boolean",
-            "experience_reward" => "required|integer|min:1",
-            "tags" => "array",
-            "tags.*" => "string|max:50",
-        ]);
-
-        $this->taskService->createTask(auth()->user(), $validated);
-
-        return redirect()->route("dashboard");
-    }
-
-    public function completeTask(Task $task)
-    {
-        $this->taskService->completeTask($task);
-        return back();
-    }
-
-    public function resetTask(Task $task)
-    {
-        $this->taskService->resetTask($task);
-        return back();
-    }
 
     public function getMotivationalQuote($locale)
     {

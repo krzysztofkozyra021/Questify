@@ -19,10 +19,12 @@ return new class() extends Migration {
             $table->timestamp("start_date")->nullable();
             $table->boolean("is_completed")->default(false);
             $table->boolean("is_deadline_task")->default(false);
-            $table->float("experience_reward")->default(10.0);
+            $table->integer("experience_reward")->default(10);
             $table->json("checklist_items")->nullable();
             $table->string("type")->default("habit");
             $table->timestamp("next_reset_at")->nullable();
+            $table->integer("completed_count")->default(0);
+            $table->integer("not_completed_count")->default(0);
             $table->timestamps();
         });
 

@@ -49,11 +49,12 @@ Route::middleware(["auth"])->group(function (): void {
 
     // Tasks - User-specific tasks
     Route::prefix("tasks")->name("tasks.")->group(function (): void {
-        Route::get("/create", [TaskController::class, "create"])->name("create");
-        Route::post("/", [TaskController::class, "store"])->name("store");
+        Route::post("/store/habit", [TaskController::class, "storeHabit"])->name("store.habit");
+        Route::put("/update/habit/{task}", [TaskController::class, "updateHabit"])->name("update.habit");
         Route::post("/{task}/complete", [TaskController::class, "completeTask"])->name("complete");
         Route::post("/{task}/reset", [TaskController::class, "resetTask"])->name("reset");
         Route::post("/{task}/not-completed", [TaskController::class, "taskNotCompleted"])->name("not-completed");
+        Route::put("/{task}", [TaskController::class, "update"])->name("update");
     });
 
     // Tags - User-specific tags
