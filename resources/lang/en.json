@@ -341,5 +341,8 @@
     "Streak": "Streak",
     "XP": "XP",
     "HP": "HP",
-    "EP": "EP"
+    "EP": "EP",
+    "All": "All",
+    "Weak": "Weak",
+    "Strong": "Strong"
 }

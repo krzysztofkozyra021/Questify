@@ -118,10 +118,10 @@
     "Difficulty": "Trudność",
     "Tags": "Tagi",
     "Reset Counter": "Zresetuj co ile",
-    "Daily": "Dzienny",
-    "Weekly": "Tygodniowy",
-    "Monthly": "Miesięczny",
-    "Yearly": "Roczny",
+    "Daily": "Dziennie",
+    "Weekly": "Tygodniowo",
+    "Monthly": "Miesięcznie",
+    "Yearly": "Rocznie",
     "Creating...": "Tworzenie...",
     "Create": "Utwórz",
     "Add a title": "Dodaj tytuł",
@@ -342,5 +342,8 @@
     "Streak": "Seria",
     "XP": "PD",
     "HP": "PZ",
-    "EP": "PE"
+    "EP": "PE",
+    "All": "Wszystkie",
+    "Weak": "Słabe",
+    "Strong": "Mocne"
 }
