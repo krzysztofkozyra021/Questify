@@ -36,7 +36,7 @@
 
   function resetForm() {
     form.value = { ...initialFormState };
-  }
+}
 
   function close() {
     emit('close');
@@ -44,7 +44,7 @@
   
   function submit() {
     loading.value = true;
-    router.post('/tasks', {
+    router.post('/tasks/store/habit', {
       ...form.value,
       tags: form.value.tags.split(',').map(t => t.trim()).filter(Boolean),
       experience_reward: DEFAULT_EXPERIENCE_REWARD,
