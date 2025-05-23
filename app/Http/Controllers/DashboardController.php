@@ -34,12 +34,17 @@ class DashboardController extends Controller
         
         // Get tasks using TaskService
         $tasks = $this->taskService->getUserTasks($user);
+        $habits = $tasks['habits'];
+        $dailyTasks = $tasks['dailies'];
+        $todoTasks = $tasks['todos'];
         
         // Get tags using TagService
         $tags = $this->tagService->getUserTags($user);
 
         return Inertia::render("Dashboard", [
-            "tasks" => $tasks,
+            "habits" => $habits,
+            "dailyTasks" => $dailyTasks,
+            "todoTasks" => $todoTasks,
             "tags" => $tags,
             "userStatistics" => $userStatistics,
             "user" => $user,

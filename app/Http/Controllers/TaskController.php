@@ -35,7 +35,6 @@ class TaskController extends Controller
         // Create task and attach to user
         $user = auth()->user();
         $task = $this->taskService->createTask($user, $validated);
-
         return redirect()->back();
     }
 
@@ -65,7 +64,7 @@ class TaskController extends Controller
             return back()->with('error', 'You do not have enough energy to complete this task.');
         }
         $this->taskService->completeTask($task);
-        return back();
+        return back()->with("success", "Task completed successfully");
     }
     
     public function taskNotCompleted(Task $task)

@@ -72,6 +72,7 @@ class TaskService
         $task->update([
             'is_completed' => true,
             'completed_at' => now(),
+            'completed_count' => $task->completed_count + 1,
         ]);
         
         // Calculate next reset date based on completion time
@@ -87,11 +88,11 @@ class TaskService
 
         // Calculate energy penalty based on player 10% of max energy and task difficulty multiplier
         $playerMaxEnergy = $userStats->max_energy;
-        $energyPenalty = ($playerMaxEnergy * 0.1) * $task->difficulty->energy_cost;
+        $energyPenalty = round(($playerMaxEnergy * 0.1) * $task->difficulty->energy_cost);
         
         // Calculate health penalty based on player 10% of max health and task difficulty multiplier
         $playerMaxHealth = $userStats->max_health;
-        $healthPenalty = ($playerMaxHealth * 0.1) * $task->difficulty->health_penalty;
+        $healthPenalty = round(($playerMaxHealth * 0.1) * $task->difficulty->health_penalty);
 
 
         $userStats->current_experience += $expGain;
@@ -104,7 +105,8 @@ class TaskService
     {
         $task->update([
             'is_completed' => false,
-            'completed_at' => now(),
+            'completed_at' => null,
+            'not_completed_count' => $task->not_completed_count + 1,
         ]);
 
         $user = $task->users()->first();
