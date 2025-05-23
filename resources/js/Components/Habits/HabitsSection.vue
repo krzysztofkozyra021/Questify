@@ -2,6 +2,7 @@
 import { ref, computed, watch } from 'vue';
 import { useTranslation } from '@/Composables/useTranslation';
 import CreateHabitModal from '@/Components/Forms/CreateHabitModal.vue';
+import EditHabitModal from '@/Components/Forms/EditHabitModal.vue';
 import { router } from '@inertiajs/vue3';
 import ErrorModal from '@/Components/ErrorModal.vue';
 
@@ -33,6 +34,8 @@ const props = defineProps({
 });
 
 const showCreateHabitModal = ref(false);
+const showEditHabitModal = ref(false);
+const selectedTask = ref(null);
 const newHabit = ref('');
 const searchQuery = ref('');
 const isSearchMode = ref(false);
@@ -141,7 +144,7 @@ const addTask = (type) => {
       type: 'habit',
     };
     
-    router.post('/tasks', formData, {
+    router.post('/tasks/store/habit', formData, {
       onSuccess: () => {
         newHabit.value = '';
       },
@@ -190,6 +193,12 @@ const taskNotCompleted = (task) => {
       onSuccess: () => {}
     });
 };
+
+const openEditHabitModal = (task) => {
+  selectedTask.value = task;
+  showEditHabitModal.value = true;
+};
+
 </script>
 
 <template>
@@ -292,6 +301,15 @@ const taskNotCompleted = (task) => {
       :resetConfigs="resetConfigs"
       @close="showCreateHabitModal = false"
     />
+    <EditHabitModal
+      v-if="selectedTask"
+      :show="showEditHabitModal"
+      :task="selectedTask"
+      :difficulties="difficulties"
+      :resetConfigs="resetConfigs"
+      @close="showEditHabitModal = false; selectedTask = null"
+      @edited="showEditHabitModal = false; selectedTask = null"
+    />
     <ul class="flex-1 space-y-2 overflow-y-auto pr-1">  
       <li v-for="task in habitsResultFromSearchMode" :key="task.id" class="bg-white rounded-lg shadow">
         <div class="flex items-stretch gap-1 sm:gap-2">
@@ -305,7 +323,7 @@ const taskNotCompleted = (task) => {
               +
             </button>
           </div>
-          <div class="flex-1 py-1.5 sm:py-2 px-2 sm:px-3">
+          <div class="flex-1 py-1.5 sm:py-2 px-2 sm:px-3 cursor-pointer" @click="openEditHabitModal(task)">
             <div class="flex flex-wrap items-center gap-1 sm:gap-2">
               <div class="font-semibold text-stone-800 text-sm sm:text-base">{{ task.title }}</div>
             </div>
