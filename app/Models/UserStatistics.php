@@ -27,13 +27,13 @@ class UserStatistics extends Model
         "last_reset",
     ];
     protected $casts = [
-        "current_health" => "float",
-        "current_energy" => "float",
-        "max_health" => "float",
-        "max_energy" => "float",
-        "current_experience" => "float",
-        "next_level_experience" => "float",
-        "energy_regen_rate" => "float",
+        "current_health" => "integer",
+        "current_energy" => "integer",
+        "max_health" => "integer",
+        "max_energy" => "integer",
+        "current_experience" => "integer",
+        "next_level_experience" => "integer",
+        "energy_regen_rate" => "integer",
         "last_login" => "datetime",
         "last_reset" => "datetime",
     ];
