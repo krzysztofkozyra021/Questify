@@ -344,5 +344,7 @@
     "EP": "EP",
     "All": "All",
     "Weak": "Weak",
-    "Strong": "Strong"
+    "Strong": "Strong",
+    "Edit": "Edit",
+    "Editing...": "Editing..."
 }
