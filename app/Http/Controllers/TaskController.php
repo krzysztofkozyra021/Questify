@@ -40,7 +40,26 @@ class TaskController extends Controller
         return redirect()->back();
     }
 
-    public function updateHabit(Request $request, Task $task)
+    public function storeTodo(Request $request)
+    {
+        $user = auth()->user();
+        $validated = $request->validate([
+            "title" => "required|string|max:255",
+            "description" => "nullable|string",
+            "difficulty_level" => "required|integer|exists:task_difficulties,difficulty_level",
+            "due_date" => "required|date",
+            "start_date" => "required|date",
+            "experience_reward" => "required|integer|min:1", 
+            "tags" => "array",
+            "tags.*" => "string|max:50",
+            "type" => "required|string|in:habit,daily,todo",
+        ]);
+
+        $task = $this->taskService->createTask($user, $validated);
+        return redirect()->back();
+    }
+
+    public function updateHabit(Request $request, Task $habit)
     {
         try {
             $validated = $request->validate([
@@ -58,7 +77,7 @@ class TaskController extends Controller
             $tags = $validated['tags'] ?? [];
             unset($validated['tags']);
             
-            $this->taskService->updateTask($task, $validated, $tags);
+            $this->taskService->updateHabit($habit, $validated, $tags);
             
             return back()->with('success', 'Habit updated successfully');
             
@@ -74,15 +93,35 @@ class TaskController extends Controller
         }
     }
 
-    public function completeTask(Task $task)
+    public function destroyHabit(Task $habit)
     {
-        $this->taskService->completeTask($task);
-        return back()->with("success", "Task completed successfully");
+        $habit->delete();
+        return back();
+    }
+
+    public function completeHabit(Task $habit)
+    {
+        $this->taskService->completeHabit($habit);
+        return back()->with("success", "Habit completed successfully");
+    }
+
+    public function completeTodo(Task $todo)
+    {
+        try {
+            $this->taskService->completeTodo($todo);
+            return back()->with("success", "Todo completed successfully");
+        } catch (\Exception $e) {
+            \Log::error('Error completing todo:', [
+                'message' => $e->getMessage(),
+                'todo_id' => $todo->id
+            ]);
+            return back()->withErrors(['message' => $e->getMessage()]);
+        }
     }
     
-    public function taskNotCompleted(Task $task)
+    public function habitNotCompleted(Task $habit)
     {
-        $this->taskService->taskNotCompleted($task);
+        $this->taskService->habitNotCompleted($habit);
         return back();
     }
 
