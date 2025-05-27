@@ -93,6 +93,39 @@ class TaskController extends Controller
         }
     }
 
+    public function updateTodo(Request $request, Task $todo){
+        try {
+            $validated = $request->validate([
+                "title" => "required|string|max:255",
+                "description" => "nullable|string",
+                "difficulty_level" => "required|integer|exists:task_difficulties,difficulty_level",
+                "due_date" => "required|date",
+                "tags" => "array",
+                "tags.*" => "string|max:50",
+            ]);
+            
+            \Log::info('Validated data:', $validated);
+            
+            // Extract and process tags
+            $tags = $validated['tags'] ?? [];
+            unset($validated['tags']);
+            
+            $this->taskService->updateTodo($todo, $validated, $tags);
+            
+            return back()->with('success', 'Todo updated successfully');
+            
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            \Log::error('Validation error:', ['errors' => $e->errors()]);
+            throw $e;
+        } catch (\Exception $e) {
+            \Log::error('Error updating todo:', [
+                'message' => $e->getMessage(),
+            ]);
+            
+            return back()->withErrors(['message' => $e->getMessage()]);
+        }
+    }
+
     public function destroyHabit(Task $habit)
     {
         $habit->delete();
@@ -164,5 +197,18 @@ class TaskController extends Controller
         return Inertia::render("Tasks/Create", $formData);
     }
 
+    public function destroyTodo(Task $todo)
+    {
+        try {
+            $todo->delete();
+            return back()->with('success', 'Todo deleted successfully');
+        } catch (\Exception $e) {
+            \Log::error('Error deleting todo:', [
+                'message' => $e->getMessage(),
+                'todo_id' => $todo->id
+            ]);
+            return back()->withErrors(['message' => $e->getMessage()]);
+        }
+    }
 
 } 

@@ -216,7 +216,58 @@ class TaskService
         $userStats->save();
     }
 
-
+    public function updateTodo(Task $todo, array $data, array $tags = []): void
+    {
+        try {
+            $todoId = $todo->id;
+            
+            if (!$todoId) {
+                throw new \Exception('Todo ID is missing');
+            }
+            
+            \Log::info('UpdateTodo called with:', [
+                'todo_id' => $todoId,
+                'data' => $data,
+                'tags' => $tags
+            ]);
+            
+            // Update task
+            $todo->update($data);
+            
+            // Re-fetch the task to ensure we have the latest instance
+            $todo = Task::find($todoId);
+            
+            if (!$todo) {
+                throw new \Exception('Todo not found after update');
+            }
+            
+            // Process tags
+            $tagIds = [];
+            foreach ($tags as $tagName) {
+                $tagName = trim($tagName);
+                if (!empty($tagName)) {
+                    $tag = Tag::firstOrCreate(
+                        ['name' => $tagName],
+                        ['user_id' => $todo->user_id ?? auth()->id()]
+                    );
+                    $tagIds[] = $tag->id;
+                }
+            }
+            
+            // Sync tags using the fresh task instance
+            $todo->tags()->sync($tagIds);
+            
+            // Load relationships
+            $todo->load('tags', 'difficulty');
+            
+        } catch (\Exception $e) {
+            \Log::error('Error in updateTodo:', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            throw $e;
+        }
+    }
 
     public function habitNotCompleted(Task $habit): void
     {

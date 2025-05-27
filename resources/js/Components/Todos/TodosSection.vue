@@ -5,6 +5,8 @@ import { router } from '@inertiajs/vue3';
 import ErrorModal from '@/Components/ErrorModal.vue';
 import CreateTodoModal from '@/Components/Forms/CreateTodoModal.vue';
 import { useNotification } from '@/Composables/useNotification';
+import EditTodoModal from '@/Components/Forms/EditTodoModal.vue';
+import ConfirmationModal from '@/Components/ConfirmationModal.vue';
 
 const { trans } = useTranslation();
 const { addNotification } = useNotification();
@@ -36,8 +38,11 @@ const newTodo = ref('');
 const showErrorModal = ref(false);
 const errorMessage = ref('');
 const showCreateTodoModal = ref(false);
-
-
+const showEditTodoModal = ref(false);
+const selectedTodo = ref(null);
+const showDeleteConfirmationModal = ref(false);
+const todoToDelete = ref(null);
+const activeDropdown = ref(null);
 
 // Computed
 const todos = computed(() => Object.values(props.todoTasks));
@@ -99,9 +104,57 @@ const completeTodo = (todo) => {
   });
 };
 
-
 const getTodoExperience = (todo) => {
   return Math.round(todo.experience_reward * todo.difficulty.exp_multiplier * props.userClassExpMultiplier);
+};
+
+const openEditTodoModal = (todo) => {
+  selectedTodo.value = todo;
+  showEditTodoModal.value = true;
+};
+
+// Close dropdown when clicking outside
+const closeDropdowns = () => {
+  activeDropdown.value = null;
+};
+
+// Add click event listener to close dropdowns when clicking outside
+if (typeof window !== 'undefined') {
+  window.addEventListener('click', closeDropdowns);
+}
+
+const toggleDropdown = (todoId, event) => {
+  event.stopPropagation();
+  activeDropdown.value = activeDropdown.value === todoId ? null : todoId;
+};
+
+const deleteTodo = (todo) => {
+  todoToDelete.value = todo;
+  showDeleteConfirmationModal.value = true;
+};
+
+const confirmDelete = () => {
+  if (todoToDelete.value) {
+    router.delete(`/tasks/todos/${todoToDelete.value.id}`, {
+      preserveScroll: true,
+      preserveState: true,
+      only: ['userStatistics', 'todoTasks'],
+      onSuccess: () => {
+        activeDropdown.value = null;
+        todoToDelete.value = null;
+        addNotification(trans('Todo deleted successfully'), 'success');
+      },
+      onError: (errors) => {
+        errorMessage.value = errors.message || trans('Failed to delete todo');
+        showErrorModal.value = true;
+      }
+    });
+  }
+};
+
+const cancelDelete = () => {
+  todoToDelete.value = null;
+  showDeleteConfirmationModal.value = false;
 };
 </script>
 
@@ -113,10 +166,25 @@ const getTodoExperience = (todo) => {
       :difficulties="difficulties"
       :default-todo-experience-reward="DEFAULT_TODO_EXPERIENCE_REWARD"
     />
+    <EditTodoModal
+      v-if="selectedTodo"
+      :show="showEditTodoModal"
+      :todo="selectedTodo"
+      :difficulties="difficulties"
+      @close="showEditTodoModal = false; selectedTodo = null"
+      @edited="showEditTodoModal = false; selectedTodo = null"
+    />
     <ErrorModal 
       :show="showErrorModal"
       :message="errorMessage"
       @close="showErrorModal = false"
+    />
+    <ConfirmationModal
+      :show="showDeleteConfirmationModal"
+      :title="trans('Delete Todo')"
+      :message="trans('Are you sure you want to delete this todo?')"
+      @confirm="confirmDelete"
+      @cancel="cancelDelete"
     />
     <h2 class="text-lg md:text-xl font-bold text-stone-800 border-b-2 border-stone-600 pb-2 mb-3">{{ trans("To Do's") }}</h2>
     <div class="flex mb-3 gap-2">
@@ -153,7 +221,7 @@ const getTodoExperience = (todo) => {
               }" 
             />
           </div>
-          <div class="flex-1 py-2">
+          <div class="flex-1 py-2 cursor-pointer hover:bg-stone-50 transition-colors duration-200" @click="openEditTodoModal(todo)">
             <div class="flex flex-wrap items-center gap-1 md:gap-2">
               <div 
                 class="font-semibold text-stone-800 text-sm md:text-base" 
@@ -230,6 +298,40 @@ const getTodoExperience = (todo) => {
                 </span>
               </li>
             </ul>
+          </div>
+          <div class="relative flex items-center px-2">
+            <button 
+              @click="toggleDropdown(todo.id, $event)"
+              class="p-1 rounded hover:bg-stone-100 transition-colors duration-200"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-stone-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+              </svg>
+            </button>
+            <div 
+              v-if="activeDropdown === todo.id"
+              class="absolute right-0 top-8 z-10 bg-white rounded-lg shadow-lg border border-stone-200 py-1 min-w-[120px]"
+              @click.stop
+            >
+              <button 
+                @click="openEditTodoModal(todo)"
+                class="w-full text-left px-3 py-2 hover:bg-stone-100 transition-colors duration-200 text-sm flex items-center gap-2"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-stone-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+                {{ trans('Edit') }}
+              </button>
+              <button 
+                @click="deleteTodo(todo)"
+                class="w-full text-left px-3 py-2 hover:bg-stone-100 transition-colors duration-200 text-sm flex items-center gap-2 text-red-600"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                {{ trans('Delete') }}
+              </button>
+            </div>
           </div>
         </div>
         </div>
