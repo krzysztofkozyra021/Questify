@@ -43,9 +43,42 @@ const selectedTodo = ref(null);
 const showDeleteConfirmationModal = ref(false);
 const todoToDelete = ref(null);
 const activeDropdown = ref(null);
+const searchQuery = ref('');
+const isSearchMode = ref(false);
+const tempInputValue = ref('');
 
 // Computed
 const todos = computed(() => Object.values(props.todoTasks));
+
+const todosResultFromSearchMode = computed(() => {
+  let filtered = todos.value;
+  // Apply search filter if in search mode
+  if (isSearchMode.value && searchQuery.value) {
+    const query = searchQuery.value.toLowerCase();
+    filtered = filtered.filter(todo => 
+      todo.title.toLowerCase().includes(query) || 
+      todo.description?.toLowerCase().includes(query) ||
+      todo.tags?.some(tag => tag.name.toLowerCase().includes(query))
+    );
+  }
+  return filtered;
+});
+
+const toggleSearchMode = () => {
+  if (isSearchMode.value) {
+    tempInputValue.value = searchQuery.value;
+  } else {
+    tempInputValue.value = newTodo.value;
+  }
+  
+  isSearchMode.value = !isSearchMode.value;
+  
+  if (isSearchMode.value) {
+    searchQuery.value = tempInputValue.value;
+  } else {
+    newTodo.value = tempInputValue.value;
+  }
+};
 
 const daysPassedAfterTodoDueDate = (todo) => {
   if (!todo || !todo.due_date) return 0;
@@ -187,23 +220,76 @@ const cancelDelete = () => {
       @cancel="cancelDelete"
     />
     <h2 class="text-lg md:text-xl font-bold text-stone-800 border-b-2 border-stone-600 pb-2 mb-3">{{ trans("To Do's") }}</h2>
-    <div class="flex mb-3 gap-2">
-      <input 
-        v-model="newTodo" 
-        @keyup.enter.prevent="addTodo()" 
-        type="text" 
-        :placeholder="trans('Add a To Do')" 
+    <div class="flex flex-col xl:flex-row xl:items-center mb-2 sm:mb-3 gap-2">
+      <div class="flex-1">
+        <input 
+          v-if="!isSearchMode"
+          v-model="newTodo" 
+          @keyup.enter.prevent="addTodo()" 
+          type="text" 
+          :placeholder="trans('Add a To Do')" 
           class="w-full px-2 sm:px-3 py-1.5 rounded border border-stone-300 bg-white text-stone-800 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-600 text-sm sm:text-base" 
-      />
-      <button 
-        @click="showCreateTodoModal = true" 
-        class="bg-stone-600 text-stone-50 px-2 sm:px-3 py-1.5 sm:py-2 rounded font-bold shadow hover:bg-stone-700 text-sm sm:text-base min-w-[32px] sm:min-w-[40px]"
-      >
-        +
-      </button>
+        />
+        <input 
+          v-else
+          v-model="searchQuery" 
+          type="text" 
+          :placeholder="trans('Search todos...')" 
+          class="w-full px-2 sm:px-3 py-1.5 rounded border border-stone-300 bg-white text-stone-800 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-600 text-sm sm:text-base" 
+        />
+      </div>
+      <div class="flex justify-center xl:justify-end gap-2 sm:gap-3 xl:ml-4">
+        <button 
+          v-if="!isSearchMode"
+          @click="showCreateTodoModal = true" 
+          class="bg-stone-600 text-stone-50 px-2 sm:px-3 py-1.5 sm:py-2 rounded font-bold shadow hover:bg-stone-700 text-sm sm:text-base min-w-[32px] sm:min-w-[40px]"
+        >
+          +
+        </button>
+        <button 
+          v-else
+          @click="toggleSearchMode" 
+          class="bg-stone-600 text-stone-50 px-2 sm:px-3 py-1.5 sm:py-2 rounded font-bold shadow hover:bg-stone-700 text-sm sm:text-base min-w-[32px] sm:min-w-[40px]"
+        >
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            class="h-4 w-4 sm:h-5 sm:w-5" 
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke="currentColor"
+          >
+            <path 
+              stroke-linecap="round" 
+              stroke-linejoin="round" 
+              stroke-width="2" 
+              d="M6 18L18 6M6 6l12 12" 
+            />
+          </svg>
+        </button>
+        <button 
+          v-if="!isSearchMode"
+          @click="toggleSearchMode" 
+          class="bg-stone-600 text-stone-50 px-2 sm:px-3 py-1.5 sm:py-2 rounded font-bold shadow hover:bg-stone-700 text-sm sm:text-base min-w-[32px] sm:min-w-[40px]"
+        >
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            class="h-4 w-4 sm:h-5 sm:w-5" 
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke="currentColor"
+          >
+            <path 
+              stroke-linecap="round" 
+              stroke-linejoin="round" 
+              stroke-width="2" 
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" 
+            />
+          </svg>
+        </button>
+      </div>
     </div>
     <ul class="flex-1 space-y-2 overflow-y-auto pr-1">
-      <li v-for="todo in todos" :key="todo.id" class="bg-white rounded-lg shadow">
+      <li v-for="todo in todosResultFromSearchMode" :key="todo.id" class="bg-white rounded-lg shadow">
         <div v-if="!todo.is_completed">
         <div class="flex items-stretch gap-2 pr-2 md:pr-4">
           <div class="flex items-center justify-center px-2 md:px-3 py-2 rounded-l-lg"

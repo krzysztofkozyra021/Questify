@@ -366,5 +366,6 @@
     "Todo deleted successfully": "Todo deleted successfully",
     "Todo updated successfully": "Todo updated successfully",
     "Failed to delete todo": "Failed to delete todo",
-    "Failed to update todo": "Failed to update todo"
+    "Failed to update todo": "Failed to update todo",
+    "Search todos...": "Search todos..."
 }

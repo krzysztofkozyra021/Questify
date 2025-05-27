@@ -363,5 +363,6 @@
     "Todo deleted successfully": "Zadanie zostało pomyślnie usunięte",
     "Todo updated successfully": "Zadanie zostało pomyślnie zaktualizowane",
     "Failed to delete todo": "Nie udało się usunąć zadania",
-    "Failed to update todo": "Nie udało się zaktualizować zadania"
+    "Failed to update todo": "Nie udało się zaktualizować zadania",
+    "Search todos...": "Szukaj zadań..."
 } 
