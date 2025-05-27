@@ -359,5 +359,12 @@
     "Todo is completed": "Todo is completed",
     "Failed to update task status": "Failed to update task status",
     "Habit created successfully": "Habit created successfully",
-    "Habit deleted successfully": "Habit deleted successfully"
+    "Habit deleted successfully": "Habit deleted successfully",
+    "Edit Todo": "Edit Todo",
+    "Delete Todo": "Delete Todo",
+    "Are you sure you want to delete this todo?": "Are you sure you want to delete this todo?",
+    "Todo deleted successfully": "Todo deleted successfully",
+    "Todo updated successfully": "Todo updated successfully",
+    "Failed to delete todo": "Failed to delete todo",
+    "Failed to update todo": "Failed to update todo"
 }
