@@ -346,5 +346,18 @@
     "Weak": "Weak",
     "Strong": "Strong",
     "Edit": "Edit",
-    "Editing...": "Editing..."
+    "Editing...": "Editing...",
+    "due today": "due today",
+    "days late": "days late",
+    "Due Date": "Due Date",
+    "Create Todo": "Create Todo",
+    "Edit Habit": "Edit Habit",
+    "Delete Habit": "Delete Habit",
+    "Are you sure you want to delete this habit?": "Are you sure you want to delete this habit?",
+    "Delete": "Delete",
+    "Todo task created successfully": "Todo task created successfully",
+    "Todo is completed": "Todo is completed",
+    "Failed to update task status": "Failed to update task status",
+    "Habit created successfully": "Habit created successfully",
+    "Habit deleted successfully": "Habit deleted successfully"
 }

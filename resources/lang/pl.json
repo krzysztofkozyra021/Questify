@@ -102,6 +102,7 @@
     "Forgot Password?": "Zapomniałeś hasła?",
     "No file selected": "Nie wybrano pliku",
     "Remove": "Usuń",
+    "Browse": "Przeglądaj",
     "Browse...": "Przeglądaj...",
     "This action cannot be undone. Please enter your password to confirm.": "Ta akcja nie może być cofnięta. Proszę wprowadzić swoje hasło, aby potwierdzić.",
     "Change Password": "Zmień hasło",
@@ -150,8 +151,6 @@
     "Report a feature": "Zgłoś funkcję",
     "Report a bug": "Zgłoś błąd",
     "Questify is a tool for managing tasks that helps you achieve goals.": "Questify to narzędzie do zarządzania zadaniami, które pomaga osiągnąć cele.",
-
-
     "About Questify": "O Questify",
     "Our mission": "Nasza misja",
     "Questify is an innovative task management tool that combines elements of gamification with effective time management. Our goal is to help users achieve their goals by transforming everyday tasks into an exciting adventure.": "Questify to innowacyjne narzędzie do zarządzania zadaniami, które łączy w sobie elementy grywalizacji z efektywnym zarządzaniem czasem. Naszym celem jest pomaganie użytkownikom w osiąganiu ich celów poprzez przekształcenie codziennych zadań w ekscytującą przygodę.",
@@ -169,7 +168,6 @@
     "Join us": "Dołącz do nas",
     "Start your journey with Questify today and discover how enjoyable it can be to achieve goals!": "Rozpocznij swoją podróż z Questify już dziś i odkryj, jak przyjemne może być osiąganie celów!",
     "Start now": "Rozpocznij teraz",
-
     "Frequently Asked Questions": "Często Zadawane Pytania",
     "If you have any questions": "Jeśli masz pytania.",
     "What is Questify?": "Czym jest Questify?",
@@ -186,8 +184,6 @@
     "How can I report a bug or suggest a new feature?": "Jak mogę zgłosić błąd lub zaproponować nową funkcję?",
     "You can do this in two ways: by using the (Report a bug) or (Report a feature) form available in the footer of the page, or by contacting our support team.": "Możesz to zrobić na dwa sposoby: poprzez formularz (Zgłoś błąd) lub (Zgłoś funkcję) dostępny w stopce strony, lub kontaktując się z naszym zespołem wsparcia.",
     "Contact us": "Skontaktuj się z nami",
-
-
     "1. General Terms": "1. Ogólne postanowienia",
     "This Terms of Service outlines the rules for using the Questify service and the rights and obligations of users.": "Ten Regulamin opisuje zasady korzystania z serwisu Questify oraz prawa i obowiązki użytkowników.",
     "Questify is a platform for managing tasks and tracking progress in games.": "Questify to platforma do zarządzania zadaniami i śledzenia postępu w grach.",
@@ -218,7 +214,6 @@
     "8. Final provisions": "8. Słowa końcowe",
     "The Terms of Service come into effect on the date of publication. Last update:": "Regulamin obowiązuje od daty opublikowania. Ostatnia aktualizacja:",
     "For matters not covered by these Terms, the laws of Poland apply.": "Dla spraw nie objętych tym Regulaminem, obowiązują przepisy prawa Polski.",
-    
     "1. General information": "1. Informacje ogólne",
     "This privacy policy outlines the rules for processing and protecting personal data in the Questify service.": "Niniejsza polityka prywatności określa zasady przetwarzania i ochrony danych osobowych w serwisie Questify.",
     "The administrator of personal data is ": "Administratorem danych osobowych jest ",
@@ -347,5 +342,19 @@
     "Weak": "Słabe",
     "Strong": "Mocne",
     "Edit": "Edytuj",
-    "Editing...": "Edycja..."
-}
+    "Editing...": "Edycja...",
+    "due today": "na dziś",
+    "days late": "Spóźnione dni",
+    "Due Date": "Termin",
+    "Create Todo": "Dodaj zadanie do wykonania",
+    "Edit Habit": "Edytuj nawyk",
+    "Delete Habit": "Usuń nawyk",
+    "Are you sure you want to delete this habit?": "Czy na pewno chcesz usunąć ten nawyk?",
+    "Delete": "Usuń",
+    "Todo task created successfully": "Zadanie zostało pomyślnie utworzone",
+    "Todo is completed": "Zadanie zostało wykonane",
+    "Task status updated successfully": "Status zadania został pomyślnie zaktualizowany",
+    "Failed to update task status": "Nie udało się zaktualizować statusu zadania",
+    "Habit created successfully": "Nawyk został pomyślnie utworzony",
+    "Habit deleted successfully": "Nawyk został pomyślnie usunięty"
+} 
