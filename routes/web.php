@@ -49,11 +49,31 @@ Route::middleware(["auth"])->group(function (): void {
 
     // Tasks - User-specific tasks
     Route::prefix("tasks")->name("tasks.")->group(function (): void {
-        Route::post("/store/habit", [TaskController::class, "storeHabit"])->name("store.habit");
-        Route::put("/update/habit/{task}", [TaskController::class, "updateHabit"])->name("update.habit");
-        Route::post("/{task}/complete", [TaskController::class, "completeTask"])->name("complete");
+        // Habits routes
+        Route::prefix("habits")->name("habits.")->group(function (): void {
+            Route::post("/store", [TaskController::class, "storeHabit"])->name("store");
+            Route::put("/update/{habit}", [TaskController::class, "updateHabit"])->name("update");
+            Route::delete("/{habit}", [TaskController::class, "destroyHabit"])->name("destroy");
+            Route::post("/{habit}/complete", [TaskController::class, "completeHabit"])->name("complete");
+            Route::post("/{habit}/not-completed", [TaskController::class, "habitNotCompleted"])->name("not-completed");
+        });
+
+        // Todos routes
+        Route::prefix("todos")->name("todos.")->group(function (): void {
+            Route::post("/store", [TaskController::class, "storeTodo"])->name("store");
+            Route::put("/update/{todo}", [TaskController::class, "updateTodo"])->name("update");
+            Route::post("/{todo}/complete", [TaskController::class, "completeTodo"])->name("complete");
+        });
+
+        // Dailies routes
+        Route::prefix("dailies")->name("dailies.")->group(function (): void {
+            Route::post("/store", [TaskController::class, "storeDaily"])->name("store");
+            Route::put("/update/{task}", [TaskController::class, "updateDaily"])->name("update");
+            Route::post("/{task}/complete", [TaskController::class, "completeDaily"])->name("complete");
+        });
+
+        // Common task routes
         Route::post("/{task}/reset", [TaskController::class, "resetTask"])->name("reset");
-        Route::post("/{task}/not-completed", [TaskController::class, "taskNotCompleted"])->name("not-completed");
         Route::put("/{task}", [TaskController::class, "update"])->name("update");
     });
 
