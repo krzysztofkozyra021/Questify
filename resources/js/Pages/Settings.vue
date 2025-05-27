@@ -1,14 +1,18 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue'
 import { useForm } from '@inertiajs/vue3'
+import { useHead } from '@vueuse/head'
 import Modal from '@/Components/Modal.vue'
 import { router } from '@inertiajs/vue3'
 import { useTranslation } from '@/Composables/useTranslation';
-import DashboardBar from '@/Components/DashboardBar.vue'
 import Footer from '@/Components/Footer.vue'
 import Header from '@/Components/Header.vue'
 
 const { trans } = useTranslation()
+
+useHead({
+  title: () => trans('Settings') + " | Questify "
+})
 
 const props = defineProps({
   user: Object,
@@ -372,5 +376,6 @@ input[type="file"]::before {
         </div>
       </Modal>
     </main>
+    <Footer />
   </div>
 </template>
