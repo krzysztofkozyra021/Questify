@@ -239,6 +239,7 @@ const confirmDelete = () => {
       onSuccess: () => {
         activeDropdown.value = null;
         habitToDelete.value = null;
+        showDeleteConfirmationModal.value = false;
         addNotification(trans('Habit deleted successfully'), 'success');
       },
       onError: (errors) => {

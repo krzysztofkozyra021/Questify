@@ -175,6 +175,7 @@ const confirmDelete = () => {
       onSuccess: () => {
         activeDropdown.value = null;
         todoToDelete.value = null;
+        showDeleteConfirmationModal.value = false;
         addNotification(trans('Todo deleted successfully'), 'success');
       },
       onError: (errors) => {
