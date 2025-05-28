@@ -109,6 +109,11 @@ import Header from '@/Components/Header.vue'
 import Footer from '@/Components/Footer.vue'
 import Preloader from '@/Components/Preloader.vue'
 import { Link } from '@inertiajs/vue3'
+import { useHead } from '@vueuse/head'
 
 const { trans } = useTranslation()
+
+useHead({
+  title: trans('Support') + ' | Questify'
+})
 </script>
