@@ -4,6 +4,13 @@ import { route } from 'ziggy-js';
 import { useTranslation } from '@/Composables/useTranslation';
 import Preloader from '@/Components/Preloader.vue';
 import { usePage, router } from '@inertiajs/vue3';
+import { useHead } from '@vueuse/head'
+
+const { trans } = useTranslation()
+
+useHead({
+  title: trans('Class Selection') + ' | Questify'
+})
 
 const props = defineProps({
   classes: {
@@ -12,7 +19,6 @@ const props = defineProps({
   }
 });
 
-const { trans } = useTranslation();
 const selectedClass = ref(null);
 
 const statRanges = {
