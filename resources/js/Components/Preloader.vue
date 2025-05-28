@@ -4,9 +4,23 @@ import { ref, onMounted } from 'vue'
 const isLoading = ref(true)
 
 onMounted(() => {
-  setTimeout(() => {
+  const minimumLoadTime = 800 // minimum time in milliseconds
+  const loadPromise = new Promise((resolve) => {
+    if (document.readyState === 'complete') {
+      resolve()
+    } else {
+      window.addEventListener('load', resolve)
+    }
+  })
+
+  const timeoutPromise = new Promise((resolve) => {
+    setTimeout(resolve, minimumLoadTime)
+  })
+
+  // Wait for both the load event AND the minimum time
+  Promise.all([loadPromise, timeoutPromise]).then(() => {
     isLoading.value = false
-  }, 1000) // Show preloader for 1 second
+  })
 })
 </script>
 

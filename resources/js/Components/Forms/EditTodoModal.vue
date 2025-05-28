@@ -9,21 +9,19 @@
     show: Boolean,
     onClose: Function,
     difficulties: Array,
-    resetConfigs: Array,
-    habit: Object,
+    todo: Object,
   });
-
 
   const emit = defineEmits(['edited', 'close']);
   
   const form = ref({
-    title: props.habit?.title || '',
-    description: props.habit?.description || '',
-    difficulty_level: props.habit?.difficulty_level || 2,
-    reset_frequency: props.habit?.reset_frequency || 1,
-    tags: props.habit?.tags?.map(tag => tag.name).join(',') || '',
+    title: props.todo?.title || '',
+    description: props.todo?.description || '',
+    difficulty_level: props.todo?.difficulty_level || 2,
+    // If todo has a due_date, convert it to YYYY-MM-DD format, otherwise use current date
+    due_date: props.todo?.due_date ? new Date(props.todo.due_date).toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10),
+    tags: props.todo?.tags?.map(tag => tag.name).join(',') || '',
   });
-  
   
   const loading = ref(false);
   
@@ -33,7 +31,7 @@
   
   function submit() {
     loading.value = true;
-    router.put(`/tasks/habits/update/${props.habit.id}`, {
+    router.put(`/tasks/todos/update/${props.todo.id}`, {
       ...form.value,
       tags: form.value.tags ? form.value.tags.split(',').map(t => t.trim()).filter(Boolean) : [],
     }, {
@@ -47,13 +45,13 @@
       }
     });
   }
-  </script>
+</script>
 
 <template>
     <div v-if="show" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
       <div class="bg-white rounded-xl shadow-lg w-full max-w-md p-6 relative">
         <button class="absolute top-2 right-2 text-gray-500" @click="close">✕</button>
-        <h2 class="text-xl font-bold mb-4">{{ trans('Edit Habit') }}</h2>
+        <h2 class="text-xl font-bold mb-4">{{ trans('Edit Todo') }}</h2>
         <form @submit.prevent="submit">
           <div class="mb-3">
             <label class="block font-semibold mb-1">{{ trans('Title') }}*</label>
@@ -74,10 +72,8 @@
             <input v-model="form.tags" class="w-full border rounded px-2 py-1" :placeholder="trans('Add tags, comma separated')" />
           </div>
           <div class="mb-3">
-            <label class="block font-semibold mb-1">{{ trans('Reset Counter') }} </label>
-            <select v-model="form.reset_frequency" class="w-full border rounded px-2 py-1">
-              <option v-for="r in resetConfigs" :key="r.id" :value="r.id">{{ trans(r.name) }}</option>
-            </select>
+            <label class="block font-semibold mb-1">{{ trans('Due Date') }} </label>
+            <input v-model="form.due_date" type="date" class="w-full border rounded px-2 py-1" />
           </div>
           <button type="submit" class="w-full bg-amber-800 text-white py-2 rounded font-bold mt-2" :disabled="loading">
             {{ loading ? trans('Editing...') : trans('Edit') }}
@@ -85,6 +81,4 @@
         </form>
       </div>
     </div>
-  </template>
-  
-  
+</template>

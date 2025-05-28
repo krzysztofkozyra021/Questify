@@ -1,5 +1,6 @@
 <template>
   <div class="flex flex-col min-h-screen">
+    <Preloader />
     <Header :showPlayerPanel="false" />
     <main class="flex-1 max-w-4xl mx-auto p-12">
       <h1 class="text-3xl font-bold text-center mb-8">{{ trans('Privacy Policy') }}</h1>
@@ -126,6 +127,12 @@
 import { useTranslation } from '@/Composables/useTranslation'
 import Header from '@/Components/Header.vue'
 import Footer from '@/Components/Footer.vue'
+import Preloader from '@/Components/Preloader.vue'
+import { useHead } from '@vueuse/head'
 
 const { trans } = useTranslation()
+
+useHead({
+  title: trans('Privacy Policy') + ' | Questify'
+})
 </script>
