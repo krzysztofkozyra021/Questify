@@ -76,7 +76,7 @@
         </form>
       </div>
 
-      <div class="mt-8 bg-stone-50 rounded-lg p-6">
+      <div class="mt-8 bg-stone-50 rounded-lg p-6" v-if="!messageSuccessfullySent">
         <h2 class="text-xl font-semibold mb-4">{{ trans('Tips') }}</h2>
         <div class="prose prose-stone max-w-none">
           <p>{{ trans('To ensure your report is processed as quickly as possible:') }}</p>
@@ -100,8 +100,12 @@ import Header from '@/Components/Header.vue'
 import Footer from '@/Components/Footer.vue'
 import { router } from '@inertiajs/vue3'
 import ErrorModal from '@/Components/ErrorModal.vue'
-
+import { useHead } from '@vueuse/head'
 const { trans } = useTranslation()
+
+useHead({
+  title: trans('Report a feature') + ' | Questify'
+})
 
 const featureReportForm = ref({
   title: '',
