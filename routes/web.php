@@ -45,7 +45,7 @@ Route::middleware(["auth"])->group(function (): void {
 
     // Dashboard - Main game interface
     Route::get("/", [DashboardController::class, "index"])->name("dashboard");
-    Route::get("/motivational-quote/{locale}", [DashboardController::class, "getMotivationalQuote"])->name("motivational-quote");
+    Route::get("/motivational-quote/{locale}", [DashboardController::class, "getMotivationalQuote"])->name("dashboard.getMotivationalQuote");
 
     // Tasks - User-specific tasks
     Route::prefix("tasks")->name("tasks.")->group(function (): void {
