@@ -2,20 +2,13 @@
 import { useTranslation } from '@/Composables/useTranslation'
 import Header from '@/Components/Header.vue'
 import Footer from '@/Components/Footer.vue'
-import Preloader from '@/Components/Preloader.vue'
-import { useHead } from '@vueuse/head'
 
 const { trans } = useTranslation()
-
-useHead({
-  title: trans('About') + ' | Questify'
-})
 
 </script>
 
 <template>
   <div class="flex flex-col h-screen">
-    <Preloader />
     <Header :showPlayerPanel="false" />
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
       <div class="bg-white overflow-hidden sm:rounded-lg p-12">

@@ -40,26 +40,7 @@ class TaskController extends Controller
         return redirect()->back();
     }
 
-    public function storeTodo(Request $request)
-    {
-        $user = auth()->user();
-        $validated = $request->validate([
-            "title" => "required|string|max:255",
-            "description" => "nullable|string",
-            "difficulty_level" => "required|integer|exists:task_difficulties,difficulty_level",
-            "due_date" => "required|date",
-            "start_date" => "required|date",
-            "experience_reward" => "required|integer|min:1", 
-            "tags" => "array",
-            "tags.*" => "string|max:50",
-            "type" => "required|string|in:habit,daily,todo",
-        ]);
-
-        $task = $this->taskService->createTask($user, $validated);
-        return redirect()->back();
-    }
-
-    public function updateHabit(Request $request, Task $habit)
+    public function updateHabit(Request $request, Task $task)
     {
         try {
             $validated = $request->validate([
@@ -77,7 +58,7 @@ class TaskController extends Controller
             $tags = $validated['tags'] ?? [];
             unset($validated['tags']);
             
-            $this->taskService->updateHabit($habit, $validated, $tags);
+            $this->taskService->updateTask($task, $validated, $tags);
             
             return back()->with('success', 'Habit updated successfully');
             
@@ -93,68 +74,15 @@ class TaskController extends Controller
         }
     }
 
-    public function updateTodo(Request $request, Task $todo){
-        try {
-            $validated = $request->validate([
-                "title" => "required|string|max:255",
-                "description" => "nullable|string",
-                "difficulty_level" => "required|integer|exists:task_difficulties,difficulty_level",
-                "due_date" => "required|date",
-                "tags" => "array",
-                "tags.*" => "string|max:50",
-            ]);
-            
-            \Log::info('Validated data:', $validated);
-            
-            // Extract and process tags
-            $tags = $validated['tags'] ?? [];
-            unset($validated['tags']);
-            
-            $this->taskService->updateTodo($todo, $validated, $tags);
-            
-            return back()->with('success', 'Todo updated successfully');
-            
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            \Log::error('Validation error:', ['errors' => $e->errors()]);
-            throw $e;
-        } catch (\Exception $e) {
-            \Log::error('Error updating todo:', [
-                'message' => $e->getMessage(),
-            ]);
-            
-            return back()->withErrors(['message' => $e->getMessage()]);
-        }
-    }
-
-    public function destroyHabit(Task $habit)
+    public function completeTask(Task $task)
     {
-        $habit->delete();
-        return back();
-    }
-
-    public function completeHabit(Task $habit)
-    {
-        $this->taskService->completeHabit($habit);
-        return back()->with("success", "Habit completed successfully");
-    }
-
-    public function completeTodo(Task $todo)
-    {
-        try {
-            $this->taskService->completeTodo($todo);
-            return back()->with("success", "Todo completed successfully");
-        } catch (\Exception $e) {
-            \Log::error('Error completing todo:', [
-                'message' => $e->getMessage(),
-                'todo_id' => $todo->id
-            ]);
-            return back()->withErrors(['message' => $e->getMessage()]);
-        }
+        $this->taskService->completeTask($task);
+        return back()->with("success", "Task completed successfully");
     }
     
-    public function habitNotCompleted(Task $habit)
+    public function taskNotCompleted(Task $task)
     {
-        $this->taskService->habitNotCompleted($habit);
+        $this->taskService->taskNotCompleted($task);
         return back();
     }
 
@@ -197,18 +125,5 @@ class TaskController extends Controller
         return Inertia::render("Tasks/Create", $formData);
     }
 
-    public function destroyTodo(Task $todo)
-    {
-        try {
-            $todo->delete();
-            return back()->with('success', 'Todo deleted successfully');
-        } catch (\Exception $e) {
-            \Log::error('Error deleting todo:', [
-                'message' => $e->getMessage(),
-                'todo_id' => $todo->id
-            ]);
-            return back()->withErrors(['message' => $e->getMessage()]);
-        }
-    }
 
 } 

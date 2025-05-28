@@ -8,7 +8,6 @@ use App\Models\TaskResetConfig;
 use App\Models\User;
 use App\Models\Tag;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 class TaskService
@@ -34,86 +33,58 @@ class TaskService
             $data['type'] = 'todo'; // Default to todo if not specified
         }
         
-        \Log::info('Creating task with data:', [
-            'user_id' => $user->id,
-            'data' => $data
-        ]);
-
-        try {
-            return DB::transaction(function () use ($user, $data) {
-                // Create the task
-                $task = Task::create($data);
-                $task->experience_reward = $data['difficulty_level'] * 10;
-                $task->save();
-                
-                \Log::info('Task created:', [
-                    'task_id' => $task->id,
-                    'type' => $task->type
-                ]);
-                
-                // Set next_reset_at if there's a reset configuration
-                if (!empty($data['reset_frequency'])) {
-                    $task->next_reset_at = null;
-                    $task->save();
-                }
-                
-                // Attach the task to the user
-                $user->tasks()->attach($task->id, [
-                    'is_completed' => false,
-                    'progress' => 0
-                ]);
-                
-                \Log::info('Task attached to user:', [
-                    'task_id' => $task->id,
-                    'user_id' => $user->id
-                ]);
-                
-                // Create and attach tags if provided
-                if (!empty($data['tags'])) {
-                    foreach ($data['tags'] as $tagName) {
-                        $tag = Tag::firstOrCreate(['name' => $tagName]);
-                        $task->tags()->attach($tag->id);
-                    }
-                }
-                
-                // Reload the task with its relationships
-                $task->load(['users', 'difficulty', 'tags']);
-                
-                return $task;
-            });
-        } catch (\Exception $e) {
-            \Log::error('Failed to create task:', [
-                'user_id' => $user->id,
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            throw $e;
+        // Create the task
+        $task = Task::create($data);
+        $task->experience_reward = $data['difficulty_level'] * 10;
+        $task->save();
+        
+        // Set next_reset_at if there's a reset configuration
+        if (!empty($data['reset_frequency'])) {
+            // For new tasks, we don't want to set a reset date until they're completed
+            $task->next_reset_at = null;
+            $task->save();
         }
+        
+        // Attach the task to the user
+        $user->tasks()->attach($task->id, [
+            'is_completed' => false,
+            'progress' => 0
+        ]);
+        
+        // Create and attach tags if provided
+        if (!empty($data['tags'])) {
+            foreach ($data['tags'] as $tagName) {
+                $tag = Tag::firstOrCreate(['name' => $tagName]);
+                $task->tags()->attach($tag->id);
+            }
+        }
+        
+        return $task;
     }
 
-    public function updateHabit(Task $habit, array $data, array $tags = []): void
+    public function updateTask(Task $task, array $data, array $tags = []): void
 {
     try {
-        $habitId = $habit->id;
+        $taskId = $task->id;
         
-        if (!$habitId) {
-            throw new \Exception('Habit ID is missing');
+        if (!$taskId) {
+            throw new \Exception('Task ID is missing');
         }
         
         \Log::info('UpdateTask called with:', [
-            'habit_id' => $habitId,
+            'task_id' => $taskId,
             'data' => $data,
             'tags' => $tags
         ]);
         
         // Update task
-        $habit->update($data);
+        $task->update($data);
         
         // Re-fetch the task to ensure we have the latest instance
-        $habit = Task::find($habitId);
+        $task = Task::find($taskId);
         
-        if (!$habit) {
-            throw new \Exception('Habit not found after update');
+        if (!$task) {
+            throw new \Exception('Task not found after update');
         }
         
         // Process tags
@@ -123,20 +94,20 @@ class TaskService
             if (!empty($tagName)) {
                 $tag = Tag::firstOrCreate(
                     ['name' => $tagName],
-                    ['user_id' => $habit->user_id ?? auth()->id()]
+                    ['user_id' => $task->user_id ?? auth()->id()]
                 );
                 $tagIds[] = $tag->id;
             }
         }
         
         // Sync tags using the fresh task instance
-        $habit->tags()->sync($tagIds);
+        $task->tags()->sync($tagIds);
         
         // Load relationships
-        $habit->load('tags', 'difficulty');
+        $task->load('tags', 'difficulty');
         
     } catch (\Exception $e) {
-        \Log::error('Error in updateHabit:', [
+        \Log::error('Error in updateTask:', [
             'message' => $e->getMessage(),
             'trace' => $e->getTraceAsString()
         ]);
@@ -144,37 +115,37 @@ class TaskService
     }
 }
 
-    public function completeHabit(Task $habit): void
+    public function completeTask(Task $task): void
     {
         // Load the difficulty relationship if not already loaded
-        if (!$habit->relationLoaded('difficulty')) {
-            $habit->load('difficulty');
+        if (!$task->relationLoaded('difficulty')) {
+            $task->load('difficulty');
         }
 
-        $habit->update([
+        $task->update([
             'is_completed' => true,
             'completed_at' => now(),
-            'completed_count' => $habit->completed_count + 1,
+            'completed_count' => $task->completed_count + 1,
         ]);
         
         // Calculate next reset date based on completion time
-        if ($habit->reset_frequency) {
-            $habit->next_reset_at = $this->calculateNextResetDate($habit);
-            $habit->save();
+        if ($task->reset_frequency) {
+            $task->next_reset_at = $this->calculateNextResetDate($task);
+            $task->save();
         }
         
-        $user = $habit->users()->first();
+        $user = $task->users()->first();
         $userStats = $user->userStatistics;
         $userClassExpMultiplier = $userStats->classAttributes->exp_multiplier;
-        $expGain = round($habit->experience_reward * $habit->difficulty->exp_multiplier * $userClassExpMultiplier);
+        $expGain = round($task->experience_reward * $task->difficulty->exp_multiplier * $userClassExpMultiplier);
 
         // Calculate energy penalty based on player 10% of max energy and task difficulty multiplier
         $playerMaxEnergy = $userStats->max_energy;
-        $energyPenalty = round(($playerMaxEnergy * 0.1) * $habit->difficulty->energy_cost);
+        $energyPenalty = round(($playerMaxEnergy * 0.1) * $task->difficulty->energy_cost);
         
         // Calculate health penalty based on player 10% of max health and task difficulty multiplier
         $playerMaxHealth = $userStats->max_health;
-        $healthPenalty = round(($playerMaxHealth * 0.1) * $habit->difficulty->health_penalty);
+        $healthPenalty = round(($playerMaxHealth * 0.1) * $task->difficulty->health_penalty);
 
 
         $userStats->current_experience += $expGain;
@@ -183,101 +154,15 @@ class TaskService
         $userStats->save();
     }
 
-    public function completeTodo(Task $todo): void
+    public function taskNotCompleted(Task $task): void
     {
-        // Load the difficulty relationship if not already loaded
-        if (!$todo->relationLoaded('difficulty')) {
-            $todo->load('difficulty');
-        }
-
-        $todo->update([
-            'is_completed' => true,
-            'completed_at' => now(),
-        ]);
-
-        $user = $todo->users()->first();
-        
-        if (!$user) {
-            \Log::error('No user found for task', ['task_id' => $todo->id]);
-            throw new \Exception('No user found for this task');
-        }
-
-        $userStats = $user->userStatistics;
-        
-        if (!$userStats) {
-            \Log::error('No user statistics found for user', ['user_id' => $user->id]);
-            throw new \Exception('No user statistics found for this user');
-        }
-
-        $userClassExpMultiplier = $userStats->classAttributes->exp_multiplier;
-        $expGain = round($todo->experience_reward * $todo->difficulty->exp_multiplier * $userClassExpMultiplier);
-
-        $userStats->current_experience += $expGain;
-        $userStats->save();
-    }
-
-    public function updateTodo(Task $todo, array $data, array $tags = []): void
-    {
-        try {
-            $todoId = $todo->id;
-            
-            if (!$todoId) {
-                throw new \Exception('Todo ID is missing');
-            }
-            
-            \Log::info('UpdateTodo called with:', [
-                'todo_id' => $todoId,
-                'data' => $data,
-                'tags' => $tags
-            ]);
-            
-            // Update task
-            $todo->update($data);
-            
-            // Re-fetch the task to ensure we have the latest instance
-            $todo = Task::find($todoId);
-            
-            if (!$todo) {
-                throw new \Exception('Todo not found after update');
-            }
-            
-            // Process tags
-            $tagIds = [];
-            foreach ($tags as $tagName) {
-                $tagName = trim($tagName);
-                if (!empty($tagName)) {
-                    $tag = Tag::firstOrCreate(
-                        ['name' => $tagName],
-                        ['user_id' => $todo->user_id ?? auth()->id()]
-                    );
-                    $tagIds[] = $tag->id;
-                }
-            }
-            
-            // Sync tags using the fresh task instance
-            $todo->tags()->sync($tagIds);
-            
-            // Load relationships
-            $todo->load('tags', 'difficulty');
-            
-        } catch (\Exception $e) {
-            \Log::error('Error in updateTodo:', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            throw $e;
-        }
-    }
-
-    public function habitNotCompleted(Task $habit): void
-    {
-        $habit->update([
+        $task->update([
             'is_completed' => false,
             'completed_at' => null,
-            'not_completed_count' => $habit->not_completed_count + 1,
+            'not_completed_count' => $task->not_completed_count + 1,
         ]);
 
-        $user = $habit->users()->first();
+        $user = $task->users()->first();
         $userStats = $user->userStatistics;
     }
 

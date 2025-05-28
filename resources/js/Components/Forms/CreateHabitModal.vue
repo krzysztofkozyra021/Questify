@@ -2,11 +2,11 @@
   import { ref, watch, onMounted } from 'vue';
   import { router } from '@inertiajs/vue3';
   import { useTranslation } from '@/Composables/useTranslation';
-  import { useNotification } from '@/Composables/useNotification';
+
   const { trans } = useTranslation();
 
   const DEFAULT_EXPERIENCE_REWARD = 5;
-  const { addNotification } = useNotification();
+
   const props = defineProps({
     show: Boolean,
     onClose: Function,
@@ -44,7 +44,7 @@
   
   function submit() {
     loading.value = true;
-    router.post('/tasks/habits/store', {
+    router.post('/tasks/store/habit', {
       ...form.value,
       tags: form.value.tags.split(',').map(t => t.trim()).filter(Boolean),
       experience_reward: DEFAULT_EXPERIENCE_REWARD,
@@ -53,12 +53,9 @@
         loading.value = false;
         resetForm();
         emit('created');
-        close();
-        addNotification(trans('Habit created successfully'), 'success');
       },
       onError: () => {
         loading.value = false;
-        addNotification(trans('Failed to create habit'), 'error');
       }
     });
   }

@@ -58,52 +58,40 @@ class DashboardController extends Controller
 
     public function getMotivationalQuote($locale)
     {
-        try {
-            $quote = $this->quoteService->getQuote($locale);
-            
-            if (empty($quote)) {
-                \Log::error('Quote service returned empty response');
-                return response()->json([
-                    'error' => 'Forismatic: Failed to fetch quote'
-                ], 502);
-            }
+        $quote = $this->quoteService->getQuote($locale);
+        
+        if (empty($quote)) {
+            return response()->json([
+                'error' => 'Forismatic: Failed to fetch quote'
+            ], 502);
+        }
 
-            $locale = strtoupper($locale);
-            
-            // Check if quote is already in the requested language
-            $requestedLang = strtolower(substr($locale, 0, 2));
-            if ($requestedLang === $quote['lang']) {
-                return response()->json([
-                    [
-                        'q' => $quote['text'],
-                        'a' => $quote['author']
-                    ]
-                ]);
-            }
-
-            $translatedText = $this->translationService->translate($quote['text'], $locale);
-            
-            if (!$translatedText) {
-                \Log::error('Translation service failed', ['quote' => $quote, 'locale' => $locale]);
-                return response()->json([
-                    'error' => 'DeepL: Failed to translate quote'
-                ], 502);
-            }
-
+        $locale = strtoupper($locale);
+        
+        // Check if quote is already in the requested language
+        $requestedLang = strtolower(substr($locale, 0, 2));
+        if ($requestedLang === $quote['lang']) {
             return response()->json([
                 [
-                    'q' => $translatedText,
+                    'q' => $quote['text'],
                     'a' => $quote['author']
                 ]
             ]);
-        } catch (\Exception $e) {
-            \Log::error('Error in getMotivationalQuote', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            return response()->json([
-                'error' => 'An unexpected error occurred'
-            ], 500);
         }
+
+        $translatedText = $this->translationService->translate($quote['text'], $locale);
+        
+        if (!$translatedText) {
+            return response()->json([
+                'error' => 'DeepL: Failed to translate quote'
+            ], 502);
+        }
+
+        return response()->json([
+            [
+                'q' => $translatedText,
+                'a' => $quote['author']
+            ]
+        ]);
     }
 }

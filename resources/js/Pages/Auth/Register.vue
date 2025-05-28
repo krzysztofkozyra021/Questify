@@ -6,7 +6,7 @@ import TextInput from '@/Components/TextInput.vue'
 import Preloader from '@/Components/Preloader.vue'
 import { Link, useForm } from '@inertiajs/vue3'
 import { useTranslation } from '@/Composables/useTranslation'
-import Header from '@/Components/Header.vue'
+import HamburgerMenu from '@/Components/HamburgerMenu.vue'
 import Footer from '@/Components/Footer.vue'
 const { trans } = useTranslation()
 
@@ -27,7 +27,23 @@ const submit = () => {
 <template>
   <Preloader />
   <div class="min-h-screen bg-stone-900 flex flex-col">
-    <Header :showPlayerPanel="false" />
+    <!-- Header -->
+    <header class="bg-stone-900 shadow-lg">
+      <div class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center">
+          <Link :href="route('register')">
+            <img src="/images/logo.png" alt="Questify Logo" class="h-10 w-auto" />
+          </Link>
+        </div>
+          
+        <Link
+            :href="route('login')"
+            class="block px-4 py-2 text-amber-50 hover:bg-stone-700 transition-colors sm:px-6 sm:py-2 bg-stone-600 hover:bg-stone-700 rounded-lg font-bold"
+          >
+            {{ trans('Log in') }}
+          </Link>
+      </div>
+    </header>
 
     <div class="flex-1 container mx-auto px-4 sm:px-6 py-8 sm:py-12">
       <div class="max-w-6xl mx-auto flex flex-col lg:flex-row gap-8 lg:gap-12 items-center">

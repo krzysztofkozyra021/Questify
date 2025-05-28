@@ -1,62 +1,49 @@
 <template>
   <div class="flex flex-col min-h-screen">
-    <Preloader />
     <Header :showPlayerPanel="false" />
     <main class="flex-1 max-w-4xl mx-auto p-12">
       <h1 class="text-4xl font-bold text-center mb-8">{{ trans('Contact') }}</h1>
-      <div v-if="messageSuccessfulySent" class="text-stone-500 text-center p-20">
-        <h1 class="text-3xl font-bold">{{ trans('Thank you for your message!') }}</h1>
-        <p class="text-stone-400 text-xl">{{ trans('We will reply to your message as soon as possible.') }}</p>
-      </div>
-      <ErrorModal v-if="errorMessage" :message="errorMessage" />
-      <div class="bg-white rounded-lg shadow-md p-6" v-if="!messageSuccessfulySent">
+      
+      <div class="bg-white rounded-lg shadow-md p-6">
         <form @submit.prevent="submitForm" class="space-y-6">
           <div>
-            <label for="name" class="block text-m font-bold text-stone-700">
-              {{ trans('Name and surname') }} <span class="text-red-500">*</span>
-            </label>
+            <label for="name" class="block text-m font-bold text-stone-700">{{ trans('Name and surname') }}</label>
             <input
               type="text"
               id="name"
-              v-model="supportForm.name"
+              v-model="form.name"
               class="mt-1 block w-full rounded-md border-stone-300 shadow-sm focus:border-stone-500 focus:ring-stone-500"
               required
             />
           </div>
 
           <div>
-            <label for="email" class="block text-m font-bold text-stone-700">
-              {{ trans('Email') }} <span class="text-red-500">*</span>
-            </label>
+            <label for="email" class="block text-m font-bold text-stone-700">{{ trans('Email') }}</label>
             <input
               type="email"
               id="email"
-              v-model="supportForm.email"
+              v-model="form.email"
               class="mt-1 block w-full rounded-md border-stone-300 shadow-sm focus:border-stone-500 focus:ring-stone-500"
               required
             />
           </div>
 
           <div>
-            <label for="subject" class="block text-m font-bold text-stone-700">
-              {{ trans('Subject') }} <span class="text-red-500">*</span>
-            </label>
+            <label for="subject" class="block text-m font-bold text-stone-700">{{ trans('Subject') }}</label>
             <input
               type="text"
               id="subject"
-              v-model="supportForm.subject"
+              v-model="form.subject"
               class="mt-1 block w-full rounded-md border-stone-300 shadow-sm focus:border-stone-500 focus:ring-stone-500"
               required
             />
           </div>
 
           <div>
-            <label for="message" class="block text-m font-bold text-stone-700">
-              {{ trans('Message') }} <span class="text-red-500">*</span>
-            </label>
+            <label for="message" class="block text-m font-bold text-stone-700">{{ trans('Message') }}</label>
             <textarea
               id="message"
-              v-model="supportForm.message"
+              v-model="form.message"
               rows="4"
               class="mt-1 block w-full rounded-md border-stone-300 shadow-sm focus:border-stone-500 focus:ring-stone-500"
               required
@@ -72,9 +59,6 @@
             </button>
           </div>
         </form>
-        <div v-if="messageSuccessfulySent" class="text-green-500 text-center">
-          {{ trans('Thank you for your message. We will get back to you as soon as possible.') }}
-        </div>
       </div>
 
       <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -110,42 +94,23 @@
   </div>
 </template>
 
-
 <script setup>
 import { ref } from 'vue'
 import { useTranslation } from '@/Composables/useTranslation'
 import Header from '@/Components/Header.vue'
 import Footer from '@/Components/Footer.vue'
-import { router } from '@inertiajs/vue3'
-import { useHead } from '@vueuse/head'
-import ErrorModal from '@/Components/ErrorModal.vue'
-import Preloader from '@/Components/Preloader.vue'
 
 const { trans } = useTranslation()
 
-useHead({
-  title: trans('Contact') + ' | Questify'
-})
-
-
-const supportForm = ref({
+const form = ref({
   name: '',
   email: '',
   subject: '',
   message: ''
 })
 
-const errorMessage = ref(null)
-const messageSuccessfulySent = ref(false)
-
 const submitForm = () => {
-  router.post(route('support.contact'), supportForm.value, {
-    onSuccess: () => {
-      messageSuccessfulySent.value = true
-    },
-    onError: () => {
-      errorMessage.value = trans('Failed to send message. Please try again later.')
-    }
-  })
+  // TODO: Implement form submission
+  console.log('Form submitted:', form.value)
 }
 </script>

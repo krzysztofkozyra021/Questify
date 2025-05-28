@@ -1,23 +1,21 @@
 <script setup>
 import { useTranslation } from '@/Composables/useTranslation'
 import { usePage, Link } from '@inertiajs/vue3'
+
 const { trans } = useTranslation()
-
-const page = usePage()
-
-const { socialLinks } = page.props
+const { socialLinks } = usePage().props
 </script>
 
 <template>
   <footer class="bg-stone-800 text-white py-4">
     <div class="max-w-7xl mx-auto px-4">
-        <!-- Logo and description -->
+        <!-- Logo i opis -->
       <div class="text-center mb-4">
         <p class="text-lg font-bold mb-1">Questify</p>
         <p class="text-xs text-stone-400">{{ trans('Questify is a tool for managing tasks that helps you achieve goals.') }}</p>
       </div>
       <!-- Links -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4" :class="{ 'md:grid-cols-4': page.props.auth.user, 'md:grid-cols-5': !page.props.auth.user }">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
         <div class="flex flex-col items-center gap-1">
           <Link :href="route('about')" class="text-stone-400 hover:text-white transition-colors text-sm">{{ trans('About us') }}</Link>
           <Link :href="route('faq')" class="text-stone-400 hover:text-white transition-colors text-sm">{{ trans('FAQ') }}</Link>
@@ -34,27 +32,23 @@ const { socialLinks } = page.props
           <Link :href="route('report.feature')" class="text-stone-400 hover:text-white transition-colors text-sm">{{ trans('Report a feature') }}</Link>
           <Link :href="route('report.bug')" class="text-stone-400 hover:text-white transition-colors text-sm">{{ trans('Report a bug') }}</Link>
         </div>
-        <div class="flex flex-col items-center gap-1 col-span-2 md:col-span-1" v-if="!page.props.auth.user">
-          <Link :href="route('login')" class="text-stone-400 hover:text-white transition-colors text-sm">{{ trans('Log in') }}</Link>
-          <Link :href="route('register')" class="text-stone-400 hover:text-white transition-colors text-sm">{{ trans('Register') }}</Link>
-        </div>
       </div>
 
       <!-- Bottom section -->
       <div class="border-t border-stone-700 pt-4">
-        <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-2">
           <!-- Logo -->
-          <div class="flex items-center">
+          <div>
             <img src="/images/logo.png" alt="Questify Logo" class="h-6">
           </div>
 
           <!-- Copyright -->
-          <div class="text-xs text-stone-400">
+          <div class="text-xs text-stone-400 mr-16">
             © {{ new Date().getFullYear() }} Questify. {{ trans('All rights reserved.') }}
           </div>
 
           <!-- Social Links -->
-          <div class="flex items-center space-x-4">
+          <div class="flex space-x-4">
             <a
               v-if="socialLinks.github"
               :href="socialLinks.github"

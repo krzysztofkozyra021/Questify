@@ -10,18 +10,18 @@
     onClose: Function,
     difficulties: Array,
     resetConfigs: Array,
-    habit: Object,
+    task: Object,
   });
 
 
   const emit = defineEmits(['edited', 'close']);
   
   const form = ref({
-    title: props.habit?.title || '',
-    description: props.habit?.description || '',
-    difficulty_level: props.habit?.difficulty_level || 2,
-    reset_frequency: props.habit?.reset_frequency || 1,
-    tags: props.habit?.tags?.map(tag => tag.name).join(',') || '',
+    title: props.task?.title || '',
+    description: props.task?.description || '',
+    difficulty_level: props.task?.difficulty_level || 2,
+    reset_frequency: props.task?.reset_frequency || 1,
+    tags: props.task?.tags?.map(tag => tag.name).join(',') || '',
   });
   
   
@@ -33,7 +33,7 @@
   
   function submit() {
     loading.value = true;
-    router.put(`/tasks/habits/update/${props.habit.id}`, {
+    router.put(`/tasks/update/habit/${props.task.id}`, {
       ...form.value,
       tags: form.value.tags ? form.value.tags.split(',').map(t => t.trim()).filter(Boolean) : [],
     }, {
