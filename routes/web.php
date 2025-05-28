@@ -19,11 +19,11 @@ use Illuminate\Support\Facades\Route;
 Route::get("/", fn() => redirect()->route("register"));
 
 // Information pages
-Route::inertia("/about", "About")->name("about");
-Route::inertia("/faq", "Faq")->name("faq");
-Route::inertia("/terms", "Terms")->name("terms");
-Route::inertia("/policy", "Policy")->name("policy");
-Route::inertia("/contact", "Contact")->name("contact");
+Route::inertia("/about", "Support/About")->name("about");
+Route::inertia("/faq", "Support/Faq")->name("faq");
+Route::inertia("/terms", "Support/Terms")->name("terms");
+Route::inertia("/policy", "Support/Policy")->name("policy");
+Route::inertia("/contact", "Support/Contact")->name("contact");
 
 // Support and reports
 Route::get("/support", [SupportController::class, "index"])->name("support");

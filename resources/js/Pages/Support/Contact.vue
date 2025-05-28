@@ -1,5 +1,6 @@
 <template>
   <div class="flex flex-col min-h-screen">
+    <Preloader />
     <Header :showPlayerPanel="false" />
     <main class="flex-1 max-w-4xl mx-auto p-12">
       <h1 class="text-4xl font-bold text-center mb-8">{{ trans('Contact') }}</h1>
@@ -118,6 +119,7 @@ import Footer from '@/Components/Footer.vue'
 import { router } from '@inertiajs/vue3'
 import { useHead } from '@vueuse/head'
 import ErrorModal from '@/Components/ErrorModal.vue'
+import Preloader from '@/Components/Preloader.vue'
 
 const { trans } = useTranslation()
 

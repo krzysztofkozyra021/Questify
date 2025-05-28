@@ -13,17 +13,17 @@ class SupportController extends Controller
 {
     public function index()
     {
-        return Inertia::render('Support');
+        return Inertia::render('Support/Support');
     }
 
     public function feature()
     {
-        return Inertia::render('ReportFeature');
+        return Inertia::render('Support/ReportFeature');
     }
 
     public function bug()
     {
-        return Inertia::render('ReportBug');
+        return Inertia::render('Support/ReportBug');
     }
 
     public function contact(Request $request)
