@@ -271,7 +271,7 @@ input[type="file"]::before {
             </div>
             <div>
               <label class="block text-base md:text-lg font-bold text-stone-800 mb-1">{{ trans('Email') }}</label>
-              <p class="text-base md:text-lg text-stone-800">{{ user.email }}</p>
+              <p class="text-base md:text-lg text-stone-800">{{ user.email }} - <span v-if="!user.email_verified_at" class="text-sm md:text-base text-stone-600">{{ trans('Email not verified') }}</span></p>
             </div>
             <button @click="confirmDeleteAccount" class="text-sm md:text-base bg-red-500 text-white px-3 md:px-4 py-1.5 md:py-2 rounded font-bold shadow hover:bg-red-600">{{ trans('Delete Account') }}</button>
           </div>
