@@ -271,20 +271,20 @@ const cancelDelete = () => {
       @cancel="cancelDelete"
     />
     <div class="flex flex-col sm:flex-row items-start sm:items-center mb-3 sm:mb-4">
-      <h2 class="text-base sm:text-lg md:text-xl font-bold text-stone-800 border-b-2 border-stone-600 pb-2">{{ trans('Habits') }}</h2>
+      <h2 class="text-base sm:text-lg md:text-xl font-bold text-stone-800 border-b-2 border-stone-600 pb-2 break-words">{{ trans('Habits') }}</h2>
       <div class="flex flex-row gap-2 sm:gap-3 mt-2 sm:mt-0 sm:ml-auto">
         <button @click="showAllHabits" 
-          class="text-xs sm:text-sm font-medium text-stone-600 hover:text-amber-600 transition-colors duration-200">
+          class="text-xs sm:text-sm font-medium text-stone-600 hover:text-amber-600 transition-colors duration-200 whitespace-nowrap">
           {{ trans('All') }}
         </button>
         <button @click="filterWeakHabits" 
           :class="{ 'text-amber-600 border-b-2 border-amber-600': showWeakHabits }" 
-          class="text-xs sm:text-sm font-medium text-stone-600 hover:text-amber-600 transition-colors duration-200">
+          class="text-xs sm:text-sm font-medium text-stone-600 hover:text-amber-600 transition-colors duration-200 whitespace-nowrap">
           {{ trans('Weak') }}
         </button>
         <button @click="filterStrongHabits" 
           :class="{ 'text-amber-600 border-b-2 border-amber-600': showStrongHabits }" 
-          class="text-xs sm:text-sm font-medium text-stone-600 hover:text-amber-600 transition-colors duration-200">
+          class="text-xs sm:text-sm font-medium text-stone-600 hover:text-amber-600 transition-colors duration-200 whitespace-nowrap">
           {{ trans('Strong') }}
         </button>
       </div>
@@ -375,7 +375,7 @@ const cancelDelete = () => {
     <ul class="flex-1 space-y-2 overflow-y-auto pr-1">  
       <li v-for="habit in habitsResultFromSearchMode" :key="habit.id" class="bg-white rounded-lg shadow">
         <div class="flex items-stretch gap-2">
-          <div class="flex items-center justify-center px-2 md:px-3 py-2 rounded-l-lg"
+          <div class="flex items-center justify-center px-2 md:px-3 py-2 rounded-l-lg flex-shrink-0"
           :class="{'bg-lime-500' : habit.completed_count > habit.not_completed_count,
             'bg-amber-500' : habit.completed_count === habit.not_completed_count,
             'bg-red-500' : habit.completed_count < habit.not_completed_count
@@ -385,48 +385,48 @@ const cancelDelete = () => {
               +
             </button>
           </div>
-          <div class="flex-1 py-2 cursor-pointer hover:bg-stone-50 transition-colors duration-200" @click="openEditHabitModal(habit)">
+          <div class="flex-1 py-2 cursor-pointer hover:bg-stone-50 transition-colors duration-200 min-w-0" @click="openEditHabitModal(habit)">
             <div class="flex flex-wrap items-center gap-1 md:gap-2">
-              <div class="font-semibold text-stone-800 text-sm md:text-base">{{ habit.title }}</div>
-              <span v-if="habit.difficulty" class="ml-1 md:ml-2 px-1.5 md:px-2 py-0.5 rounded text-xs font-bold text-center" 
+              <div class="font-semibold text-stone-800 text-sm md:text-base break-words overflow-hidden">{{ habit.title }}</div>
+              <span v-if="habit.difficulty" class="ml-1 md:ml-2 px-1.5 md:px-2 py-0.5 rounded text-xs font-bold text-center whitespace-nowrap flex-shrink-0" 
                 :style="{ backgroundColor: habit.difficulty.color || '#57534e', color: '#ffffff' }">
                 <span v-if="habit.difficulty.icon" v-html="habit.difficulty.icon" class="mr-1"></span>
                 {{ trans(habit.difficulty.name) }}
               </span>
             </div>
             <div class="flex flex-wrap items-center gap-1 md:gap-2 mt-2">
-              <span v-if="habit.completed_count !== undefined" class="text-xs font-bold text-stone-600">
+              <span v-if="habit.completed_count !== undefined" class="text-xs font-bold text-stone-600 whitespace-nowrap flex-shrink-0">
                 +{{ habit.completed_count }} | -{{ habit.not_completed_count }}
               </span>
-              <span v-if="habit.experience_reward" class="text-xs font-bold text-stone-600 bg-amber-100 px-1.5 py-0.5 rounded flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-amber-400 mr-1" viewBox="0 0 24 24" fill="currentColor">
+              <span v-if="habit.experience_reward" class="text-xs font-bold text-stone-600 bg-amber-100 px-1.5 py-0.5 rounded flex items-center whitespace-nowrap flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-amber-400 mr-1 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
                 </svg>
                 +{{ getHabitExperience(habit) }} {{ trans('XP') }}
               </span>
-              <span v-if="habit.difficulty && calculateHabitHealthPenalty(habit) > 0" class="text-xs font-bold text-stone-600 bg-red-100 px-1.5 py-0.5 rounded flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-red-500 mr-1" viewBox="0 0 24 24" fill="currentColor">
+              <span v-if="habit.difficulty && calculateHabitHealthPenalty(habit) > 0" class="text-xs font-bold text-stone-600 bg-red-100 px-1.5 py-0.5 rounded flex items-center whitespace-nowrap flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-red-500 mr-1 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                 </svg>
                 -{{ calculateHabitHealthPenalty(habit) }} {{ trans('HP') }}
               </span>
-              <span v-if="habit.difficulty && calculateHabitEnergyPenalty(habit) > 0" class="text-xs font-bold text-stone-600 bg-blue-100 px-1.5 py-0.5 rounded flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-blue-500 mr-1" viewBox="0 0 24 24" fill="currentColor">
+              <span v-if="habit.difficulty && calculateHabitEnergyPenalty(habit) > 0" class="text-xs font-bold text-stone-600 bg-blue-100 px-1.5 py-0.5 rounded flex items-center whitespace-nowrap flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-blue-500 mr-1 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
                 -{{ calculateHabitEnergyPenalty(habit) }} {{ trans('EP') }}
               </span>
             </div>
             <div class="mt-2">
-              <div v-if="habit.description" class="text-xs text-stone-600">{{ habit.description }}</div>
+              <div v-if="habit.description" class="text-xs text-stone-600 break-words overflow-hidden">{{ habit.description }}</div>
               <div v-if="habit.tags && habit.tags.length" class="flex flex-wrap gap-1 mt-1">
-                <span v-for="tag in habit.tags" :key="tag.id" class="bg-stone-100 text-stone-700 px-1.5 md:px-2 py-0.5 rounded text-xs font-semibold">
+                <span v-for="tag in habit.tags" :key="tag.id" class="bg-stone-100 text-stone-700 px-1.5 md:px-2 py-0.5 rounded text-xs font-semibold break-words">
                   #{{ tag.name }}
                 </span>
               </div>
             </div>
           </div>
-          <div class="relative flex items-center px-2">
+          <div class="relative flex items-center px-2 flex-shrink-0">
             <button 
               @click="toggleDropdown(habit.id, $event)"
               class="p-1 rounded hover:bg-stone-100 transition-colors duration-200"
@@ -460,7 +460,7 @@ const cancelDelete = () => {
               </button>
             </div>
           </div>
-          <div class="flex items-center justify-center px-2 md:px-3 py-2 rounded-r-lg"
+          <div class="flex items-center justify-center px-2 md:px-3 py-2 rounded-r-lg flex-shrink-0"
           :class="{'bg-lime-500' : habit.completed_count > habit.not_completed_count,
             'bg-amber-500' : habit.completed_count === habit.not_completed_count,
             'bg-red-500' : habit.completed_count < habit.not_completed_count
