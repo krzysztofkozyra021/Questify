@@ -60,7 +60,7 @@ const togglePlayerPanel = () => {
           <Link :href="route('help')" class="nav-link" :class="{ 'border-b-4 border-amber-600': $page.url.startsWith(route('help')) }">{{ trans('Help') }}</Link> -->
         </nav>
         <!-- Mobile Menu -->
-        <HamburgerMenu class="md:hidden" />
+        <HamburgerMenu v-if="page.props.auth.user" class="md:hidden" />
       </div>
       <!-- Player Dropdown -->
       <div class="hidden md:block relative min-w-[48px] flex justify-end" v-if="page.props.auth.user">
