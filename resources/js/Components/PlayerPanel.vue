@@ -81,47 +81,50 @@ const experiencePercentage = computed(() => {
 </script>
 
 <template>
-  <div class="flex items-center rounded-xl shadow px-2 md:px-4 py-2 gap-2 md:gap-4 min-w-[200px] md:min-w-[260px]">
-    <img :src="profileImageUrl" alt="Player Avatar" class="w-8 h-8 md:w-12 md:h-12 rounded-lg border-amber-400 shadow-md" @error="profileImageUrl = '/images/default-profile.png'" />
-    <div class="flex-1">
-      <div class="flex flex-col gap-0.5 md:gap-1">
-        <span class="text-base md:text-lg text-white font-bold truncate">{{ page.props.user?.name }}</span>
-        <div class="flex items-center gap-1 md:gap-2">
-          <span class="bg-amber-400 text-stone-900 font-bold px-1.5 md:px-2 py-0.5 rounded text-xs md:text-sm">Lv {{ userLevel }}</span>
-          <span class="text-amber-400 text-xs md:text-sm font-semibold truncate">{{ trans(userClassName) }}</span>
+  <div class="flex flex-col sm:flex-row items-center rounded-xl shadow px-3 md:px-4 py-3 md:py-2 gap-3 md:gap-4 min-w-[280px] md:min-w-[400px] bg-stone-800">
+    <!-- Profile Section -->
+    <div class="flex flex-col sm:flex-row items-center gap-2 md:gap-4 w-full sm:w-auto sm:border-r sm:border-stone-600 sm:pr-4">
+      <img :src="profileImageUrl" alt="Player Avatar" class="w-16 h-16 md:w-12 md:h-12 rounded-lg border-2 border-amber-400 shadow-md flex-shrink-0" @error="profileImageUrl = '/images/default-profile.png'" />
+      <div class="flex flex-col items-center sm:items-start gap-1">
+        <span class="text-lg md:text-lg text-white font-bold truncate max-w-[200px]">{{ page.props.user?.name }}</span>
+        <div class="flex items-center gap-2">
+          <span class="bg-amber-400 text-stone-900 font-bold px-2 py-0.5 rounded text-sm">Lv {{ userLevel }}</span>
+          <span class="text-amber-400 text-sm font-semibold truncate max-w-[120px]">{{ trans(userClassName) }}</span>
         </div>
       </div>
     </div>
-    <div class="flex flex-col gap-0.5 md:gap-1">
+
+    <!-- Stats Section -->
+    <div class="flex flex-col gap-2 w-full sm:w-auto sm:flex-1 sm:pl-4">
       <!-- Health bar -->
-      <div class="flex items-center gap-1 md:gap-2">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 md:h-4 md:w-4 text-red-500" viewBox="0 0 24 24" fill="currentColor">
+      <div class="flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 md:h-4 md:w-4 text-red-500 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
           <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
         </svg>
-        <div class="w-24 md:w-32 h-2 md:h-3 bg-gray-100 overflow-hidden rounded-full">
+        <div class="flex-1 h-3 md:h-3 bg-gray-100 overflow-hidden rounded-full">
           <div class="h-full bg-red-500 transition-all duration-500 ease-in-out rounded-full" :style="{ width: ((currentPlayerHealth / maxPlayerHealth * 100) || 0) + '%' }"></div>
         </div>
-        <span class="text-xs md:text-sm text-white font-normal">{{ currentPlayerHealth }}/{{ maxPlayerHealth }}</span>
+        <span class="text-sm text-white font-normal whitespace-nowrap ml-1 min-w-[60px] text-right">{{ currentPlayerHealth }}/{{ maxPlayerHealth }}</span>
       </div>
       <!-- Energy bar -->
-      <div class="flex items-center gap-1 md:gap-2">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 md:h-4 md:w-4 text-blue-500" viewBox="0 0 24 24" fill="currentColor">
+      <div class="flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 md:h-4 md:w-4 text-blue-500 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
           <path d="M13 10V3L4 14h7v7l9-11h-7z" />
         </svg>
-        <div class="w-24 md:w-32 h-2 md:h-3 bg-gray-100 overflow-hidden rounded-full">
+        <div class="flex-1 h-3 md:h-3 bg-gray-100 overflow-hidden rounded-full">
           <div class="h-full bg-blue-500 transition-all duration-500 ease-in-out rounded-full" :style="{ width: ((currentPlayerEnergy / maxPlayerEnergy * 100) || 0) + '%' }"></div>
         </div>
-        <span class="text-xs md:text-sm text-white font-normal">{{ currentPlayerEnergy }}/{{ maxPlayerEnergy }}</span>
+        <span class="text-sm text-white font-normal whitespace-nowrap ml-1 min-w-[60px] text-right">{{ currentPlayerEnergy }}/{{ maxPlayerEnergy }}</span>
       </div>
       <!-- XP bar -->
-      <div class="flex items-center gap-1 md:gap-2">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 md:h-4 md:w-4 text-amber-400" viewBox="0 0 24 24" fill="currentColor">
+      <div class="flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 md:h-4 md:w-4 text-amber-400 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
           <path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
         </svg>
-        <div class="w-24 md:w-32 h-2 md:h-3 bg-gray-100 overflow-hidden rounded-full">
+        <div class="flex-1 h-3 md:h-3 bg-gray-100 overflow-hidden rounded-full">
           <div class="h-full bg-amber-400 transition-all duration-500 ease-in-out rounded-full" :style="{ width: ((currentPlayerExperience / maxPlayerExperience * 100) || 0) + '%' }"></div>
         </div>
-        <span class="text-xs md:text-sm text-white font-normal">{{ currentPlayerExperience }}/{{ maxPlayerExperience }}</span>
+        <span class="text-sm text-white font-normal whitespace-nowrap ml-1 min-w-[60px] text-right">{{ currentPlayerExperience }}/{{ maxPlayerExperience }}</span>
       </div>
     </div>
   </div>
