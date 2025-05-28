@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\Contact;
+use App\Mail\FeatureReport;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Mail;
@@ -48,16 +49,25 @@ class SupportController extends Controller
         return back()->with('success', 'Message sent successfully.');
     }
 
-    public function storeFeature(Request $request)
+    public function sendFeatureReport(Request $request)
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'priority' => 'required|in:low,medium,high',
-            'category' => 'required|in:ui,functionality,performance,other',
+            'category' => 'required|in:ui,functionality,performance,other,general',
         ]);
 
-        // TODO: Implement save feature report
+        try {
+            \Log::info('Attempting to send email with data:', $validated);
+            \Log::info('Data types:', array_map('gettype', $validated));
+            Mail::to('support@questify.com')->send(new FeatureReport($validated));
+            \Log::info('Email sent successfully');
+        } catch (\Exception $e) {
+            \Log::error('Failed to send email: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            return back()->with('error', 'Failed to send message. Please try again later.');
+        }
 
         return back()->with('success', 'Feature report sent.');
     }

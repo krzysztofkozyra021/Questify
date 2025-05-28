@@ -3,15 +3,20 @@
     <Header :showPlayerPanel="false" />
     <main class="flex-1 max-w-4xl mx-auto p-12">
       <h1 class="text-4xl font-bold text-center mb-8">{{ trans('Report a feature') }}</h1>
-      
-      <div class="bg-white rounded-lg shadow-md p-6">
-        <form @submit.prevent="submitForm" class="space-y-6">
+      <ErrorModal v-if="errorMessage" :message="errorMessage" />
+      <div v-if="messageSuccessfullySent" class="text-stone-500 text-center p-20">
+        <h1 class="text-3xl font-bold">{{ trans('Thank you for improving Questify!') }}</h1>
+        <p class="text-stone-400 text-xl">{{ trans('We will review your idea and get back to you soon.') }}</p>
+      </div>
+
+      <div v-else class="bg-white rounded-lg shadow-md p-6">
+        <form @submit.prevent="submitReportFeatureForm" class="space-y-6">
           <div>
-            <label for="title" class="block text-sm font-medium text-stone-700">{{ trans('Title') }}</label>
+            <label for="title" class="block text-sm font-medium text-stone-700">{{ trans('Title') }} <span class="text-red-500">*</span></label>
             <input
               type="text"
               id="title"
-              v-model="form.title"
+              v-model="featureReportForm.title"
               class="mt-1 block w-full rounded-md border-stone-300 shadow-sm focus:border-stone-500 focus:ring-stone-500"
               required
               :placeholder="trans('Short description of the proposed feature')"
@@ -19,10 +24,10 @@
           </div>
 
           <div>
-            <label for="description" class="block text-sm font-medium text-stone-700">{{ trans('Description') }}</label>
+            <label for="description" class="block text-sm font-medium text-stone-700">{{ trans('Description') }} <span class="text-red-500">*</span></label>
             <textarea
               id="description"
-              v-model="form.description"
+              v-model="featureReportForm.description"
               rows="6"
               class="mt-1 block w-full rounded-md border-stone-300 shadow-sm focus:border-stone-500 focus:ring-stone-500"
               required
@@ -35,7 +40,7 @@
               <label for="category" class="block text-sm font-medium text-stone-700">{{ trans('Category') }}</label>
               <select
                 id="category"
-                v-model="form.category"
+                v-model="featureReportForm.category"
                 class="mt-1 block w-full rounded-md border-stone-300 shadow-sm focus:border-stone-500 focus:ring-stone-500"
                 required
               >
@@ -49,7 +54,7 @@
               <label for="priority" class="block text-sm font-medium text-stone-700">{{ trans('Priority') }}</label>
               <select
                 id="priority"
-                v-model="form.priority"
+                v-model="featureReportForm.priority"
                 class="mt-1 block w-full rounded-md border-stone-300 shadow-sm focus:border-stone-500 focus:ring-stone-500"
                 required
               >
@@ -93,16 +98,20 @@ import { ref } from 'vue'
 import { useTranslation } from '@/Composables/useTranslation'
 import Header from '@/Components/Header.vue'
 import Footer from '@/Components/Footer.vue'
+import { router } from '@inertiajs/vue3'
+import ErrorModal from '@/Components/ErrorModal.vue'
 
 const { trans } = useTranslation()
 
-const form = ref({
+const featureReportForm = ref({
   title: '',
   description: '',
   priority: 'medium',
   category: 'general'
 })
 
+const messageSuccessfullySent = ref(false)
+const errorMessage = ref(null)
 const categories = [
   { value: 'general', label: 'General' },
   { value: 'ui', label: 'Ui' },
@@ -115,10 +124,16 @@ const priorities = [
   { value: 'low', label: 'Low' },
   { value: 'medium', label: 'Medium' },
   { value: 'high', label: 'High' }
-]
+] 
 
-const submitForm = () => {
-  // TODO: Implement form submission
-  console.log('Form submitted:', form.value)
+const submitReportFeatureForm = () => {
+  router.post(route('report.feature.send'), featureReportForm.value, {
+    onSuccess: () => {
+      messageSuccessfullySent.value = true
+    },
+    onError: () => {
+      errorMessage.value = trans('Failed to send feature report. Please try again later.')
+    }
+  })
 }
 </script>

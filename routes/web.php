@@ -29,7 +29,7 @@ Route::inertia("/contact", "Contact")->name("contact");
 Route::get("/support", [SupportController::class, "index"])->name("support");
 Route::post("/support/contact", [SupportController::class, "contact"])->name("support.contact");
 Route::get("/report/feature", [SupportController::class, "feature"])->name("report.feature");
-Route::post("/report/feature", [SupportController::class, "storeFeature"])->name("report.feature.store");
+Route::post("/report/feature", [SupportController::class, "sendFeatureReport"])->name("report.feature.send");
 Route::get("/report/bug", [SupportController::class, "bug"])->name("report.bug");
 Route::post("/report/bug", [SupportController::class, "storeBug"])->name("report.bug.store");
 
