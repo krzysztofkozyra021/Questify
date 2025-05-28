@@ -380,5 +380,8 @@
     "Failed to send message. Please try again later.": "Nie udało się wysłać wiadomości. Spróbuj ponownie później.",
     "Thank you for improving Questify!": "Dziękujemy za ulepszanie Questify!",
     "We will review your idea and get back to you soon.": "Przejrzymy Twój pomysł i wkrótce się z Tobą skontaktujemy.",
-    "Failed to send feature report. Please try again later.": "Nie udało się wysłać zgłoszenia funkcji. Spróbuj ponownie później."
+    "Failed to send feature report. Please try again later.": "Nie udało się wysłać zgłoszenia funkcji. Spróbuj ponownie później.",
+    "Thank you for reporting the bug!": "Dziękujemy za zgłoszenie błędu!",
+    "We will review your report and get back to you soon.": "Przejrzymy Twoje zgłoszenie i wkrótce się z Tobą skontaktujemy.",
+    "Failed to send bug report. Please try again later.": "Nie udało się wysłać zgłoszenia błędu. Spróbuj ponownie później."
 } 

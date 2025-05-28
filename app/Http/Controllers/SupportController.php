@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\Contact;
 use App\Mail\FeatureReport;
+use App\Mail\BugReport;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Mail;
@@ -72,7 +73,7 @@ class SupportController extends Controller
         return back()->with('success', 'Feature report sent.');
     }
 
-    public function storeBug(Request $request)
+    public function sendBugReport(Request $request)
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
@@ -82,11 +83,20 @@ class SupportController extends Controller
             'actual' => 'required|string',
             'browser' => 'nullable|string|max:255',
             'os' => 'nullable|string|max:255',
+            'category' => 'required|in:ui,functionality,performance,security,other,general',
             'priority' => 'required|in:low,medium,high,critical',
-            'screenshots.*' => 'nullable|image|max:10240', // max 10MB
         ]);
 
-        // TODO: Implement save bug report and handle screenshots
+        try {
+            \Log::info('Attempting to send email with data:', $validated);
+            \Log::info('Data types:', array_map('gettype', $validated));
+            Mail::to('support@questify.com')->send(new BugReport($validated));
+            \Log::info('Email sent successfully');
+        } catch (\Exception $e) {
+            \Log::error('Failed to send email: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            return back()->with('error', 'Failed to send message. Please try again later.');
+        }
 
         return back()->with('success', 'Bug report sent.');
     }

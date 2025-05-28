@@ -3,15 +3,19 @@
     <Header :showPlayerPanel="false" />
     <main class="flex-1 max-w-4xl mx-auto p-12">
       <h1 class="text-4xl font-bold text-center mb-8">{{ trans('Report a bug') }}</h1>
-      
-      <div class="bg-white rounded-lg shadow-md p-6">
+      <ErrorModal v-if="errorMessage" :message="errorMessage" />
+      <div v-if="messageSuccessfullySent" class="text-stone-500 text-center p-20">
+        <h1 class="text-3xl font-bold">{{ trans('Thank you for reporting the bug!') }}</h1>
+        <p class="text-stone-400 text-xl">{{ trans('We will review your report and get back to you soon.') }}</p>
+      </div>
+      <div class="bg-white rounded-lg shadow-md p-6" v-if="!messageSuccessfullySent">
         <form @submit.prevent="submitForm" class="space-y-6">
           <div>
-            <label for="title" class="block text-sm font-medium text-stone-700">{{ trans('Title') }}</label>
+            <label for="title" class="block text-sm font-medium text-stone-700">{{ trans('Title') }} <span class="text-red-500">*</span></label>
             <input
               type="text"
               id="title"
-              v-model="form.title"
+              v-model="reportBugForm.title"
               class="mt-1 block w-full rounded-md border-stone-300 shadow-sm focus:border-stone-500 focus:ring-stone-500"
               required
               :placeholder="trans('Short description of the bug')"
@@ -19,10 +23,10 @@
           </div>
 
           <div>
-            <label for="description" class="block text-sm font-medium text-stone-700">{{ trans('Description') }}</label>
+            <label for="description" class="block text-sm font-medium text-stone-700">{{ trans('Description') }} <span class="text-red-500">*</span></label>
             <textarea
               id="description"
-              v-model="form.description"
+              v-model="reportBugForm.description"
               rows="4"
               class="mt-1 block w-full rounded-md border-stone-300 shadow-sm focus:border-stone-500 focus:ring-stone-500"
               required
@@ -31,10 +35,10 @@
           </div>
 
           <div>
-            <label for="steps" class="block text-sm font-medium text-stone-700">{{ trans('Steps to reproduce') }}</label>
+            <label for="steps" class="block text-sm font-medium text-stone-700">{{ trans('Steps to reproduce') }} <span class="text-red-500">*</span></label>
             <textarea
               id="steps"
-              v-model="form.steps"
+              v-model="reportBugForm.steps"
               rows="4"
               class="mt-1 block w-full rounded-md border-stone-300 shadow-sm focus:border-stone-500 focus:ring-stone-500"
               required
@@ -44,10 +48,10 @@
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label for="expected" class="block text-sm font-medium text-stone-700">{{ trans('Expected behavior') }}</label>
+              <label for="expected" class="block text-sm font-medium text-stone-700">{{ trans('Expected behavior') }} <span class="text-red-500">*</span></label>
               <textarea
                 id="expected"
-                v-model="form.expected"
+                v-model="reportBugForm.expected"
                 rows="3"
                 class="mt-1 block w-full rounded-md border-stone-300 shadow-sm focus:border-stone-500 focus:ring-stone-500"
                 required
@@ -56,10 +60,10 @@
             </div>
 
             <div>
-              <label for="actual" class="block text-sm font-medium text-stone-700">{{ trans('Actual behavior') }}</label>
+              <label for="actual" class="block text-sm font-medium text-stone-700">{{ trans('Actual behavior') }} <span class="text-red-500">*</span></label>
               <textarea
                 id="actual"
-                v-model="form.actual"
+                v-model="reportBugForm.actual"
                 rows="3"
                 class="mt-1 block w-full rounded-md border-stone-300 shadow-sm focus:border-stone-500 focus:ring-stone-500"
                 required
@@ -74,7 +78,7 @@
               <input
                 type="text"
                 id="browser"
-                v-model="form.browser"
+                v-model="reportBugForm.browser"
                 class="mt-1 block w-full rounded-md border-stone-300 shadow-sm focus:border-stone-500 focus:ring-stone-500"
                 :placeholder="trans('e.g. Chrome 91.0.4472.124')"
               />
@@ -85,7 +89,7 @@
               <input
                 type="text"
                 id="os"
-                v-model="form.os"
+                v-model="reportBugForm.os"
                 class="mt-1 block w-full rounded-md border-stone-300 shadow-sm focus:border-stone-500 focus:ring-stone-500"
                 :placeholder="trans('e.g. Windows 10 Pro')"
               />
@@ -97,7 +101,7 @@
               <label for="category" class="block text-sm font-medium text-stone-700">{{ trans('Category') }}</label>
               <select
                 id="category"
-                v-model="form.category"
+                v-model="reportBugForm.category"
                 class="mt-1 block w-full rounded-md border-stone-300 shadow-sm focus:border-stone-500 focus:ring-stone-500"
                 required
               >
@@ -111,7 +115,7 @@
               <label for="priority" class="block text-sm font-medium text-stone-700">{{ trans('Priority') }}</label>
               <select
                 id="priority"
-                v-model="form.priority"
+                v-model="reportBugForm.priority"
                 class="mt-1 block w-full rounded-md border-stone-300 shadow-sm focus:border-stone-500 focus:ring-stone-500"
                 required
               >
@@ -133,7 +137,7 @@
         </form>
       </div>
 
-      <div class="mt-8 bg-stone-50 rounded-lg p-6">
+      <div class="mt-8 bg-stone-50 rounded-lg p-6" v-if="!messageSuccessfullySent">
         <h2 class="text-xl font-semibold mb-4">{{ trans('Tips') }}</h2>
         <div class="prose prose-stone max-w-none">
           <p>{{ trans('To ensure your report is processed as quickly as possible:') }}</p>
@@ -155,20 +159,47 @@ import { ref } from 'vue'
 import { useTranslation } from '@/Composables/useTranslation'
 import Header from '@/Components/Header.vue'
 import Footer from '@/Components/Footer.vue'
+import { router } from '@inertiajs/vue3'
+import ErrorModal from '@/Components/ErrorModal.vue'
+import { useHead } from '@vueuse/head'
 
 const { trans } = useTranslation()
 
-const form = ref({
+useHead({
+  title: trans('Report a bug') + ' | Questify'
+})
+
+const messageSuccessfullySent = ref(false)
+
+const getBrowserInfo = () => {
+  const ua = navigator.userAgent
+  return ua;
+}
+
+const getOSInfo = () => {
+  if (navigator.userAgentData?.platform) {
+    return navigator.userAgentData.platform
+  }
+  const ua = navigator.userAgent
+  if (ua.includes('Windows')) return 'Windows'
+  if (ua.includes('Mac')) return 'MacOS'
+  if (ua.includes('Linux')) return 'Linux'
+  return 'Unknown'
+}
+
+const reportBugForm = ref({
   title: '',
   description: '',
   steps: '',
   expected: '',
   actual: '',
-  browser: '',
-  os: '',
+  browser: getBrowserInfo(),
+  os: getOSInfo(),
   priority: 'medium',
   category: 'general'
 })
+
+const errorMessage = ref(null)
 
 const categories = [
   { value: 'general', label: 'General' },
@@ -187,7 +218,13 @@ const priorities = [
 ]
 
 const submitForm = () => {
-  // TODO: Implement form submission
-  console.log('Form submitted:', form.value)
+  router.post(route('report.bug.send'), reportBugForm.value, {
+    onSuccess: () => {
+      messageSuccessfullySent.value = true
+    },
+    onError: () => {
+      errorMessage.value = trans('Failed to send bug report. Please try again later.')
+    }
+  })
 }
 </script>

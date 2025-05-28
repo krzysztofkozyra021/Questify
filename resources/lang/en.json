@@ -383,5 +383,8 @@
     "Failed to send message. Please try again later.": "Failed to send message. Please try again later.",
     "Thank you for improving Questify!": "Thank you for improving Questify!",
     "We will review your idea and get back to you soon.": "We will review your idea and get back to you soon.",
-    "Failed to send feature report. Please try again later.": "Failed to send feature report. Please try again later."
+    "Failed to send feature report. Please try again later.": "Failed to send feature report. Please try again later.",
+    "Thank you for reporting the bug!": "Thank you for reporting the bug!",
+    "We will review your report and get back to you soon.": "We will review your report and get back to you soon.",
+    "Failed to send bug report. Please try again later.": "Failed to send bug report. Please try again later."
 }

@@ -31,7 +31,7 @@ Route::post("/support/contact", [SupportController::class, "contact"])->name("su
 Route::get("/report/feature", [SupportController::class, "feature"])->name("report.feature");
 Route::post("/report/feature", [SupportController::class, "sendFeatureReport"])->name("report.feature.send");
 Route::get("/report/bug", [SupportController::class, "bug"])->name("report.bug");
-Route::post("/report/bug", [SupportController::class, "storeBug"])->name("report.bug.store");
+Route::post("/report/bug", [SupportController::class, "sendBugReport"])->name("report.bug.send");
 
 Route::get("/language/{locale}", [LanguageController::class, "switch"])->name("language.switch");
 
