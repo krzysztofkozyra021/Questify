@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\Contact;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Mail;
 
 class SupportController extends Controller
 {
@@ -24,6 +26,7 @@ class SupportController extends Controller
 
     public function contact(Request $request)
     {
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
@@ -31,9 +34,18 @@ class SupportController extends Controller
             'message' => 'required|string',
         ]);
 
-        // TODO: Implement send message (email)
+        try {
+            \Log::info('Attempting to send email with data:', $validated);
+            \Log::info('Data types:', array_map('gettype', $validated));
+            Mail::to('support@questify.com')->send(new Contact($validated));
+            \Log::info('Email sent successfully');
+        } catch (\Exception $e) {
+            \Log::error('Failed to send email: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            return back()->with('error', 'Failed to send message. Please try again later.');
+        }
 
-        return back()->with('success', 'Message sent.');
+        return back()->with('success', 'Message sent successfully.');
     }
 
     public function storeFeature(Request $request)
