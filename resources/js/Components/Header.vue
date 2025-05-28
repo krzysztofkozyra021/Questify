@@ -36,46 +36,53 @@ const togglePlayerPanel = () => {
 <template>
   <header class="bg-stone-900 shadow-md">
     <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between px-2 md:px-4 py-2 relative">
-      <!-- Left: Logo and Navigation -->
+      <!-- Left: Logo -->
       <div class="flex items-center gap-2 md:gap-4 w-full md:w-auto justify-between md:justify-start">
         <Link 
             :href="route('dashboard')" 
             class="hover:scale-105 transition-all duration-300" 
-           
           >
         <img src="/images/logo.png" alt="Logo" class="w-32 md:w-40 h-8 md:h-10" />
         </Link>
-        <!-- Navigation -->
+        <!-- Navigation when user is logged in-->
         <nav class="hidden md:flex gap-4 lg:gap-6" v-if="page.props.auth.user">
           <Link 
             :href="route('dashboard')" 
             class="text-amber-50 text-base md:text-lg font-medium px-2 md:px-4 py-1 md:py-2 transition-colors hover:bg-amber-500 hover:text-amber-50" 
             :class="{ 'border-b-4 border-amber-500 font-bold': isActive('dashboard') }"
           >{{ trans('Tasks') }}</Link>
-          <!-- <Link :href="route('inventory')" class="nav-link" :class="{ 'border-b-4 border-amber-600': $page.url.startsWith(route('inventory')) }">{{ trans('Inventory') }}</Link>
-          <Link :href="route('shops')" class="nav-link" :class="{ 'border-b-4 border-amber-600': $page.url.startsWith(route('shops')) }">{{ trans('Shops') }}</Link>
-          <Link :href="route('party')" class="nav-link" :class="{ 'border-b-4 border-amber-600': $page.url.startsWith(route('party')) }">{{ trans('Party') }}</Link>
-          <Link :href="route('group')" class="nav-link" :class="{ 'border-b-4 border-amber-600': $page.url.startsWith(route('group')) }">{{ trans('Group') }}</Link>
-          <Link :href="route('challenges')" class="nav-link" :class="{ 'border-b-4 border-amber-600': $page.url.startsWith(route('challenges')) }">{{ trans('Challenges') }}</Link>
-          <Link :href="route('help')" class="nav-link" :class="{ 'border-b-4 border-amber-600': $page.url.startsWith(route('help')) }">{{ trans('Help') }}</Link> -->
         </nav>
         <!-- Mobile Menu -->
         <HamburgerMenu v-if="page.props.auth.user" class="md:hidden" />
       </div>
-      <!-- Player Dropdown -->
-      <div class="hidden md:block relative min-w-[48px] flex justify-end" v-if="page.props.auth.user">
-        <button @click="toggleDropdown" class="focus:outline-none">
-          <svg class="w-8 h-8 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M10 10a4 4 0 100-8 4 4 0 000 8zm0 2c-3.314 0-6 1.343-6 3v1a1 1 0 001 1h10a1 1 0 001-1v-1c0-1.657-2.686-3-6-3z" />
-          </svg>
-        </button>
-        <div v-if="showDropdown" @click.away="closeDropdown" class="absolute top-10 right-0 mt-2 w-44 bg-stone-700 rounded-lg shadow-lg border border-stone-600 py-1 z-50">
-          <Link :href="route('character')" class="block px-4 py-2 text-sm font-bold text-amber-50 hover:bg-stone-600 transition-colors">{{ trans('Stats') }}</Link>
-          <Link :href="route('settings')" class="block px-4 py-2 text-sm font-bold text-amber-50 hover:bg-stone-600 transition-colors">{{ trans('Settings') }}</Link>
-          <button @click="logout" class="block w-full text-left px-4 py-2 text-sm font-bold text-red-400 hover:bg-stone-600 transition-colors">{{ trans('Log Out') }}</button>
+
+      <!-- Right: Login Button and Player Dropdown -->
+      <div class="flex items-center gap-4">
+        <!-- Navigation when user is not logged in-->
+        <nav class="hidden md:flex" v-if="!page.props.auth.user">
+          <Link 
+            :href="route('login')"
+            class="block px-4 py-2 text-amber-50 hover:bg-stone-700 transition-colors sm:px-6 sm:py-2 bg-stone-600 hover:bg-stone-700 rounded-lg font-bold"
+          >
+            {{ trans('Log in') }}
+          </Link>
+        </nav>
+        <!-- Player Dropdown -->
+        <div class="hidden md:block relative min-w-[48px] flex justify-end" v-if="page.props.auth.user">
+          <button @click="toggleDropdown" class="focus:outline-none">
+            <svg class="w-8 h-8 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10 10a4 4 0 100-8 4 4 0 000 8zm0 2c-3.314 0-6 1.343-6 3v1a1 1 0 001 1h10a1 1 0 001-1v-1c0-1.657-2.686-3-6-3z" />
+            </svg>
+          </button>
+          <div v-if="showDropdown" @click.away="closeDropdown" class="absolute top-10 right-0 mt-2 w-44 bg-stone-700 rounded-lg shadow-lg border border-stone-600 py-1 z-50">
+            <Link :href="route('character')" class="block px-4 py-2 text-sm font-bold text-amber-50 hover:bg-stone-600 transition-colors">{{ trans('Stats') }}</Link>
+            <Link :href="route('settings')" class="block px-4 py-2 text-sm font-bold text-amber-50 hover:bg-stone-600 transition-colors">{{ trans('Settings') }}</Link>
+            <button @click="logout" class="block w-full text-left px-4 py-2 text-sm font-bold text-red-400 hover:bg-stone-600 transition-colors">{{ trans('Log Out') }}</button>
+          </div>
         </div>
       </div>
     </div>
+
     <!-- Bottom Row: PlayerPanel -->
     <div v-if="props.showPlayerPanel" class="bg-stone-800 px-2 md:px-4 py-2">
       <div class="max-w-7xl mx-auto">
