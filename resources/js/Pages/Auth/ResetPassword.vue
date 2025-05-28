@@ -8,9 +8,13 @@ import Preloader from '@/Components/Preloader.vue'
 import { Head, useForm, Link } from '@inertiajs/vue3'
 import { useTranslation } from '@/Composables/useTranslation'
 import LanguageSwitcher from '@/Components/LanguageSwitcher.vue'
-
+import { useHead } from '@vueuse/head'
 
 const { trans } = useTranslation()
+
+useHead({
+  title: trans('Reset Password') + ' | Questify'
+})
 
 const props = defineProps({
   email: {

@@ -6,8 +6,14 @@ import TextInput from '@/Components/TextInput.vue'
 import { Link, useForm } from '@inertiajs/vue3'
 import { useTranslation } from '@/Composables/useTranslation'
 import Preloader from '@/Components/Preloader.vue'
+import { useHead } from '@vueuse/head'
 
 const { trans } = useTranslation()
+
+useHead({
+  title: trans('Login') + ' | Questify'
+})
+
 const backgroundImage = '/images/background-landscape-register.jpg'
 
 defineProps({

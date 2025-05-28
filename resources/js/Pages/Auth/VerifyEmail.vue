@@ -6,8 +6,12 @@ import Preloader from '@/Components/Preloader.vue'
 import { Head, Link, useForm } from '@inertiajs/vue3'
 import { useTranslation } from '@/Composables/useTranslation'
 import LanguageSwitcher from '@/Components/LanguageSwitcher.vue'
+import { useHead } from '@vueuse/head'
 
 const { trans } = useTranslation()
+useHead({
+  title: trans('Verify Email') + ' | Questify'
+})
 
 const props = defineProps({
   status: {

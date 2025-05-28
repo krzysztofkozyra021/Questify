@@ -8,7 +8,13 @@ import { Link, useForm } from '@inertiajs/vue3'
 import { useTranslation } from '@/Composables/useTranslation'
 import Header from '@/Components/Header.vue'
 import Footer from '@/Components/Footer.vue'
+import { useHead } from '@vueuse/head'
+
 const { trans } = useTranslation()
+
+useHead({
+  title: trans('Register') + ' | Questify'
+})
 
 const form = useForm({
   name: '',
