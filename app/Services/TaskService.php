@@ -175,7 +175,6 @@ class TaskService
         $userClassExpMultiplier = $userStats->classAttributes->exp_multiplier;
         $expGain = round($habit->experience_reward * $habit->difficulty->exp_multiplier * $userClassExpMultiplier);
         $userStats->current_experience += $expGain;
-        $userStats->current_health = max(0, $userStats->current_health - $this->getHealthPenalty($habit));
         $userStats->current_energy = max(0, $userStats->current_energy - $this->getEnergyPenalty($habit));
         $userStats->save();
     }

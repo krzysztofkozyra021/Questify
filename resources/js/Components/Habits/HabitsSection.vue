@@ -206,6 +206,7 @@ const completeHabit = (habit) => {
     only: ['userStatistics', 'habits'],
     onSuccess: () => {
       addNotification('+ ' + getHabitExperience(habit) + ' ' + trans('XP'), 'exp');
+      addNotification(trans('- ') + calculateHabitEnergyPenalty(habit).toString() + ' ' + trans('EP'), 'energy');
     },
     onError: () => {
       addNotification(trans('Failed to complete habit'), 'error');
