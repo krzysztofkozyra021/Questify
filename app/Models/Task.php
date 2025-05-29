@@ -20,8 +20,6 @@ class Task extends Model
         "reset_frequency",
         "due_date",
         "start_date",
-        "repeat_every",
-        "repeat_unit",
         "is_completed",
         "is_deadline_task",
         "experience_reward",
