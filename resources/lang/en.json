@@ -389,5 +389,11 @@
     "Failed to send feature report. Please try again later.": "Failed to send feature report. Please try again later.",
     "Thank you for reporting the bug!": "Thank you for reporting the bug!",
     "We will review your report and get back to you soon.": "We will review your report and get back to you soon.",
-    "Failed to send bug report. Please try again later.": "Failed to send bug report. Please try again later."
+    "Failed to send bug report. Please try again later.": "Failed to send bug report. Please try again later.",
+    "Failed to complete habit": "Failed to complete habit",
+    "Failed to not complete habit": "Failed to not complete habit",
+    "Todo task updated successfully": "Todo task updated successfully",
+    "Failed to update todo task": "Failed to update todo task",
+    "Habit updated successfully": "Habit updated successfully",
+    "Failed to update habit": "Failed to update habit"
 }

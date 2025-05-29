@@ -387,5 +387,11 @@
     "Failed to send feature report. Please try again later.": "Nie udało się wysłać zgłoszenia funkcji. Spróbuj ponownie później.",
     "Thank you for reporting the bug!": "Dziękujemy za zgłoszenie błędu!",
     "We will review your report and get back to you soon.": "Przejrzymy Twoje zgłoszenie i wkrótce się z Tobą skontaktujemy.",
-    "Failed to send bug report. Please try again later.": "Nie udało się wysłać zgłoszenia błędu. Spróbuj ponownie później."
+    "Failed to send bug report. Please try again later.": "Nie udało się wysłać zgłoszenia błędu. Spróbuj ponownie później.",
+    "Failed to complete habit": "Nie udało się wykonać nawyku",
+    "Failed to not complete habit": "Nie udało się nie wykonać nawyku",
+    "Todo task updated successfully": "Zadanie do wykonania zostało pomyślnie zaktualizowane",
+    "Failed to update todo task": "Nie udało się zaktualizować zadania do wykonania",
+    "Habit updated successfully": "Nawyk został pomyślnie zaktualizowany",
+    "Failed to update habit": "Nie udało się zaktualizować nawyku"
 } 
