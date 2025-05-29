@@ -12,7 +12,7 @@ const props = defineProps({
   type: {
     type: String,
     default: 'success',
-    validator: (value) => ['success', 'error', 'warning', 'info'].includes(value)
+    validator: (value) => ['success', 'error', 'warning', 'info', 'exp', 'health', 'energy'].includes(value)
   },
   duration: {
     type: Number,
@@ -48,6 +48,24 @@ const colors = {
     text: 'text-blue-800',
     border: 'border-blue-200',
     icon: 'text-blue-600'
+  },
+  exp: {
+    bg: 'bg-amber-100',
+    text: 'text-amber-800',
+    border: 'border-amber-200',
+    icon: 'text-amber-600'
+  },
+  health: {
+    bg: 'bg-red-100',
+    text: 'text-red-800',
+    border: 'border-red-200',
+    icon: 'text-red-600'
+  },
+  energy: {
+    bg: 'bg-blue-100',
+    text: 'text-blue-800',
+    border: 'border-blue-200',
+    icon: 'text-blue-600'
   }
 };
 
@@ -63,6 +81,15 @@ const icons = {
   </svg>`,
   info: `<svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
     <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+  </svg>`,
+  exp: `<svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+    <path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+  </svg>`,
+  health: `<svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+    <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+  </svg>`,
+  energy: `<svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+    <path d="M13 10V3L4 14h7v7l9-11h-7z" />
   </svg>`
 };
 
@@ -89,42 +116,42 @@ onUnmounted(() => {
   >
     <div
       v-if="isVisible"
-      class="fixed top-4 right-4 z-50 max-w-sm w-full"
+      class="fixed top-16 right-4 z-50 w-auto min-w-[280px] max-w-[90vw] sm:max-w-[400px]"
     >
       <div 
         class="rounded-lg shadow-lg overflow-hidden border transform transition-all duration-300"
         :class="[colors[type].bg, colors[type].border]"
       >
-        <div class="p-2">
-          <div class="flex items-start">
+        <div class="p-2 sm:p-3">
+          <div class="flex items-start gap-2 sm:gap-3">
             <div class="flex-shrink-0">
               <div 
                 class="rounded-full p-0.5"
                 :class="colors[type].bg"
               >
                 <div 
-                  class="h-5 w-5 flex items-center justify-center"
+                  class="h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center"
                   :class="colors[type].icon"
                   v-html="icons[type]"
                 ></div>
               </div>
             </div>
-            <div class="ml-2 w-0 flex-1">
+            <div class="flex-1 min-w-0">
               <p 
-                class="text-sm font-medium"
+                class="text-xs sm:text-sm font-medium break-words"
                 :class="colors[type].text"
               >
                 {{ trans(message) }}
               </p>
             </div>
-            <div class="ml-2 flex-shrink-0 flex">
+            <div class="flex-shrink-0">
               <button
                 @click="isVisible = false; emit('close')"
-                class="inline-flex text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-stone-500 rounded-md"
+                class="inline-flex text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-stone-500 rounded-md p-1"
                 :class="colors[type].text"
               >
                 <span class="sr-only">{{ trans('Close') }}</span>
-                <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                <svg class="h-3 w-3 sm:h-4 sm:w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
                 </svg>
               </button>
