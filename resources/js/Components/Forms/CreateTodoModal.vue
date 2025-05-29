@@ -2,8 +2,10 @@
   import { ref } from 'vue';
   import { router } from '@inertiajs/vue3';
   import { useTranslation } from '@/Composables/useTranslation';
-
+  import { useNotification } from '@/Composables/useNotification';
   const { trans } = useTranslation();
+
+  const { addNotification } = useNotification();
 
 
   const props = defineProps({
@@ -46,13 +48,18 @@
       tags: form.value.tags.split(',').map(t => t.trim()).filter(Boolean),
       experience_reward: props.defaultTodoExperienceReward,
     }, {
+      preserveScroll: true,
+      preserveState: true,
+      only: ['userStatistics', 'todoTasks'],
       onSuccess: () => {
         loading.value = false;
         resetForm();
         emit('created');
+        addNotification(trans('Todo task created successfully'), 'success');
       },
       onError: () => {
         loading.value = false;
+        addNotification(trans('Failed to create todo task'), 'error');
       }
     });
   }
