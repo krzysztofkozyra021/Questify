@@ -19,6 +19,7 @@ class Task extends Model
         "difficulty_level",
         "reset_frequency",
         "due_date",
+        "overdue_days",
         "start_date",
         "is_completed",
         "is_deadline_task",
