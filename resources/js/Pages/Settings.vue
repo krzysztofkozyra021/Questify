@@ -177,11 +177,7 @@ const deleteAccount = () => {
 }
 
 const changeLocale = ($event) => {
-  router.post(route('settings.changeLocale'), {
-    locale: $event.target.value,
-  }, {
-    preserveScroll: true,
-  })
+  router.get(route('language.switch', { locale: $event.target.value }))
 }
 
 const isMenuOpen = ref(false)
