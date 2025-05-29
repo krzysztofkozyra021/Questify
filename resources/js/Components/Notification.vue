@@ -106,59 +106,50 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <Transition
-    enter-active-class="transform ease-out duration-300 transition-all"
-    enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
-    enter-to-class="translate-y-0 opacity-100 sm:translate-x-0"
-    leave-active-class="transition-all duration-300 ease-in-out"
-    leave-from-class="opacity-100 translate-y-0"
-    leave-to-class="opacity-0 translate-y-2"
+  <div
+    v-if="isVisible"
+    class="flex flex-col gap-2 w-auto min-w-[280px] max-w-[90vw] sm:max-w-[400px]"
   >
-    <div
-      v-if="isVisible"
-      class="fixed top-16 right-4 z-50 w-auto min-w-[280px] max-w-[90vw] sm:max-w-[400px]"
+    <div 
+      class="rounded-lg shadow-lg overflow-hidden border"
+      :class="[colors[type].bg, colors[type].border]"
     >
-      <div 
-        class="rounded-lg shadow-lg overflow-hidden border transform transition-all duration-300"
-        :class="[colors[type].bg, colors[type].border]"
-      >
-        <div class="p-2 sm:p-3">
-          <div class="flex items-start gap-2 sm:gap-3">
-            <div class="flex-shrink-0">
+      <div class="p-2 sm:p-3">
+        <div class="flex items-start gap-2 sm:gap-3">
+          <div class="flex-shrink-0">
+            <div 
+              class="rounded-full p-0.5"
+              :class="colors[type].bg"
+            >
               <div 
-                class="rounded-full p-0.5"
-                :class="colors[type].bg"
-              >
-                <div 
-                  class="h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center"
-                  :class="colors[type].icon"
-                  v-html="icons[type]"
-                ></div>
-              </div>
+                class="h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center"
+                :class="colors[type].icon"
+                v-html="icons[type]"
+              ></div>
             </div>
-            <div class="flex-1 min-w-0">
-              <p 
-                class="text-xs sm:text-sm font-medium break-words"
-                :class="colors[type].text"
-              >
-                {{ trans(message) }}
-              </p>
-            </div>
-            <div class="flex-shrink-0">
-              <button
-                @click="isVisible = false; emit('close')"
-                class="inline-flex text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-stone-500 rounded-md p-1"
-                :class="colors[type].text"
-              >
-                <span class="sr-only">{{ trans('Close') }}</span>
-                <svg class="h-3 w-3 sm:h-4 sm:w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
-                </svg>
-              </button>
-            </div>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p 
+              class="text-xs sm:text-sm font-medium break-words"
+              :class="colors[type].text"
+            >
+              {{ trans(message) }}
+            </p>
+          </div>
+          <div class="flex-shrink-0">
+            <button
+              @click="isVisible = false; emit('close')"
+              class="inline-flex text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-stone-500 rounded-md p-1"
+              :class="colors[type].text"
+            >
+              <span class="sr-only">{{ trans('Close') }}</span>
+              <svg class="h-3 w-3 sm:h-4 sm:w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </button>
           </div>
         </div>
       </div>
     </div>
-  </Transition>
+  </div>
 </template>
