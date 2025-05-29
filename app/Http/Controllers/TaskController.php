@@ -100,6 +100,7 @@ class TaskController extends Controller
                 "description" => "nullable|string",
                 "difficulty_level" => "required|integer|exists:task_difficulties,difficulty_level",
                 "due_date" => "required|date",
+                "experience_reward" => "required|integer|min:1",
                 "tags" => "array",
                 "tags.*" => "string|max:50",
             ]);

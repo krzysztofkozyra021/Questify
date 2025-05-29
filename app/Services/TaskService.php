@@ -27,6 +27,12 @@ class TaskService
         ];
     }
 
+    public function calculateExperienceReward(Task $task): int
+    {
+        // Base experience reward is difficulty level * 10
+        return round($task->difficulty->difficulty_level * 10);
+    }
+
     public function createTask(User $user, array $data): Task
     {
         // Ensure type is set
@@ -43,7 +49,7 @@ class TaskService
             return DB::transaction(function () use ($user, $data) {
                 // Create the task
                 $task = Task::create($data);
-                $task->experience_reward = $data['difficulty_level'] * 10;
+                $task-> experience_reward = $this->calculateExperienceReward($task);
                 $task->save();
                 
                 \Log::info('Task created:', [
@@ -108,7 +114,8 @@ class TaskService
         
         // Update task
         $habit->update($data);
-        
+        $habit->experience_reward = $this->calculateExperienceReward($habit);
+        $habit->save();
         // Re-fetch the task to ensure we have the latest instance
         $habit = Task::find($habitId);
         
@@ -167,21 +174,28 @@ class TaskService
         $userStats = $user->userStatistics;
         $userClassExpMultiplier = $userStats->classAttributes->exp_multiplier;
         $expGain = round($habit->experience_reward * $habit->difficulty->exp_multiplier * $userClassExpMultiplier);
-
-        // Calculate energy penalty based on player 10% of max energy and task difficulty multiplier
-        $playerMaxEnergy = $userStats->max_energy;
-        $energyPenalty = round(($playerMaxEnergy * 0.1) * $habit->difficulty->energy_cost);
-        
-        // Calculate health penalty based on player 10% of max health and task difficulty multiplier
-        $playerMaxHealth = $userStats->max_health;
-        $healthPenalty = round(($playerMaxHealth * 0.1) * $habit->difficulty->health_penalty);
-
-
         $userStats->current_experience += $expGain;
-        $userStats->current_health = max(0, $userStats->current_health - $healthPenalty);
-        $userStats->current_energy = max(0, $userStats->current_energy - $energyPenalty);
+        $userStats->current_health = max(0, $userStats->current_health - $this->getHealthPenalty($habit));
+        $userStats->current_energy = max(0, $userStats->current_energy - $this->getEnergyPenalty($habit));
         $userStats->save();
     }
+
+    // Calculate energy penalty based on player 10% of max energy and task difficulty multiplier
+    public function getEnergyPenalty(Task $habit): int
+    {
+        $userStats = $habit->users()->first()->userStatistics;
+        $playerMaxEnergy = $userStats->max_energy;
+        return round(($playerMaxEnergy * 0.1) * $habit->difficulty->energy_cost);
+    }
+
+    // Calculate health penalty based on player 10% of max health and task difficulty multiplier
+    public function getHealthPenalty(Task $habit): int
+    {
+        $userStats = $habit->users()->first()->userStatistics;
+        $playerMaxHealth = $userStats->max_health;
+        return round(($playerMaxHealth * 0.1) * $habit->difficulty->health_penalty);
+    }
+
 
     public function completeTodo(Task $todo): void
     {
@@ -233,7 +247,8 @@ class TaskService
             
             // Update task
             $todo->update($data);
-            
+            $todo->experience_reward = $this->calculateExperienceReward($todo);
+            $todo->save();
             // Re-fetch the task to ensure we have the latest instance
             $todo = Task::find($todoId);
             
@@ -279,6 +294,8 @@ class TaskService
 
         $user = $habit->users()->first();
         $userStats = $user->userStatistics;
+        $userStats->current_health = max(0, $userStats->current_health - $this->getHealthPenalty($habit));
+        $userStats->save();
     }
 
     public function resetTask(Task $task): void
