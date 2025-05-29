@@ -28,15 +28,15 @@ class TaskFactory extends Factory
         $resetConfig = TaskResetConfig::inRandomOrder()->first()->id;
 
         return [
-            'title' => $this->faker->sentence,
-            'description' => $this->faker->paragraph,
-            'difficulty_level' => $difficultyLevel,
-            'reset_frequency' => $resetConfig,
-            'start_date' => now(),
-            'due_date' => $this->faker->optional()->dateTimeBetween('now', '+1 month'),
-            'is_completed' => false,
-            'is_deadline_task' => $this->faker->boolean,
-            'experience_reward' => $this->faker->numberBetween(5, 50),
+            "title" => $this->faker->sentence,
+            "description" => $this->faker->paragraph,
+            "difficulty_level" => $difficultyLevel,
+            "reset_frequency" => $resetConfig,
+            "start_date" => now(),
+            "due_date" => $this->faker->optional()->dateTimeBetween("now", "+1 month"),
+            "is_completed" => false,
+            "is_deadline_task" => $this->faker->boolean,
+            "experience_reward" => $this->faker->numberBetween(5, 50),
         ];
     }
 }

@@ -5,10 +5,13 @@
     "English": "English",
     "Polish": "Polish",
     "Log in": "Log in",
+    "Login": "Login",
+    "Dashboard": "Dashboard",
     "Register": "Register",
     "Sign up": "Sign up",
     "Name": "Name",
     "Email": "Email",
+    "Email not verified": "Email not verified",
     "Password": "Password",
     "Confirm Password": "Confirm Password",
     "By clicking the button below, you are indicating that you have read and agree to the": "By clicking the button below, you are indicating that you have read and agree to the",
@@ -386,5 +389,11 @@
     "Failed to send feature report. Please try again later.": "Failed to send feature report. Please try again later.",
     "Thank you for reporting the bug!": "Thank you for reporting the bug!",
     "We will review your report and get back to you soon.": "We will review your report and get back to you soon.",
-    "Failed to send bug report. Please try again later.": "Failed to send bug report. Please try again later."
+    "Failed to send bug report. Please try again later.": "Failed to send bug report. Please try again later.",
+    "Failed to complete habit": "Failed to complete habit",
+    "Failed to not complete habit": "Failed to not complete habit",
+    "Todo task updated successfully": "Todo task updated successfully",
+    "Failed to update todo task": "Failed to update todo task",
+    "Habit updated successfully": "Habit updated successfully",
+    "Failed to update habit": "Failed to update habit"
 }

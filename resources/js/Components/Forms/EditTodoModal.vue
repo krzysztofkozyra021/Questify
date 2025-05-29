@@ -2,8 +2,10 @@
   import { ref } from 'vue';
   import { router } from '@inertiajs/vue3';
   import { useTranslation } from '@/Composables/useTranslation';
+  import { useNotification } from '@/Composables/useNotification';
 
   const { trans } = useTranslation();
+  const { addNotification } = useNotification();
 
   const props = defineProps({
     show: Boolean,
@@ -18,6 +20,7 @@
     title: props.todo?.title || '',
     description: props.todo?.description || '',
     difficulty_level: props.todo?.difficulty_level || 2,
+    experience_reward: props.todo?.experience_reward || 3,
     // If todo has a due_date, convert it to YYYY-MM-DD format, otherwise use current date
     due_date: props.todo?.due_date ? new Date(props.todo.due_date).toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10),
     tags: props.todo?.tags?.map(tag => tag.name).join(',') || '',
@@ -34,14 +37,19 @@
     router.put(`/tasks/todos/update/${props.todo.id}`, {
       ...form.value,
       tags: form.value.tags ? form.value.tags.split(',').map(t => t.trim()).filter(Boolean) : [],
+      experience_reward: form.value.experience_reward,
     }, {
+      preserveScroll: true,
+      preserveState: true,
+      only: ['userStatistics', 'todoTasks'],
       onSuccess: () => {
         loading.value = false;
         emit('edited');
+        addNotification(trans('Todo task updated successfully'), 'success');
       },
-      onError: (errors) => {
-        console.error('Request failed with errors:', errors);
+      onError: () => {
         loading.value = false;
+        addNotification(trans('Failed to update todo task'), 'error');
       }
     });
   }

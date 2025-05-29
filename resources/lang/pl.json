@@ -5,11 +5,15 @@
     "English": "Angielski",
     "Polish": "Polski",
     "Log in": "Zaloguj się",
+    "Login": "Zaloguj się",
+    "Dashboard": "Tablica",
     "Register": "Zarejestruj się",
     "Sign up": "Zarejestruj się",
     "Name": "Imię",
     "Email": "Email",
+    "Email not verified": "Email nie zweryfikowany",
     "Password": "Hasło",
+    "Enter your password": "Wprowadź swoje hasło",
     "Confirm Password": "Potwierdź hasło",
     "By clicking the button below, you are indicating that you have read and agree to the": "Klikając przycisk poniżej, potwierdzasz, że przeczytałeś i zgadzasz się z",
     "Terms of Service": "Regulamin",
@@ -383,5 +387,11 @@
     "Failed to send feature report. Please try again later.": "Nie udało się wysłać zgłoszenia funkcji. Spróbuj ponownie później.",
     "Thank you for reporting the bug!": "Dziękujemy za zgłoszenie błędu!",
     "We will review your report and get back to you soon.": "Przejrzymy Twoje zgłoszenie i wkrótce się z Tobą skontaktujemy.",
-    "Failed to send bug report. Please try again later.": "Nie udało się wysłać zgłoszenia błędu. Spróbuj ponownie później."
+    "Failed to send bug report. Please try again later.": "Nie udało się wysłać zgłoszenia błędu. Spróbuj ponownie później.",
+    "Failed to complete habit": "Nie udało się wykonać nawyku",
+    "Failed to not complete habit": "Nie udało się nie wykonać nawyku",
+    "Todo task updated successfully": "Zadanie do wykonania zostało pomyślnie zaktualizowane",
+    "Failed to update todo task": "Nie udało się zaktualizować zadania do wykonania",
+    "Habit updated successfully": "Nawyk został pomyślnie zaktualizowany",
+    "Failed to update habit": "Nie udało się zaktualizować nawyku"
 } 

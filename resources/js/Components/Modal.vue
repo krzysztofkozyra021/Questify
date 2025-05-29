@@ -69,63 +69,54 @@ const maxWidthClass = computed(() => {
 
 <template>
   <Teleport to="body">
-    <Transition
-      enter-active-class="ease-out duration-300"
-      enter-from-class="opacity-0"
-      enter-to-class="opacity-100"
-      leave-active-class="ease-in duration-200"
-      leave-from-class="opacity-100"
-      leave-to-class="opacity-0"
+    <div
+      v-show="show"
+      class="fixed inset-0 z-[9999] overflow-y-auto bg-stone-900/50"
     >
-      <div
-        v-show="show"
-        class="fixed inset-0 z-[9999] overflow-y-auto bg-stone-900/50 backdrop-blur-sm"
-      >
-        <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
-          <Transition
-            enter-active-class="ease-out duration-300"
-            enter-from-class="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-            enter-to-class="opacity-100 translate-y-0 sm:scale-100"
-            leave-active-class="ease-in duration-200"
-            leave-from-class="opacity-100 translate-y-0 sm:scale-100"
-            leave-to-class="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+      <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+        <Transition
+          enter-active-class="ease-out duration-150"
+          enter-from-class="opacity-0 scale-95"
+          enter-to-class="opacity-100 scale-100"
+          leave-active-class="ease-in duration-100"
+          leave-from-class="opacity-100 scale-100"
+          leave-to-class="opacity-0 scale-95"
+        >
+          <div
+            v-show="show"
+            class="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:p-6"
+            :class="maxWidthClass"
           >
             <div
-              v-show="show"
-              class="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:p-6"
-              :class="maxWidthClass"
+              v-if="closeable"
+              class="absolute right-0 top-0 pr-4 pt-4"
             >
-              <div
-                v-if="closeable"
-                class="absolute right-0 top-0 pr-4 pt-4"
+              <button
+                type="button"
+                class="rounded-md bg-white text-stone-400 hover:text-stone-500 focus:outline-none focus:ring-2 focus:ring-stone-500 focus:ring-offset-2 transition-colors"
+                @click="close"
               >
-                <button
-                  type="button"
-                  class="rounded-md bg-white text-stone-400 hover:text-stone-500 focus:outline-none focus:ring-2 focus:ring-stone-500 focus:ring-offset-2 transition-colors"
-                  @click="close"
+                <span class="sr-only">Close</span>
+                <svg
+                  class="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
                 >
-                  <span class="sr-only">Close</span>
-                  <svg
-                    class="h-6 w-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </button>
-              </div>
-
-              <slot v-if="showSlot" />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
             </div>
-          </Transition>
-        </div>
+
+            <slot v-if="showSlot" />
+          </div>
+        </Transition>
       </div>
-    </Transition>
+    </div>
   </Teleport>
 </template>

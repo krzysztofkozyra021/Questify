@@ -8,7 +8,13 @@ import { Link, useForm } from '@inertiajs/vue3'
 import { useTranslation } from '@/Composables/useTranslation'
 import Header from '@/Components/Header.vue'
 import Footer from '@/Components/Footer.vue'
+import { useHead } from '@vueuse/head'
+
 const { trans } = useTranslation()
+
+useHead({
+  title: trans('Register') + ' | Questify'
+})
 
 const form = useForm({
   name: '',
@@ -48,7 +54,7 @@ const submit = () => {
             <h2 class="text-3xl font-bold text-center text-amber-50 mb-8">{{ trans('Sign up') }}</h2>
             <form @submit.prevent="submit" class="space-y-6">
               <div>
-                <InputLabel for="name" :value="trans('Name')" class="text-amber-50" />
+                <InputLabel for="name" :value="trans('Username')" class="text-amber-50" />
                 <TextInput
                   id="name"
                   v-model="form.name"

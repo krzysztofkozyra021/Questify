@@ -167,6 +167,9 @@ const addTask = (type) => {
     };
     
     router.post('/tasks/habits/store', formData, {
+      preserveScroll: true,
+      preserveState: true,
+      only: ['userStatistics', 'habits'],
       onSuccess: () => {
         newHabit.value = '';
         addNotification(trans('Habit created successfully'), 'success');
@@ -202,7 +205,11 @@ const completeHabit = (habit) => {
     preserveState: true,
     only: ['userStatistics', 'habits'],
     onSuccess: () => {
-      addNotification('+ ' + getHabitExperience(habit) + ' ' + trans('XP'), 'info');
+      addNotification('+ ' + getHabitExperience(habit) + ' ' + trans('XP'), 'exp');
+      addNotification(trans('- ') + calculateHabitEnergyPenalty(habit).toString() + ' ' + trans('EP'), 'energy');
+    },
+    onError: () => {
+      addNotification(trans('Failed to complete habit'), 'error');
     }
   });
 };
@@ -215,7 +222,14 @@ const habitNotCompleted = (habit) => {
       preserveScroll: true,
       preserveState: true,
       only: ['userStatistics', 'habits'],
-      onSuccess: () => {}
+      onSuccess: () => {
+        if(props.userStats.current_health > 0) {
+          addNotification(trans('- ') + calculateHabitHealthPenalty(habit).toString() + ' ' + trans('HP'), 'health');
+        }
+      },
+      onError: () => {
+        addNotification(trans('Failed to not complete habit'), 'error');
+      }
     });
 };
 
@@ -240,6 +254,7 @@ const confirmDelete = () => {
         activeDropdown.value = null;
         habitToDelete.value = null;
         addNotification(trans('Habit deleted successfully'), 'success');
+        showDeleteConfirmationModal.value = false;
       },
       onError: (errors) => {
         errorMessage.value = errors.message || trans('Failed to delete habit');

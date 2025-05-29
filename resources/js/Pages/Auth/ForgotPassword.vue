@@ -7,8 +7,14 @@ import Preloader from '@/Components/Preloader.vue'
 import { Head, useForm, Link } from '@inertiajs/vue3'
 import { useTranslation } from '@/Composables/useTranslation'
 import Footer from '@/Components/Footer.vue'
+import Header from '@/Components/Header.vue'
+import { useHead } from '@vueuse/head'
 
 const { trans } = useTranslation()
+
+useHead({
+  title: trans('Forgot Password') + ' | Questify'
+})
 
 defineProps({
   status: {
@@ -29,24 +35,7 @@ const submit = () => {
 <template>
   <Preloader />
   <div class="min-h-screen bg-stone-900 flex flex-col">
-    <!-- Header -->
-    <header class="bg-stone-900 shadow-lg">
-      <div class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
-        <div class="flex items-center">
-          <Link :href="route('dashboard')">
-            <img src="/images/logo.png" alt="Questify Logo" class="h-8 sm:h-10 w-auto" />
-          </Link>
-        </div>
-        <div class="flex items-center space-x-4">
-          <Link
-            :href="route('login')"
-            class="block px-4 py-2 text-amber-50 hover:bg-stone-700 transition-colors sm:px-6 sm:py-2 bg-stone-600 hover:bg-stone-700 rounded-lg font-bold"
-          >
-            {{ trans('Log in') }}
-          </Link>
-        </div>
-      </div>
-    </header>
+    <Header :showPlayerPanel="false" />
 
     <div class="flex-1 container mx-auto px-4 sm:px-6 flex items-center">
       <div class="max-w-6xl mx-auto flex flex-col lg:flex-row gap-8 lg:gap-12 items-center w-full">

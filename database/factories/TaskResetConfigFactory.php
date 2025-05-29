@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Factories;
 
 use App\Models\TaskResetConfig;
@@ -11,34 +13,38 @@ class TaskResetConfigFactory extends Factory
 
     public function definition(): array
     {
-        $frequencyTypes = ['daily', 'weekly', 'monthly', 'yearly', 'custom'];
+        $frequencyTypes = ["daily", "weekly", "monthly", "yearly", "custom"];
         $frequencyType = $this->faker->randomElement($frequencyTypes);
 
         $data = [
-            'name' => ucfirst($frequencyType),
-            'frequency_type' => $frequencyType,
-            'period' => 1,
-            'period_unit' => 'day',
-            'reset_time' => '00:00:00',
+            "name" => ucfirst($frequencyType),
+            "frequency_type" => $frequencyType,
+            "period" => 1,
+            "period_unit" => "day",
+            "reset_time" => "00:00:00",
         ];
 
         switch ($frequencyType) {
-            case 'weekly':
-                $data['days_of_week'] = json_encode([1]); // Monday
+            case "weekly":
+                $data["days_of_week"] = json_encode([1]); // Monday
+
                 break;
-            case 'monthly':
-                $data['day_of_month'] = 1;
+            case "monthly":
+                $data["day_of_month"] = 1;
+
                 break;
-            case 'yearly':
-                $data['day_of_month'] = 1;
-                $data['month'] = 1;
+            case "yearly":
+                $data["day_of_month"] = 1;
+                $data["month"] = 1;
+
                 break;
-            case 'custom':
-                $data['period'] = $this->faker->numberBetween(2, 7);
-                $data['period_unit'] = $this->faker->randomElement(['day', 'week', 'month']);
+            case "custom":
+                $data["period"] = $this->faker->numberBetween(2, 7);
+                $data["period_unit"] = $this->faker->randomElement(["day", "week", "month"]);
+
                 break;
         }
 
         return $data;
     }
-} 
+}

@@ -2,6 +2,9 @@
   import { ref } from 'vue';
   import { router } from '@inertiajs/vue3';
   import { useTranslation } from '@/Composables/useTranslation';
+  import { useNotification } from '@/Composables/useNotification';
+
+  const { addNotification } = useNotification();
 
   const { trans } = useTranslation();
 
@@ -37,13 +40,18 @@
       ...form.value,
       tags: form.value.tags ? form.value.tags.split(',').map(t => t.trim()).filter(Boolean) : [],
     }, {
+      preserveScroll: true,
+      preserveState: true,
+      only: ['userStatistics', 'habits'],
       onSuccess: () => {
         loading.value = false;
         emit('edited');
+        addNotification(trans('Habit updated successfully'), 'success');
       },
       onError: (errors) => {
         console.error('Request failed with errors:', errors);
         loading.value = false;
+        addNotification(trans('Failed to update habit'), 'error');
       }
     });
   }

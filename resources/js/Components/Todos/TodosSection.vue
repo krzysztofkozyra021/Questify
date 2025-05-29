@@ -111,6 +111,9 @@ const addTodo = () => {
       type: 'todo',
     };
     router.post('/tasks/todos/store', formData, {
+      preserveScroll: true,
+      preserveState: true,
+      only: ['userStatistics', 'todoTasks'],
       onSuccess: () => {
         newTodo.value = '';
         addNotification(trans('Todo task created successfully'), 'success');
@@ -128,10 +131,13 @@ const completeTodo = (todo) => {
   router.post(`/tasks/todos/${todo.id}/complete`, {
     is_completed: todo.is_completed,
   }, {
+    preserveScroll: true,
+    preserveState: true,
+    only: ['userStatistics', 'todoTasks'],
     onSuccess: () => {
-      addNotification('+ ' + getTodoExperience(todo) + ' ' + trans('XP'), 'info');
+      addNotification('+ ' + getTodoExperience(todo) + ' ' + trans('XP'), 'exp');
     },
-    onError: (errors) => {
+    onError: () => {
       addNotification(trans('Failed to complete todo'), 'error');
     }
   });
@@ -176,6 +182,7 @@ const confirmDelete = () => {
         activeDropdown.value = null;
         todoToDelete.value = null;
         addNotification(trans('Todo deleted successfully'), 'success');
+        showDeleteConfirmationModal.value = false;
       },
       onError: (errors) => {
         errorMessage.value = errors.message || trans('Failed to delete todo');
@@ -196,6 +203,7 @@ const cancelDelete = () => {
     <CreateTodoModal
       :show="showCreateTodoModal"
       @close="showCreateTodoModal = false"
+      @created="showCreateTodoModal = false; newTodo = ''"
       :difficulties="difficulties"
       :default-todo-experience-reward="DEFAULT_TODO_EXPERIENCE_REWARD"
     />
