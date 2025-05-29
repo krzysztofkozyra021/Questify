@@ -14,8 +14,15 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserStatisticsController;
 use Illuminate\Support\Facades\Route;
 
-// Public routes
-Route::get("/", fn() => redirect()->route("register"));
+require __DIR__ . "/auth.php";
+
+Route::get("/", function() {
+    if(!auth()->check()) {
+        return inertia("Auth/Register");
+    }
+    return redirect()->route("dashboard");
+})->name("home");
+
 Route::get("/language/{locale}", [LanguageController::class, "switch"])->name("language.switch");
 
 // Information pages
@@ -33,10 +40,6 @@ Route::post("/report/feature", [SupportController::class, "sendFeatureReport"])-
 Route::get("/report/bug", [SupportController::class, "bug"])->name("report.bug");
 Route::post("/report/bug", [SupportController::class, "sendBugReport"])->name("report.bug.send");
 
-
-
-require __DIR__ . "/auth.php";
-
 // Routes requiring authentication
 Route::middleware(["auth"])->group(function (): void {
     // Class selection (post-registration, one-time only)
@@ -44,7 +47,7 @@ Route::middleware(["auth"])->group(function (): void {
     Route::post("/select-class", [ClassSelectionController::class, "store"])->name("select-class.store");
 
     // Dashboard - Main game interface
-    Route::get("/", [DashboardController::class, "index"])->name("dashboard");
+    Route::get("/dashboard", [DashboardController::class, "index"])->name("dashboard");
     Route::get("/motivational-quote/{locale}", [DashboardController::class, "getMotivationalQuote"])->name("dashboard.getMotivationalQuote");
 
     // Tasks - User-specific tasks
