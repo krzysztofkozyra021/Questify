@@ -1,25 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Middleware;
 
+use App\Services\TaskService;
 use Closure;
 use Illuminate\Http\Request;
-use App\Services\TaskService;
 use Symfony\Component\HttpFoundation\Response;
 
 class CheckTaskResets
 {
-    protected $taskService;
-
-    public function __construct(TaskService $taskService)
-    {
-        $this->taskService = $taskService;
-    }
+    public function __construct(
+        protected TaskService $taskService,
+    ) {}
 
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -30,4 +29,4 @@ class CheckTaskResets
 
         return $next($request);
     }
-} 
+}

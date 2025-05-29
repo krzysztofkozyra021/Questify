@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use App\Models\Tag;
@@ -10,9 +12,9 @@ class TagService
 {
     public function getUserTags(User $user): Collection
     {
-        return Tag::whereHas('tasks', function ($query) use ($user) {
-            $query->whereHas('users', function ($q) use ($user) {
-                $q->where('users.id', $user->id);
+        return Tag::whereHas("tasks", function ($query) use ($user): void {
+            $query->whereHas("users", function ($q) use ($user): void {
+                $q->where("users.id", $user->id);
             });
         })->get();
     }
@@ -20,10 +22,10 @@ class TagService
     public function getTasksByTag(Tag $tag, User $user): Collection
     {
         return $tag->tasks()
-            ->whereHas('users', function ($query) use ($user) {
-                $query->where('users.id', $user->id);
+            ->whereHas("users", function ($query) use ($user): void {
+                $query->where("users.id", $user->id);
             })
-            ->with(['difficulty', 'resetConfig'])
+            ->with(["difficulty", "resetConfig"])
             ->get();
     }
 
@@ -41,4 +43,4 @@ class TagService
     {
         $tag->delete();
     }
-} 
+}

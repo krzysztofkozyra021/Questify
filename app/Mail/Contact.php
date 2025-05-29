@@ -1,27 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
 class Contact extends Mailable
 {
-    use Queueable, SerializesModels;
-
-    public array $data;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(array $data)
-    {
-        $this->data = $data;
-    }
+    public function __construct(
+        public array $data,
+    ) {}
 
     /**
      * Get the message envelope.
@@ -29,7 +29,7 @@ class Contact extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Contact from ' . $this->data['name'],
+            subject: "Contact from " . $this->data["name"],
         );
     }
 
@@ -125,30 +125,30 @@ class Contact extends Mailable
             <body>
                 <div class='container'>
                     <div class='header'>
-                        <img src='" . asset('images/logo.png') . "' alt='Questify Logo' class='logo'>
+                        <img src='" . asset("images/logo.png") . "' alt='Questify Logo' class='logo'>
                         <h1>New Contact Form Submission</h1>
                     </div>
                     
                     <div class='content'>
                         <div class='field'>
                             <strong>Name</strong>
-                            <div class='field-value'>{$this->data['name']}</div>
+                            <div class='field-value'>{$this->data["name"]}</div>
                         </div>
                         
                         <div class='field'>
                             <strong>Email</strong>
-                            <div class='field-value'>{$this->data['email']}</div>
+                            <div class='field-value'>{$this->data["email"]}</div>
                         </div>
                         
                         <div class='field'>
                             <strong>Subject</strong>
-                            <div class='field-value'>{$this->data['subject']}</div>
+                            <div class='field-value'>{$this->data["subject"]}</div>
                         </div>
                         
                         <div class='message-section'>
                             <h2>Message</h2>
                             <div class='message-content'>
-                                {$this->data['message']}
+                                {$this->data["message"]}
                             </div>
                         </div>
                     </div>
@@ -162,14 +162,14 @@ class Contact extends Mailable
         ";
 
         return new Content(
-            htmlString: $html
+            htmlString: $html,
         );
     }
 
     /**
      * Get the attachments for the message.
      *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
+     * @return array<int, Attachment>
      */
     public function attachments(): array
     {

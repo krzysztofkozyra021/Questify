@@ -51,7 +51,7 @@ class AuthenticatedSessionController extends Controller
     public function destroy(Request $request): RedirectResponse
     {
         $user = Auth::user();
-        $locale = session('locale');
+        $locale = session("locale");
 
         Auth::guard("web")->logout();
 
@@ -59,7 +59,7 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerateToken();
 
         if ($locale) {
-            session()->put('locale', $locale);
+            session()->put("locale", $locale);
         }
 
         if ($user) {

@@ -20,7 +20,7 @@ class LanguageController extends Controller
         session()->put("locale", $locale);
 
         // Also store in cookie for persistence across sessions
-        cookie()->queue('locale', $locale, 60 * 24 * 30); // 30 days
+        cookie()->queue("locale", $locale, 60 * 24 * 30); // 30 days
 
         // Set the application locale
         App::setLocale($locale);

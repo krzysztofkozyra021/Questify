@@ -11,6 +11,7 @@ use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\RedirectIfAuthenticated;
 use App\Http\Middleware\SetLocale;
 use App\Http\Middleware\VerifyCsrfToken;
+use App\Services\TaskService;
 use Illuminate\Auth\Middleware\AuthenticateWithBasicAuth;
 use Illuminate\Auth\Middleware\Authorize;
 use Illuminate\Auth\Middleware\EnsureEmailIsVerified;
@@ -81,13 +82,13 @@ class Kernel extends HttpKernel
         "verified" => EnsureEmailIsVerified::class,
     ];
 
-    protected function schedule(Schedule $schedule)
-{
-    // Check for tasks that need to be reset every 10 minutes
-    $schedule->call(function () {
-        $taskService = app(\App\Services\TaskService::class);
-        $resetCount = $taskService->resetDueTasks();
-        \Log::info("Reset {$resetCount} tasks");
-    })->everyTenMinutes();
-}
+    protected function schedule(Schedule $schedule): void
+    {
+        // Check for tasks that need to be reset every 10 minutes
+        $schedule->call(function (): void {
+            $taskService = app(TaskService::class);
+            $resetCount = $taskService->resetDueTasks();
+            \Log::info("Reset {$resetCount} tasks");
+        })->everyTenMinutes();
+    }
 }

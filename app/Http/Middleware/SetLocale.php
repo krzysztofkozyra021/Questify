@@ -19,7 +19,7 @@ class SetLocale
     public function handle(Request $request, Closure $next): Response
     {
         // Get locale from session, cookie, or default to 'en'
-        $locale = session('locale') ?? $request->cookie('locale') ?? 'en';
+        $locale = session("locale") ?? $request->cookie("locale") ?? "en";
 
         // Set the application locale
         App::setLocale($locale);

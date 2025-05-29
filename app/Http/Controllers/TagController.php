@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Models\Tag;
-use App\Models\Task;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -12,21 +13,21 @@ class TagController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $tags = Tag::whereHas('tasks', function ($query) use ($user) {
-            $query->whereHas('users', function ($q) use ($user) {
-                $q->where('users.id', $user->id);
+        $tags = Tag::whereHas("tasks", function ($query) use ($user): void {
+            $query->whereHas("users", function ($q) use ($user): void {
+                $q->where("users.id", $user->id);
             });
         })->get();
 
-        return Inertia::render('Tags/Index', [
-            'tags' => $tags
+        return Inertia::render("Tags/Index", [
+            "tags" => $tags,
         ]);
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:50|unique:tags,name'
+            "name" => "required|string|max:50|unique:tags,name",
         ]);
 
         $tag = Tag::create($validated);
@@ -38,22 +39,22 @@ class TagController extends Controller
     {
         $user = auth()->user();
         $tasks = $tag->tasks()
-            ->whereHas('users', function ($query) use ($user) {
-                $query->where('users.id', $user->id);
+            ->whereHas("users", function ($query) use ($user): void {
+                $query->where("users.id", $user->id);
             })
-            ->with(['difficulty', 'resetConfig'])
+            ->with(["difficulty", "resetConfig"])
             ->get();
 
-        return Inertia::render('Tags/Show', [
-            'tag' => $tag,
-            'tasks' => $tasks
+        return Inertia::render("Tags/Show", [
+            "tag" => $tag,
+            "tasks" => $tasks,
         ]);
     }
 
     public function update(Request $request, Tag $tag)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:50|unique:tags,name,' . $tag->id
+            "name" => "required|string|max:50|unique:tags,name," . $tag->id,
         ]);
 
         $tag->update($validated);
@@ -64,6 +65,7 @@ class TagController extends Controller
     public function destroy(Tag $tag)
     {
         $tag->delete();
+
         return back();
     }
 
@@ -71,14 +73,14 @@ class TagController extends Controller
     {
         $user = auth()->user();
         $tasks = $tag->tasks()
-            ->whereHas('users', function ($query) use ($user) {
-                $query->where('users.id', $user->id);
+            ->whereHas("users", function ($query) use ($user): void {
+                $query->where("users.id", $user->id);
             })
-            ->with(['difficulty', 'resetConfig'])
+            ->with(["difficulty", "resetConfig"])
             ->get();
 
         return response()->json([
-            'tasks' => $tasks
+            "tasks" => $tasks,
         ]);
     }
-} 
+}

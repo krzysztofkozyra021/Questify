@@ -11,25 +11,24 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class ProfileController extends Controller
 {
     public function __construct(
-        private readonly ProfileImageService $profileImageService
+        private readonly ProfileImageService $profileImageService,
     ) {}
 
     public function updateProfileImage(Request $request)
     {
         $request->validate([
-            'profile_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            "profile_image" => "required|image|mimes:jpeg,png,jpg,gif|max:2048",
         ]);
 
         $result = $this->profileImageService->updateProfileImage(
             Auth::user(),
-            $request->file('profile_image')
+            $request->file("profile_image"),
         );
 
         return back()->with($result);
@@ -38,6 +37,7 @@ class ProfileController extends Controller
     public function getProfileImage(Request $request)
     {
         $result = $this->profileImageService->getProfileImageUrl(Auth::user());
+
         return response()->json($result);
     }
 
@@ -78,7 +78,7 @@ class ProfileController extends Controller
         ]);
 
         $user = $request->user();
-        $locale = session('locale'); // Store the current locale
+        $locale = session("locale"); // Store the current locale
 
         // Delete user statistics first
         if ($user->userStatistics) {
@@ -94,7 +94,7 @@ class ProfileController extends Controller
 
         // Restore the locale after session regeneration
         if ($locale) {
-            session()->put('locale', $locale);
+            session()->put("locale", $locale);
         }
 
         return Redirect::to("/");

@@ -16,10 +16,11 @@ use Illuminate\Support\Facades\Route;
 
 require __DIR__ . "/auth.php";
 
-Route::get("/", function() {
-    if(!auth()->check()) {
+Route::get("/", function () {
+    if (!auth()->check()) {
         return inertia("Auth/Register");
     }
+
     return redirect()->route("dashboard");
 })->name("home");
 
@@ -111,5 +112,4 @@ Route::middleware(["auth"])->group(function (): void {
     // Settings
     Route::get("/settings", [SettingsController::class, "index"])->name("settings");
     Route::put("/settings", [SettingsController::class, "update"])->name("settings.update");
-
 });

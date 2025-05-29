@@ -51,7 +51,6 @@ class UserStatistics extends Model
             // Calculate new experience threshold for next level
             $this->next_level_experience = $this->calculateNextLevelExperience($this->level);
 
-
             // Calculate health and energy increases
             $healthIncrease = $this->calculateHealthIncrease($this->level);
             $energyIncrease = $this->calculateEnergyIncrease($this->level);
@@ -64,40 +63,6 @@ class UserStatistics extends Model
             $this->current_energy = $this->max_energy;
 
             $this->current_experience = 0;
-        }
-    }
-
-    /**
-     * Calculate health increase based on current level and tier
-     */
-    protected function calculateHealthIncrease(int $level)
-    {
-        if ($level <= 10) {
-            // Tier 1: Modest health increases
-            return 8 + (1 * $level);
-        } elseif ($level <= 25) {
-            // Tier 2: Better health increases
-            return 10 + (2 * $level);
-        } else {
-            // Tier 3: Significant health increases
-            return 15 + (3 * $level);
-        }
-    }
-
-    /**
-     * Calculate energy increase based on current level and tier
-     */
-    protected function calculateEnergyIncrease(int $level)
-    {
-        if ($level <= 10) {
-            // Tier 1: Modest energy increases
-            return 5 + (1 * $level);
-        } elseif ($level <= 25) {
-            // Tier 2: Better energy increases
-            return 8 + (1.5 * $level);
-        } else {
-            // Tier 3: Significant energy increases
-            return 10 + (2 * $level);
         }
     }
 
@@ -115,6 +80,40 @@ class UserStatistics extends Model
     public function classAttributes(): BelongsTo
     {
         return $this->belongsTo(ClassAttribute::class, "class", "id");
+    }
+
+    /**
+     * Calculate health increase based on current level and tier
+     */
+    protected function calculateHealthIncrease(int $level)
+    {
+        if ($level <= 10) {
+            // Tier 1: Modest health increases
+            return 8 + (1 * $level);
+        } elseif ($level <= 25) {
+            // Tier 2: Better health increases
+            return 10 + (2 * $level);
+        }
+
+        // Tier 3: Significant health increases
+        return 15 + (3 * $level);
+    }
+
+    /**
+     * Calculate energy increase based on current level and tier
+     */
+    protected function calculateEnergyIncrease(int $level)
+    {
+        if ($level <= 10) {
+            // Tier 1: Modest energy increases
+            return 5 + (1 * $level);
+        } elseif ($level <= 25) {
+            // Tier 2: Better energy increases
+            return 8 + (1.5 * $level);
+        }
+
+        // Tier 3: Significant energy increases
+        return 10 + (2 * $level);
     }
 
     /**
@@ -137,17 +136,16 @@ class UserStatistics extends Model
     protected function calculateNextLevelExperience($level)
     {
         $baseXP = 100;
-    
+
         if ($level <= 10) {
             // Easy early progression - Formula: 100 * level + 25 * level
             return $baseXP * $level + $baseXP * 0.25 * $level;
         } elseif ($level <= 25) {
             // Medium difficulty mid-game - Formula: 100 + 150 * (level - 10)
             return $baseXP * 10 + $baseXP * 1.5 * ($level - 10);
-        } else {
-            // More challenging end-game - Formula: 100 + 150 * 15 + 200 * (level - 25)
-            return $baseXP * 10 + $baseXP * 1.5 * 15 + $baseXP * 2 * ($level - 25);
         }
+
+        // More challenging end-game - Formula: 100 + 150 * 15 + 200 * (level - 25)
+        return $baseXP * 10 + $baseXP * 1.5 * 15 + $baseXP * 2 * ($level - 25);
     }
-    
 }

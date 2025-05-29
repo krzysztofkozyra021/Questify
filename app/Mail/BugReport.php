@@ -1,25 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
 class BugReport extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(array $data)
-    {
-        $this->data = $data;
-    }
+    public function __construct(
+        public array $data,
+    ) {}
 
     /**
      * Get the message envelope.
@@ -27,7 +29,7 @@ class BugReport extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Bug Report',
+            subject: "Bug Report",
         );
     }
 
@@ -123,54 +125,54 @@ class BugReport extends Mailable
             <body>
                 <div class='container'>
                     <div class='header'>
-                        <img src='" . asset('images/logo.png') . "' alt='Questify Logo' class='logo'>
+                        <img src='" . asset("images/logo.png") . "' alt='Questify Logo' class='logo'>
                         <h1>New Bug Report</h1>
                     </div>
                     
                     <div class='content'>
                         <div class='field'>
                             <strong>Title</strong>
-                            <div class='field-value'>{$this->data['title']}</div>
+                            <div class='field-value'>{$this->data["title"]}</div>
                         </div>
                         
                         <div class='field'>
                             <strong>Description</strong>
-                            <div class='field-value'>{$this->data['description']}</div>
+                            <div class='field-value'>{$this->data["description"]}</div>
                         </div>
                         
                         <div class='field'>
                             <strong>Steps to reproduce</strong>
-                            <div class='field-value'>{$this->data['steps']}</div>
+                            <div class='field-value'>{$this->data["steps"]}</div>
                         </div>
                         
                         <div class='field'>
                             <strong>Expected behavior</strong>
-                            <div class='field-value'>{$this->data['expected']}</div>
+                            <div class='field-value'>{$this->data["expected"]}</div>
                         </div>
 
                          <div class='field'>
                             <strong>Actual behavior</strong>
-                            <div class='field-value'>{$this->data['actual']}</div>
+                            <div class='field-value'>{$this->data["actual"]}</div>
                         </div>
                         
                         <div class='field'>
                             <strong>Browser</strong>
-                            <div class='field-value'>{$this->data['browser']}</div>
+                            <div class='field-value'>{$this->data["browser"]}</div>
                         </div>
                         
                         <div class='field'>
                             <strong>OS</strong>
-                            <div class='field-value'>{$this->data['os']}</div>
+                            <div class='field-value'>{$this->data["os"]}</div>
                         </div>
 
                         <div class='field'>
                             <strong>Category</strong>
-                            <div class='field-value'>{$this->data['category']}</div>
+                            <div class='field-value'>{$this->data["category"]}</div>
                         </div>
                         
                         <div class='field'>
                             <strong>Priority</strong>
-                            <div class='field-value'>{$this->data['priority']}</div>
+                            <div class='field-value'>{$this->data["priority"]}</div>
                         </div>
                         
                     </div>
@@ -184,14 +186,14 @@ class BugReport extends Mailable
         ";
 
         return new Content(
-            htmlString: $html
+            htmlString: $html,
         );
     }
 
     /**
      * Get the attachments for the message.
      *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
+     * @return array<int, Attachment>
      */
     public function attachments(): array
     {
