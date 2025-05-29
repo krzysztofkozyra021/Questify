@@ -78,6 +78,7 @@ class ProfileController extends Controller
         ]);
 
         $user = $request->user();
+        $locale = session('locale'); // Store the current locale
 
         // Delete user statistics first
         if ($user->userStatistics) {
@@ -90,6 +91,11 @@ class ProfileController extends Controller
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
+        // Restore the locale after session regeneration
+        if ($locale) {
+            session()->put('locale', $locale);
+        }
 
         return Redirect::to("/");
     }
