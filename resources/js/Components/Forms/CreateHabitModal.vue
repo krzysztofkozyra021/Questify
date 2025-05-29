@@ -5,7 +5,7 @@
   import { useNotification } from '@/Composables/useNotification';
   const { trans } = useTranslation();
 
-  const DEFAULT_EXPERIENCE_REWARD = 5;
+  const DEFAULT_EXPERIENCE_REWARD = 3;
   const { addNotification } = useNotification();
   const props = defineProps({
     show: Boolean,
@@ -49,11 +49,13 @@
       tags: form.value.tags.split(',').map(t => t.trim()).filter(Boolean),
       experience_reward: DEFAULT_EXPERIENCE_REWARD,
     }, {
+      preserveScroll: true,
+      preserveState: true,
+      only: ['userStatistics', 'habits'],
       onSuccess: () => {
         loading.value = false;
         resetForm();
         emit('created');
-        close();
         addNotification(trans('Habit created successfully'), 'success');
       },
       onError: () => {
