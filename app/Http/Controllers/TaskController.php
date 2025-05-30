@@ -9,6 +9,7 @@ use App\Services\TaskService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Cache;
 
 class TaskController extends Controller
 {
@@ -41,6 +42,8 @@ class TaskController extends Controller
 
         $task = $this->taskService->createTask($user, $validated);
 
+        $this->clearDashboardCache();
+
         return redirect()->back();
     }
 
@@ -60,6 +63,8 @@ class TaskController extends Controller
         ]);
 
         $task = $this->taskService->createTask($user, $validated);
+        
+        $this->clearDashboardCache();
 
         return redirect()->back();
     }
@@ -83,6 +88,8 @@ class TaskController extends Controller
             unset($validated["tags"]);
 
             $this->taskService->updateHabit($habit, $validated, $tags);
+
+            $this->clearDashboardCache();
 
             return back()->with("success", "Habit updated successfully");
         } catch (ValidationException $e) {
@@ -118,6 +125,8 @@ class TaskController extends Controller
             unset($validated["tags"]);
 
             $this->taskService->updateTodo($todo, $validated, $tags);
+            
+            $this->clearDashboardCache();
 
             return back()->with("success", "Todo updated successfully");
         } catch (ValidationException $e) {
@@ -137,12 +146,16 @@ class TaskController extends Controller
     {
         $habit->delete();
 
+        $this->clearDashboardCache();
+
         return back();
     }
 
     public function completeHabit(Task $habit)
     {
         $this->taskService->completeHabit($habit);
+
+        $this->clearDashboardCache();
 
         return back()->with("success", "Habit completed successfully");
     }
@@ -151,6 +164,8 @@ class TaskController extends Controller
     {
         try {
             $this->taskService->completeTodo($todo);
+            
+            $this->clearDashboardCache();
 
             return back()->with("success", "Todo completed successfully");
         } catch (\Exception $e) {
@@ -167,7 +182,9 @@ class TaskController extends Controller
     {
         $this->taskService->habitNotCompleted($habit);
 
-        return back();
+        $this->clearDashboardCache();
+
+        return back()->with("success", "Habit deleted successfully");
     }
 
     public function getUserRemainingHealth()
@@ -194,14 +211,16 @@ class TaskController extends Controller
             "progress" => 0,
         ]);
 
-        return back();
+        return back()->with("success", "Task reset successfully");
     }
 
     public function destroy(Task $task)
     {
         $task->delete();
 
-        return back();
+        $this->clearDashboardCache();
+
+        return back()->with("success", "Task deleted successfully");
     }
 
     public function create()
@@ -215,6 +234,8 @@ class TaskController extends Controller
     {
         try {
             $todo->delete();
+            
+            $this->clearDashboardCache();
 
             return back()->with("success", "Todo deleted successfully");
         } catch (\Exception $e) {
@@ -225,5 +246,10 @@ class TaskController extends Controller
 
             return back()->withErrors(["message" => $e->getMessage()]);
         }
+    }
+
+    public function clearDashboardCache()
+    {
+        Cache::forget('dashboard_data_' . auth()->user()->id);
     }
 }
