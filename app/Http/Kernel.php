@@ -56,7 +56,7 @@ class Kernel extends HttpKernel
         ],
 
         "api" => [
-            // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             "throttle:api",
             SubstituteBindings::class,
         ],
@@ -84,11 +84,5 @@ class Kernel extends HttpKernel
 
     protected function schedule(Schedule $schedule): void
     {
-        // Check for tasks that need to be reset every 10 minutes
-        $schedule->call(function (): void {
-            $taskService = app(TaskService::class);
-            $resetCount = $taskService->resetDueTasks();
-            \Log::info("Reset {$resetCount} tasks");
-        })->everyTenMinutes();
     }
 }
