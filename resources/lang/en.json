@@ -416,5 +416,12 @@
     "These credentials do not match our records.": "These credentials do not match our records.",
     "The current password field is required.": "The current password field is required.",
     "The current password is incorrect.": "The current password is incorrect.",
-    "We can't find a user with that email address.": "We can't find a user with that email address."
+    "We can't find a user with that email address.": "We can't find a user with that email address.",
+    "Dashboard data synced successfully": "Dashboard data synced successfully",
+    "Failed to sync dashboard data. Please try again later.": "Failed to sync dashboard data. Please try again later.",
+    "Wait 10 seconds before syncing again.": "Wait 10 seconds before syncing again.",
+    "Syncing dashboard data...": "Syncing dashboard data...",
+    "Next sync in": "Next sync in",
+    "Sync": "Sync",
+    "Syncing...": "Syncing..."
 }
