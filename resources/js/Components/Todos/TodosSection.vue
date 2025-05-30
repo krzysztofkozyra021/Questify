@@ -49,6 +49,7 @@ const isSearchMode = ref(false);
 const tempInputValue = ref('');
 const remainingHealth = computed(() => props.userStats.current_health);
 const localTodos = ref([]);
+const checkboxStates = ref({});
 
 // Watch for changes in todoTasks prop
 watch(() => props.todoTasks, (newTodos) => {
@@ -127,12 +128,10 @@ const addTodo = () => {
 
 
 const completeTodo = (todo) => {
-
-  if(remainingHealth.value <  todo.overdue_days) {
+  if(remainingHealth.value < todo.overdue_days) {
     errorMessage.value = trans('You do not have enough health to complete this task.');
     showErrorModal.value = true;
-    const checkbox = document.getElementById(todo.id);
-    if (checkbox) checkbox.checked = false;
+    checkboxStates.value[todo.id] = todo.is_completed;
     return;
   }
 
@@ -151,6 +150,7 @@ const completeTodo = (todo) => {
     },
     onError: () => {
       addNotification(trans('Failed to complete todo'), 'error');
+      checkboxStates.value[todo.id] = todo.is_completed;
     }
   });
 };
@@ -327,7 +327,7 @@ const cancelDelete = () => {
             <input 
               :id="todo.id"
               type="checkbox" 
-              :checked="todo.is_completed" 
+              :checked="checkboxStates[todo.id] !== undefined ? checkboxStates[todo.id] : todo.is_completed" 
               @change="completeTodo(todo)" 
               class="w-4 h-4 md:w-6 md:h-6 rounded-md border-2 border-white cursor-pointer transition-all duration-200 ease-in-out
               checked:bg-white checked:border-white focus:ring-2 focus:ring-offset-2 focus:ring-white focus:outline-none

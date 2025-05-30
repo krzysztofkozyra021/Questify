@@ -184,7 +184,7 @@ class TaskController extends Controller
 
         $this->clearDashboardCache();
 
-        return back()->with("success", "Habit deleted successfully");
+        return back()->with("success", "Habit set to not completed");
     }
 
     public function getUserRemainingHealth()

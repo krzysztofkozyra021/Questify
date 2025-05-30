@@ -35,7 +35,6 @@ class IncrementOverdueDays extends Command
 
         foreach ($overdueTasks as $task) {
             $task->increment("overdue_days");
-            $task->due_date = Carbon::now()->subDays($task->overdue_days);
             $task->save();
         }
 

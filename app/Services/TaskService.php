@@ -46,7 +46,7 @@ class TaskService
         $startDate = Carbon::parse($task->start_date)->setTimezone('UTC')->startOfDay();
         $now = Carbon::now()->setTimezone('UTC')->startOfDay();
         
-        Log::info('Calculating overdue days:', [
+        Log::debug('Calculating overdue days:', [
             'task_id' => $task->id,
             'due_date' => $dueDate->toDateTimeString(),
             'start_date' => $startDate->toDateTimeString(),
