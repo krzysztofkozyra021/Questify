@@ -7,6 +7,7 @@ import { router } from '@inertiajs/vue3';
 import ErrorModal from '@/Components/ErrorModal.vue';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue';
 import { useNotification } from '@/Composables/useNotification';
+import { syncDashboardData } from '@/Composables/syncDashboardData';
 
 
 const { trans } = useTranslation();
@@ -207,6 +208,12 @@ const completeHabit = (habit) => {
     onSuccess: () => {
       addNotification('+ ' + getHabitExperience(habit) + ' ' + trans('XP'), 'exp');
       addNotification(trans('- ') + calculateHabitEnergyPenalty(habit).toString() + ' ' + trans('EP'), 'energy');
+      // Trigger immediate sync after completion
+      syncDashboardData((newData) => {
+        if (newData.tasks?.habits) {
+          habits.value = Object.values(newData.tasks.habits);
+        }
+      });
     },
     onError: () => {
       addNotification(trans('Failed to complete habit'), 'error');
@@ -215,22 +222,30 @@ const completeHabit = (habit) => {
 };
 
 const habitNotCompleted = (habit) => {
-    habit.is_completed = !habit.is_completed;
-    router.post(`/tasks/habits/${habit.id}/not-completed`, {
-      is_completed: !habit.is_completed,
-    }, {
-      preserveScroll: true,
-      preserveState: true,
-      only: ['userStatistics', 'habits'],
-      onSuccess: () => {
-        if(props.userStats.current_health > 0) {
-          addNotification(trans('- ') + calculateHabitHealthPenalty(habit).toString() + ' ' + trans('HP'), 'health');
+
+  if(remainingHealth.value <= 0 || remainingHealth.value < calculateHabitHealthPenalty(habit)) {
+    errorMessage.value = trans('You do not have enough health to complete this task.');
+    showErrorModal.value = true;
+    return;
+  }
+
+  router.post(`/tasks/habits/${habit.id}/not-completed`, {}, {
+    preserveScroll: true,
+    preserveState: true,
+    only: ['userStatistics', 'habits'],
+    onSuccess: () => {
+      addNotification(trans('- ') + calculateHabitHealthPenalty(habit).toString() + ' ' + trans('HP'), 'health');
+      // Trigger immediate sync after not completed
+      syncDashboardData((newData) => {
+        if (newData.tasks?.habits) {
+          habits.value = Object.values(newData.tasks.habits);
         }
-      },
-      onError: () => {
-        addNotification(trans('Failed to not complete habit'), 'error');
-      }
-    });
+      });
+    },
+    onError: () => {
+      addNotification(trans('Failed to update habit'), 'error');
+    }
+  });
 };
 
 const openEditHabitModal = (habit) => {

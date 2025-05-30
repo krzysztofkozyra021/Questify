@@ -11,6 +11,7 @@ use App\Models\TaskResetConfig;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 
 class TaskService
@@ -31,8 +32,44 @@ class TaskService
 
     public function calculateExperienceReward(Task $task): int
     {
+        
         // Base experience reward is difficulty level * 10
-        return round($task->difficulty->difficulty_level * 10);
+        return intval(round($task->difficulty->difficulty_level * 10));
+    }
+
+    public function calculateOverdueDays(Task $task): int
+    {
+        if (!$task->due_date) return 0;
+        
+        // Use UTC for all calculations
+        $dueDate = Carbon::parse($task->due_date)->setTimezone('UTC')->startOfDay();
+        $startDate = Carbon::parse($task->start_date)->setTimezone('UTC')->startOfDay();
+        $now = Carbon::now()->setTimezone('UTC')->startOfDay();
+        
+        Log::debug('Calculating overdue days:', [
+            'task_id' => $task->id,
+            'due_date' => $dueDate->toDateTimeString(),
+            'start_date' => $startDate->toDateTimeString(),
+            'now' => $now->toDateTimeString(),
+            'is_future' => $startDate->isFuture(),
+            'is_gte' => $now->gte($dueDate),
+            'diff_days' => $dueDate->diffInDays($now)
+        ]);
+        
+        // If the task hasn't started yet, return 0
+        if ($startDate->isFuture()) return 0;
+        
+        // If current date is greater than or equal to due date, calculate days between due date and now
+        if ($now->gte($dueDate)) {
+            $days = intval($dueDate->diffInDays($now));
+            Log::info('Overdue days calculated:', [
+                'task_id' => $task->id,
+                'days' => $days
+            ]);
+            return $days;
+        }
+        
+        return 0;
     }
 
     public function createTask(User $user, array $data): Task
@@ -52,11 +89,13 @@ class TaskService
                 // Create the task
                 $task = Task::create($data);
                 $task->experience_reward = $this->calculateExperienceReward($task);
+                $task->overdue_days = $this->calculateOverdueDays($task);
                 $task->save();
 
                 \Log::info("Task created:", [
                     "task_id" => $task->id,
                     "type" => $task->type,
+                    "overdue_days" => $task->overdue_days,
                 ]);
 
                 // Set next_reset_at if there's a reset configuration
@@ -190,7 +229,7 @@ class TaskService
         $userStats = $habit->users()->first()->userStatistics;
         $playerMaxEnergy = $userStats->max_energy;
 
-        return round(($playerMaxEnergy * 0.1) * $habit->difficulty->energy_cost);
+        return intval(round(($playerMaxEnergy * 0.1) * $habit->difficulty->energy_cost));
     }
 
     // Calculate health penalty based on player 10% of max health and task difficulty multiplier
@@ -199,8 +238,9 @@ class TaskService
         $userStats = $habit->users()->first()->userStatistics;
         $playerMaxHealth = $userStats->max_health;
 
-        return round(($playerMaxHealth * 0.1) * $habit->difficulty->health_penalty);
+        return intval(round(($playerMaxHealth * 0.1) * $habit->difficulty->health_penalty));
     }
+
 
     public function completeTodo(Task $todo): void
     {
@@ -232,8 +272,10 @@ class TaskService
 
         $userClassExpMultiplier = $userStats->classAttributes->exp_multiplier;
         $expGain = round($todo->experience_reward * $todo->difficulty->exp_multiplier * $userClassExpMultiplier);
+        $healthPenalty = $todo->overdue_days;
 
         $userStats->current_experience += $expGain;
+        $userStats->current_health = max(0, $userStats->current_health - $healthPenalty);
         $userStats->save();
     }
 
@@ -255,7 +297,14 @@ class TaskService
             // Update task
             $todo->update($data);
             $todo->experience_reward = $this->calculateExperienceReward($todo);
+            $todo->overdue_days = $this->calculateOverdueDays($todo);
             $todo->save();
+
+            \Log::info("Todo updated:", [
+                "todo_id" => $todoId,
+                "overdue_days" => $todo->overdue_days,
+            ]);
+
             // Re-fetch the task to ensure we have the latest instance
             $todo = Task::find($todoId);
 

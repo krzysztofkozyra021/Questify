@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useTranslation } from '@/Composables/useTranslation';
 import { router } from '@inertiajs/vue3';
 import ErrorModal from '@/Components/ErrorModal.vue';
@@ -7,6 +7,7 @@ import CreateTodoModal from '@/Components/Forms/CreateTodoModal.vue';
 import { useNotification } from '@/Composables/useNotification';
 import EditTodoModal from '@/Components/Forms/EditTodoModal.vue';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue';
+import { syncDashboardData } from '@/Composables/syncDashboardData';
 
 const { trans } = useTranslation();
 const { addNotification } = useNotification();
@@ -46,12 +47,21 @@ const activeDropdown = ref(null);
 const searchQuery = ref('');
 const isSearchMode = ref(false);
 const tempInputValue = ref('');
+const remainingHealth = computed(() => props.userStats.current_health);
+const localTodos = ref([]);
+const checkboxStates = ref({});
+
+// Watch for changes in todoTasks prop
+watch(() => props.todoTasks, (newTodos) => {
+  if (newTodos && typeof newTodos === 'object') {
+    const todosArray = Object.values(newTodos);
+    localTodos.value = todosArray;
+  }
+}, { deep: true, immediate: true });
 
 // Computed
-const todos = computed(() => Object.values(props.todoTasks));
-
 const todosResultFromSearchMode = computed(() => {
-  let filtered = todos.value;
+  let filtered = localTodos.value;
   // Apply search filter if in search mode
   if (isSearchMode.value && searchQuery.value) {
     const query = searchQuery.value.toLowerCase();
@@ -80,21 +90,8 @@ const toggleSearchMode = () => {
   }
 };
 
-const daysPassedAfterTodoDueDate = (todo) => {
-  if (!todo || !todo.due_date) return 0;
-  const today = new Date();
-  const dueDate = new Date(todo.due_date);
-  
-  // Set both dates to midnight for accurate day calculation
-  today.setHours(0, 0, 0, 0);
-  dueDate.setHours(0, 0, 0, 0);
-  
-  const timeDiff = today.getTime() - dueDate.getTime();
-  const daysDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
-  
-  if (daysDiff === 0) return 'today';
-  return daysDiff;
-};
+
+
 
 // Methods
 const addTodo = () => {
@@ -103,6 +100,7 @@ const addTodo = () => {
       title: newTodo.value.trim(),
       description: '',
       difficulty_level: 2,
+      overdue_days: 0,
       due_date: new Date().toISOString().slice(0, 10),
       start_date: new Date().toISOString().slice(0, 10),
       experience_reward: DEFAULT_TODO_EXPERIENCE_REWARD,
@@ -117,6 +115,7 @@ const addTodo = () => {
       onSuccess: () => {
         newTodo.value = '';
         addNotification(trans('Todo task created successfully'), 'success');
+        syncTodos();
       },
       onError: (errors) => {
         errorMessage.value = errors.message || trans('Failed to create todo task');
@@ -127,18 +126,31 @@ const addTodo = () => {
   }
 };
 
+
 const completeTodo = (todo) => {
+  if(remainingHealth.value < todo.overdue_days) {
+    errorMessage.value = trans('You do not have enough health to complete this task.');
+    showErrorModal.value = true;
+    checkboxStates.value[todo.id] = todo.is_completed;
+    return;
+  }
+
   router.post(`/tasks/todos/${todo.id}/complete`, {
-    is_completed: todo.is_completed,
+    is_completed: !todo.is_completed,
   }, {
     preserveScroll: true,
     preserveState: true,
     only: ['userStatistics', 'todoTasks'],
     onSuccess: () => {
       addNotification('+ ' + getTodoExperience(todo) + ' ' + trans('XP'), 'exp');
+      if (todo.overdue_days > 0) {
+        addNotification('- ' + todo.overdue_days + ' ' + trans('HP'), 'health');
+      }
+      syncTodos();
     },
     onError: () => {
       addNotification(trans('Failed to complete todo'), 'error');
+      checkboxStates.value[todo.id] = todo.is_completed;
     }
   });
 };
@@ -183,6 +195,7 @@ const confirmDelete = () => {
         todoToDelete.value = null;
         addNotification(trans('Todo deleted successfully'), 'success');
         showDeleteConfirmationModal.value = false;
+        syncTodos();
       },
       onError: (errors) => {
         errorMessage.value = errors.message || trans('Failed to delete todo');
@@ -192,10 +205,19 @@ const confirmDelete = () => {
   }
 };
 
+const syncTodos = () => {
+  syncDashboardData((newData) => {
+    if (newData.tasks?.todos) {
+      localTodos.value = Object.values(newData.tasks.todos);
+    }
+  });
+};
+
 const cancelDelete = () => {
   todoToDelete.value = null;
   showDeleteConfirmationModal.value = false;
 };
+
 </script>
 
 <template>
@@ -203,7 +225,7 @@ const cancelDelete = () => {
     <CreateTodoModal
       :show="showCreateTodoModal"
       @close="showCreateTodoModal = false"
-      @created="showCreateTodoModal = false; newTodo = ''"
+      @created="showCreateTodoModal = false; newTodo = ''; syncTodos()"
       :difficulties="difficulties"
       :default-todo-experience-reward="DEFAULT_TODO_EXPERIENCE_REWARD"
     />
@@ -213,7 +235,7 @@ const cancelDelete = () => {
       :todo="selectedTodo"
       :difficulties="difficulties"
       @close="showEditTodoModal = false; selectedTodo = null"
-      @edited="showEditTodoModal = false; selectedTodo = null"
+      @edited="showEditTodoModal = false; selectedTodo = null; syncTodos()"
     />
     <ErrorModal 
       :show="showErrorModal"
@@ -303,8 +325,9 @@ const cancelDelete = () => {
           <div class="flex items-center justify-center px-2 md:px-3 py-2 rounded-l-lg flex-shrink-0"
           :class="{'bg-stone-600': !todo.difficulty}" :style="todo.difficulty ? { backgroundColor: todo.difficulty.color || '#57534e' } : {}">
             <input 
+              :id="todo.id"
               type="checkbox" 
-              :checked="todo.is_completed" 
+              :checked="checkboxStates[todo.id] !== undefined ? checkboxStates[todo.id] : todo.is_completed" 
               @change="completeTodo(todo)" 
               class="w-4 h-4 md:w-6 md:h-6 rounded-md border-2 border-white cursor-pointer transition-all duration-200 ease-in-out
               checked:bg-white checked:border-white focus:ring-2 focus:ring-offset-2 focus:ring-white focus:outline-none
@@ -339,24 +362,30 @@ const cancelDelete = () => {
                 </svg>
                 +{{ getTodoExperience(todo) }} {{ trans('XP') }}
               </span>
+              <span v-if="todo.overdue_days > 0" class="text-xs font-bold text-stone-600 bg-red-100 px-1.5 py-0.5 rounded flex items-center whitespace-nowrap flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-red-500 mr-1 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+                - {{ todo.overdue_days }} {{ trans('HP') }}
+              </span>
               <span 
                 v-if="todo.due_date" 
                 class="text-xs text-stone-600 font-bold whitespace-nowrap flex-shrink-0"
               >
-                <span :class="{ 'line-through': typeof daysPassedAfterTodoDueDate(todo) === 'number' && daysPassedAfterTodoDueDate(todo) > 0 }">
+                <span :class="{ 'line-through': todo.overdue_days > 0 }">
                   {{ new Date(todo.due_date).toLocaleDateString() }}
                 </span>
                 <span 
-                  v-if="daysPassedAfterTodoDueDate(todo) === 'today'" 
+                  v-if="todo.overdue_days === 0 && new Date(todo.due_date).toDateString() === new Date().toDateString()" 
                   class="text-xs font-bold text-green-600 ml-1"
                 >
                   ( {{ trans('due today') }} )
                 </span>
                 <span 
-                  v-else-if="typeof daysPassedAfterTodoDueDate(todo) === 'number' && daysPassedAfterTodoDueDate(todo) > 0" 
+                  v-else-if="todo.overdue_days > 0" 
                   class="text-xs font-bold text-red-500 ml-1"
                 >
-                  {{ trans('days late') }} ( {{ daysPassedAfterTodoDueDate(todo) }} ) 
+                  {{ trans('days late') }} ( {{ todo.overdue_days }} ) 
                 </span>
               </span>
             </div>

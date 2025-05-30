@@ -16,6 +16,7 @@ return new class() extends Migration {
             $table->integer("difficulty_level")->default(2);
             $table->unsignedBigInteger("reset_frequency")->nullable(); 
             $table->timestamp("due_date")->nullable();
+            $table->integer("overdue_days")->default(0);
             $table->timestamp("start_date")->nullable();
             $table->boolean("is_completed")->default(false);
             $table->boolean("is_deadline_task")->default(false);
