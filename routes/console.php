@@ -2,9 +2,15 @@
 
 declare(strict_types=1);
 
-use Illuminate\Foundation\Inspiring;
-use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Schedule;
 
-Artisan::command("inspire", function (): void {
-    $this->comment(Inspiring::quote());
-})->purpose("Display an inspiring quote")->hourly();
+// Check for tasks that need to be reset every 10 minutes
+        // $schedule->call(function (): void {
+        //     $taskService = app(TaskService::class);
+        //     $resetCount = $taskService->resetDueTasks();
+        //     \Log::info("Reset {$resetCount} tasks");
+        // })->everyTenMinutes();
+
+Schedule::command("tasks:increment-overdue-days")
+                ->dailyAt("00:30")
+                 ->withoutOverlapping();

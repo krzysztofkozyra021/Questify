@@ -17,10 +17,7 @@ use Illuminate\Support\Facades\Route;
 require __DIR__ . "/auth.php";
 
 Route::get("/", function () {
-    if (!auth()->check()) {
-        return inertia("Auth/Register");
-    }
-
+    if (!auth()->check()) { return inertia("Auth/Register"); }
     return redirect()->route("dashboard");
 })->name("home");
 
@@ -50,6 +47,7 @@ Route::middleware(["auth"])->group(function (): void {
     // Dashboard - Main game interface
     Route::get("/dashboard", [DashboardController::class, "index"])->name("dashboard");
     Route::get("/motivational-quote/{locale}", [DashboardController::class, "getMotivationalQuote"])->name("dashboard.getMotivationalQuote");
+    Route::get("/api/user/dashboard-data", [DashboardController::class, "getDashboardData"])->name("api.user.dashboard-data");
 
     // Tasks - User-specific tasks
     Route::prefix("tasks")->name("tasks.")->group(function (): void {
