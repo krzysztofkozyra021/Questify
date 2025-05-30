@@ -25,6 +25,7 @@ class Task extends Model
         "is_deadline_task",
         "experience_reward",
         "checklist_items",
+        "weekly_schedule",
         "type",
         "next_reset_at",
         "completed_count",
