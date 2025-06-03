@@ -74,7 +74,7 @@ const previewImage = (event) => {
     // Check file size (2MB = 2 * 1024 * 1024 bytes)
     const maxSize = 2 * 1024 * 1024
     if (file.size > maxSize) {
-      uploadError.value = 'Image size should not exceed 2MB.'
+      uploadError.value = trans('Image size should not exceed 2MB.')
       return
     }
 
@@ -114,13 +114,13 @@ const uploadImage = async () => {
         if (errors.profile_image) {
           uploadError.value = errors.profile_image
         } else {
-          uploadError.value = 'An error occurred while uploading the image.'
+          uploadError.value = trans('An error occurred while uploading the image.')
         }
       }
     })
   } catch (error) {
     console.error('Error uploading image:', error)
-    uploadError.value = 'An error occurred while uploading the image.'
+    uploadError.value = trans('An error occurred while uploading the image.')
   } finally {
     isUploading.value = false
   }
