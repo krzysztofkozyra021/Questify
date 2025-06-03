@@ -22,6 +22,7 @@ return new class() extends Migration {
             $table->boolean("is_deadline_task")->default(false);
             $table->integer("experience_reward")->default(10);
             $table->json("checklist_items")->nullable();
+            $table->json("weekly_schedule")->nullable();
             $table->string("type")->default("habit");
             $table->timestamp("next_reset_at")->nullable();
             $table->integer("completed_count")->default(0);

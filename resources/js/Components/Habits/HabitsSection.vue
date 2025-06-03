@@ -147,9 +147,6 @@ const calculateHabitHealthPenalty = (habit) => {
 const calculateHabitEnergyPenalty = (habit) => {
   return Math.round(props.userStats.max_energy * 0.1 * habit.difficulty.energy_cost);
 }
-const getHabitExperience = (habit) => {
-  return Math.round(habit.experience_reward * habit.difficulty.exp_multiplier * props.userClassExpMultiplier);
-};
 
 const addTask = (type) => {
   if (type === 'habit' && newHabit.value.trim()) {
@@ -206,7 +203,7 @@ const completeHabit = (habit) => {
     preserveState: true,
     only: ['userStatistics', 'habits'],
     onSuccess: () => {
-      addNotification('+ ' + getHabitExperience(habit) + ' ' + trans('XP'), 'exp');
+      addNotification('+ ' + habit.experience_reward + ' ' + trans('XP'), 'exp');
       addNotification(trans('- ') + calculateHabitEnergyPenalty(habit).toString() + ' ' + trans('EP'), 'energy');
       // Trigger immediate sync after completion
       syncDashboardData((newData) => {
@@ -261,7 +258,7 @@ const deleteHabit = (habit) => {
 
 const confirmDelete = () => {
   if (habitToDelete.value) {
-    router.delete(`/tasks/habits/${habitToDelete.value.id}`, {
+    router.delete(`/tasks/${habitToDelete.value.id}`, {
       preserveScroll: true,
       preserveState: true,
       only: ['userStatistics', 'habits'],
@@ -432,7 +429,7 @@ const cancelDelete = () => {
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-amber-400 mr-1 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
                 </svg>
-                +{{ getHabitExperience(habit) }} {{ trans('XP') }}
+                +{{ habit.experience_reward }} {{ trans('XP') }}
               </span>
               <span v-if="habit.difficulty && calculateHabitHealthPenalty(habit) > 0" class="text-xs font-bold text-stone-600 bg-red-100 px-1.5 py-0.5 rounded flex items-center whitespace-nowrap flex-shrink-0">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-red-500 mr-1 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">

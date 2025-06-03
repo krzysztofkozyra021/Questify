@@ -67,7 +67,7 @@ const previewImage = (event) => {
 
     const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif']
     if (!validTypes.includes(file.type)) {
-      uploadError.value = 'Please select a valid image file (JPG, PNG, or GIF).'
+      uploadError.value = trans('Please select a valid image file (JPG, PNG, or GIF).')
       return
     }
 
