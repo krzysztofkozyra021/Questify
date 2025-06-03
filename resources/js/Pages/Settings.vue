@@ -67,12 +67,12 @@ const previewImage = (event) => {
 
     const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif']
     if (!validTypes.includes(file.type)) {
-      uploadError.value = 'Please select a valid image file (JPG, PNG, or GIF).'
+      uploadError.value = trans('Please select a valid image file (JPG, PNG, or GIF).')
       return
     }
 
     // Check file size (2MB = 2 * 1024 * 1024 bytes)
-    const maxSize = 2 * 1024 * 1024
+    const maxSize = 4 * 1024 * 1024
     if (file.size > maxSize) {
       uploadError.value = 'Image size should not exceed 2MB.'
       return

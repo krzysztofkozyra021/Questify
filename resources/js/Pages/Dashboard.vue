@@ -238,6 +238,8 @@ onUnmounted(() => {
           :user-stats="userStatistics"
           :user-class-exp-multiplier="userClassExpMultiplier"
           :daily-tasks="dailyTasks"
+          :difficulties="difficulties"
+          :reset-configs="resetConfigs"
         />
 
         <!-- Todos Section -->
