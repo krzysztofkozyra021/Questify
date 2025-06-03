@@ -14,3 +14,8 @@ use Illuminate\Support\Facades\Schedule;
 Schedule::command("tasks:increment-overdue-days")
                 ->dailyAt("00:30")
                  ->withoutOverlapping();
+
+Schedule::command("tasks:reset-dailies")
+                // ->dailyAt("00:30")
+                 ->dailyAt("00:30")
+                 ->withoutOverlapping();
