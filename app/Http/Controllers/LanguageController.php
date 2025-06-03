@@ -12,7 +12,7 @@ class LanguageController extends Controller
     public function switch($locale): RedirectResponse
     {
         // Validate the locale
-        if (!in_array($locale, ["en", "pl"], true)) {
+        if (!in_array($locale, ["en", "pl", "de"], true)) {
             return redirect()->back();
         }
 

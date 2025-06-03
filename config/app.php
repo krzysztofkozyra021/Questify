@@ -26,5 +26,6 @@ return [
     "available_locales" => [
         "English" => "en",
         "Polish" => "pl",
+        "German" => "de",
     ],
 ];
