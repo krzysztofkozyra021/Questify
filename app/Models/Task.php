@@ -39,7 +39,20 @@ class Task extends Model
         "experience_reward" => "float",
         "checklist_items" => "array",
         "next_reset_at" => "datetime",
+        "weekly_schedule" => "array",
     ];
+
+    /**
+     * Ensure next_reset_at is always stored in UTC
+     */
+    public function setNextResetAtAttribute($value)
+    {
+        if ($value instanceof \DateTime) {
+            $this->attributes['next_reset_at'] = $value->setTimezone('UTC');
+        } else {
+            $this->attributes['next_reset_at'] = $value;
+        }
+    }
 
     /**
      * Get the task difficulty that this task belongs to.

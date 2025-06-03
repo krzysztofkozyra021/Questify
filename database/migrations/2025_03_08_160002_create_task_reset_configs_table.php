@@ -79,7 +79,7 @@ return new class() extends Migration {
             ],
             [
                 "name" => "Every 2 days",
-                "frequency_type" => "custom",
+                "frequency_type" => "every_2_days",
                 "period" => 2,
                 "period_unit" => "day",
                 "period_to_days" => 2,
@@ -92,7 +92,7 @@ return new class() extends Migration {
             ],
             [
                 "name" => "Every 2 weeks",
-                "frequency_type" => "custom",
+                "frequency_type" => "every_2_weeks",
                 "period" => 2,
                 "period_unit" => "week",
                 "period_to_days" => 14,

@@ -68,6 +68,77 @@ class TaskController extends Controller
 
         return redirect()->back();
     }
+    public function storeDaily(Request $request)
+    {
+        $user = auth()->user();
+        $validated = $request->validate([
+            "title" => "required|string|max:255",
+            "description" => "nullable|string",
+            "difficulty_level" => "required|integer|exists:task_difficulties,difficulty_level",
+            "reset_frequency" => "required|integer|exists:task_reset_configs,id",
+            "start_date" => "required|date",
+            "weekly_schedule" => "nullable|array",
+            "weekly_schedule.*" => "string|in:monday,tuesday,wednesday,thursday,friday,saturday,sunday",
+            "tags" => "array",
+            "tags.*" => "string|max:50",
+            "type" => "required|string|in:habit,daily,todo",
+            "is_completed" => "boolean",
+            "experience_reward" => "required|integer|min:1",
+        ]);
+
+        $task = $this->taskService->createTask($user, $validated);
+
+        $this->clearDashboardCache();
+
+        return redirect()->back();
+    }
+
+    public function updateDaily(Request $request, Task $daily)
+    {
+        $validated = $request->validate([
+            "title" => "required|string|max:255",
+            "description" => "nullable|string",
+            "difficulty_level" => "required|integer|exists:task_difficulties,difficulty_level",
+            "reset_frequency" => "required|integer|exists:task_reset_configs,id",
+            "weekly_schedule" => "nullable|array",
+            "weekly_schedule.*" => "string|in:monday,tuesday,wednesday,thursday,friday,saturday,sunday",
+            "tags" => "array",
+            "tags.*" => "string|max:50",
+        ]);
+
+        $this->taskService->updateDaily($daily, $validated);
+
+        $this->clearDashboardCache();
+
+        return back()->with("success", "Daily updated successfully");
+    }
+
+    public function completeDaily(Task $daily)
+    {
+        $this->taskService->completeDaily($daily);
+
+        $this->clearDashboardCache();
+
+        return back()->with("success", "Daily completed successfully");
+    }
+
+    public function dailyNotCompleted(Task $daily)
+    {
+        $this->taskService->dailyNotCompleted($daily);
+
+        $this->clearDashboardCache();
+
+        return back()->with("success", "Daily set to not completed");
+    }
+
+    public function destroyTask(Task $task)
+    {
+        $this->taskService->deleteUserTask($task);
+
+        $this->clearDashboardCache();
+
+        return back();
+    }
 
     public function updateHabit(Request $request, Task $habit)
     {
@@ -142,15 +213,6 @@ class TaskController extends Controller
         }
     }
 
-    public function destroyHabit(Task $habit)
-    {
-        $habit->delete();
-
-        $this->clearDashboardCache();
-
-        return back();
-    }
-
     public function completeHabit(Task $habit)
     {
         $this->taskService->completeHabit($habit);
@@ -214,38 +276,12 @@ class TaskController extends Controller
         return back()->with("success", "Task reset successfully");
     }
 
-    public function destroy(Task $task)
-    {
-        $task->delete();
-
-        $this->clearDashboardCache();
-
-        return back()->with("success", "Task deleted successfully");
-    }
 
     public function create()
     {
         $formData = $this->taskService->getTaskFormData();
 
         return Inertia::render("Tasks/Create", $formData);
-    }
-
-    public function destroyTodo(Task $todo)
-    {
-        try {
-            $todo->delete();
-            
-            $this->clearDashboardCache();
-
-            return back()->with("success", "Todo deleted successfully");
-        } catch (\Exception $e) {
-            \Log::error("Error deleting todo:", [
-                "message" => $e->getMessage(),
-                "todo_id" => $todo->id,
-            ]);
-
-            return back()->withErrors(["message" => $e->getMessage()]);
-        }
     }
 
     public function clearDashboardCache()

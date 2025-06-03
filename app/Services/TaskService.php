@@ -30,11 +30,11 @@ class TaskService
         ];
     }
 
-    public function calculateExperienceReward(Task $task): int
+    public function calculateExperienceReward(Task $task, User $user): int
     {
-        
-        // Base experience reward is difficulty level * 10
-        return intval(round($task->difficulty->difficulty_level * 10));
+        $expMultiplier = $task->difficulty->exp_multiplier;
+        $userClassExpMultiplier = $user->userStatistics->classAttributes->exp_multiplier;
+        return intval(round($task->difficulty->difficulty_level * 10 * $expMultiplier * $userClassExpMultiplier));
     }
 
     public function calculateOverdueDays(Task $task): int
@@ -72,6 +72,19 @@ class TaskService
         return 0;
     }
 
+    public function deleteUserTask(Task $task): void{
+        try {
+            $task->delete();
+        } catch (\Exception $e) {
+            \Log::error("Error deleting task:", [
+                "message" => $e->getMessage(),
+                "task_id" => $task->id,
+            ]);
+
+            throw $e;
+        }
+    }
+
     public function createTask(User $user, array $data): Task
     {
         // Ensure type is set
@@ -88,8 +101,10 @@ class TaskService
             return DB::transaction(function () use ($user, $data) {
                 // Create the task
                 $task = Task::create($data);
-                $task->experience_reward = $this->calculateExperienceReward($task);
+
+                $task->experience_reward = $this->calculateExperienceReward($task, $user);
                 $task->overdue_days = $this->calculateOverdueDays($task);
+                
                 $task->save();
 
                 \Log::info("Task created:", [
@@ -97,12 +112,6 @@ class TaskService
                     "type" => $task->type,
                     "overdue_days" => $task->overdue_days,
                 ]);
-
-                // Set next_reset_at if there's a reset configuration
-                if (!empty($data["reset_frequency"])) {
-                    $task->next_reset_at = null;
-                    $task->save();
-                }
 
                 // Attach the task to the user
                 $user->tasks()->attach($task->id, [
@@ -156,7 +165,7 @@ class TaskService
 
             // Update task
             $habit->update($data);
-            $habit->experience_reward = $this->calculateExperienceReward($habit);
+            $habit->experience_reward = $this->calculateExperienceReward($habit, $habit->users()->first());
             $habit->save();
             // Re-fetch the task to ensure we have the latest instance
             $habit = Task::find($habitId);
@@ -216,8 +225,7 @@ class TaskService
 
         $user = $habit->users()->first();
         $userStats = $user->userStatistics;
-        $userClassExpMultiplier = $userStats->classAttributes->exp_multiplier;
-        $expGain = round($habit->experience_reward * $habit->difficulty->exp_multiplier * $userClassExpMultiplier);
+        $expGain = $habit->experience_reward;
         $userStats->current_experience += $expGain;
         $userStats->current_energy = max(0, $userStats->current_energy - $this->getEnergyPenalty($habit));
         $userStats->save();
@@ -270,8 +278,7 @@ class TaskService
             throw new \Exception("No user statistics found for this user");
         }
 
-        $userClassExpMultiplier = $userStats->classAttributes->exp_multiplier;
-        $expGain = round($todo->experience_reward * $todo->difficulty->exp_multiplier * $userClassExpMultiplier);
+        $expGain = $todo->experience_reward;
         $healthPenalty = $todo->overdue_days;
 
         $userStats->current_experience += $expGain;
@@ -296,7 +303,7 @@ class TaskService
 
             // Update task
             $todo->update($data);
-            $todo->experience_reward = $this->calculateExperienceReward($todo);
+            $todo->experience_reward = $this->calculateExperienceReward($todo, $todo->users()->first());
             $todo->overdue_days = $this->calculateOverdueDays($todo);
             $todo->save();
 
@@ -393,42 +400,66 @@ class TaskService
         return $fixedCount;
     }
 
-    /**
-     * Reset all tasks that have reached their reset time
-     */
-    public function resetDueTasks(): int
+    public function updateDaily(Task $daily, array $data): void
     {
-        $resetCount = 0;
+        $daily->update($data);
+        $daily->experience_reward = $this->calculateExperienceReward($daily, $daily->users()->first());
+        $daily->save();
+    }
 
-        // Find all completed tasks that have passed their reset time
-        $tasksToReset = Task::where("is_completed", true)
-            ->whereNotNull("next_reset_at")
-            ->where("next_reset_at", "<=", now())
-            ->get();
+    public function completeDaily(Task $daily): void
+    {
+        $daily->update([
+            "is_completed" => true,
+            "completed_at" => now(),
+            
+        ]);
 
-        foreach ($tasksToReset as $task) {
-            // Reset the task
-            $task->update([
-                "is_completed" => false,
-                "completed_at" => null,
-                "progress" => 0,
-            ]);
-
-            // Reset the user task pivot table
-            $task->users()->updateExistingPivot($task->users->pluck("id")->toArray(), [
-                "is_completed" => false,
-                "progress" => 0,
-                "completed_at" => null,
-            ]);
-
-            // Recalculate next reset time
-            $task->next_reset_at = $this->calculateNextResetDate($task);
-            $task->save();
-
-            $resetCount++;
+    // Set next_reset_at if there's a reset configuration
+        if ($daily->reset_frequency) {
+            $daily->next_reset_at = $this->calculateNextResetDate($daily);
+            $daily->save();
+        } else {
+            $daily->next_reset_at = null;
+            $daily->save();
         }
 
-        return $resetCount;
+        $user = $daily->users()->first();
+        $userStats = $user->userStatistics;
+        $userStats->current_energy = max(0, $userStats->current_energy - $this->getEnergyPenalty($daily));
+        $expGain = $daily->experience_reward;
+        $userStats->current_experience += $expGain;
+        $userStats->save();
+    }
+
+    public function dailyNotCompleted(Task $daily): void
+    {
+        // Load the difficulty relationship if not already loaded
+        if (!$daily->relationLoaded("difficulty")) {
+            $daily->load("difficulty");
+        }
+
+        $daily->update([
+            "is_completed" => false,
+            "completed_at" => null,
+        ]);
+
+        $daily->next_reset_at = null;
+        $daily->is_completed = false;
+        $daily->save();
+
+        $user = $daily->users()->first();
+        $userStats = $user->userStatistics;
+        $expLoss = $daily->experience_reward;
+        
+        // Subtract experience and ensure it doesn't go below 0
+        $userStats->current_experience = max(0, $userStats->current_experience - $expLoss);
+        
+        // Calculate energy to restore (same as the penalty that was taken)
+        $energyToRestore = $this->getEnergyPenalty($daily);
+        $userStats->current_energy = min($userStats->max_energy, $userStats->current_energy + $energyToRestore);
+        
+        $userStats->save();
     }
 
     /**
@@ -438,25 +469,21 @@ class TaskService
     public function calculateNextResetDate(Task $task): ?Carbon
     {
         $config = $task->resetConfig;
-        $baseDate = $task->updated_at;
+        $baseDate = $task->updated_at->setTimezone('UTC');
         $resetDate = null;
 
         switch ($config->frequency_type) {
             case "daily":
-                $resetDate = $baseDate->copy()->addDays($config->period_to_days);
-
+                $resetDate = $baseDate->copy()->addDay();
                 break;
             case "weekly":
-                $resetDate = $baseDate->copy()->addDays($config->period_to_days);
-
+                $resetDate = $baseDate->copy()->addWeek();
                 break;
             case "monthly":
-                $resetDate = $baseDate->copy()->addDays($config->period_to_days);
-
+                $resetDate = $baseDate->copy()->addMonth();
                 break;
             case "yearly":
-                $resetDate = $baseDate->copy()->addDays($config->period_to_days);
-
+                $resetDate = $baseDate->copy()->addYear();
                 break;
             case "custom":
                 break;
