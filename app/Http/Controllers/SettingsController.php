@@ -58,7 +58,7 @@ class SettingsController extends Controller
         }
 
         $locale = $request->input("locale");
-        $allowedLocales = config("app.available_locales", ["en"]);
+        $allowedLocales = config("app.available_locales", ["en", "pl", "de"]);
 
         // Validate the locale against allowed locales
         if (!in_array($locale, $allowedLocales, true)) {
