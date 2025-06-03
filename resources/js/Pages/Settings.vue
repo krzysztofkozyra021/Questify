@@ -72,7 +72,7 @@ const previewImage = (event) => {
     }
 
     // Check file size (2MB = 2 * 1024 * 1024 bytes)
-    const maxSize = 4 * 1024 * 1024
+    const maxSize = 2 * 1024 * 1024
     if (file.size > maxSize) {
       uploadError.value = 'Image size should not exceed 2MB.'
       return
