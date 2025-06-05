@@ -13,8 +13,8 @@ class TagService
 {
     public function getUserTags(User $user): Collection
     {
-        $cacheKey = 'user_tags_' . $user->id;
-        
+        $cacheKey = "user_tags_" . $user->id;
+
         return Cache::remember($cacheKey, 1800, function () use ($user) {
             return Tag::whereHas("tasks", function ($query) use ($user): void {
                 $query->whereHas("users", function ($q) use ($user): void {

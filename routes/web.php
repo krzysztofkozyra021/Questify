@@ -17,7 +17,10 @@ use Illuminate\Support\Facades\Route;
 require __DIR__ . "/auth.php";
 
 Route::get("/", function () {
-    if (!auth()->check()) { return inertia("Auth/Register"); }
+    if (!auth()->check()) {
+        return inertia("Auth/Register");
+    }
+
     return redirect()->route("dashboard");
 })->name("home");
 

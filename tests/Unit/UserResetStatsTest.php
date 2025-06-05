@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
+use App\Console\Commands\ResetEnergyAndHealth;
 use App\Models\User;
 use App\Models\UserStatistics;
-use App\Console\Commands\ResetEnergyAndHealth;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class UserResetStatsTest extends TestCase
 {
@@ -18,9 +18,8 @@ class UserResetStatsTest extends TestCase
     {
         $user = User::factory()->create();
         $userStatistics = UserStatistics::factory()->create([
-            'user_id' => $user->id,
+            "user_id" => $user->id,
         ]);
-
 
         $this->assertEquals($userStatistics->max_energy, $userStatistics->current_energy);
         $this->assertEquals($userStatistics->max_health, $userStatistics->current_health);

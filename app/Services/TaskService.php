@@ -11,12 +11,11 @@ use App\Models\TaskResetConfig;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class TaskService
 {
-
     public const DIFFICULTY_LEVEL_MULTIPLIER = 10;
     public const PLAYER_MAX_STATS_MULTIPLIER = 0.1;
 
@@ -38,55 +37,60 @@ class TaskService
     {
         $expMultiplier = $task->difficulty->exp_multiplier;
         $userClassExpMultiplier = $user->userStatistics->classAttributes->exp_multiplier;
+
         return intval(round($task->difficulty->difficulty_level * self::DIFFICULTY_LEVEL_MULTIPLIER * $expMultiplier * $userClassExpMultiplier));
     }
 
     public function calculateOverdueDays(Task $task): int
     {
-        if (!$task->due_date) return 0;
-        
+        if (!$task->due_date) {
+            return 0;
+        }
+
         // Use UTC for all calculations
-        $dueDate = Carbon::parse($task->due_date)->setTimezone('UTC')->startOfDay();
-        $startDate = Carbon::parse($task->start_date)->setTimezone('UTC')->startOfDay();
-        $now = Carbon::now()->setTimezone('UTC')->startOfDay();
-        
-        Log::debug('Calculating overdue days:', [
-            'task_id' => $task->id,
-            'due_date' => $dueDate->toDateTimeString(),
-            'start_date' => $startDate->toDateTimeString(),
-            'now' => $now->toDateTimeString(),
-            'is_future' => $startDate->isFuture(),
-            'is_gte' => $now->gte($dueDate),
-            'diff_days' => $dueDate->diffInDays($now)
+        $dueDate = Carbon::parse($task->due_date)->setTimezone("UTC")->startOfDay();
+        $startDate = Carbon::parse($task->start_date)->setTimezone("UTC")->startOfDay();
+        $now = Carbon::now()->setTimezone("UTC")->startOfDay();
+
+        Log::debug("Calculating overdue days:", [
+            "task_id" => $task->id,
+            "due_date" => $dueDate->toDateTimeString(),
+            "start_date" => $startDate->toDateTimeString(),
+            "now" => $now->toDateTimeString(),
+            "is_future" => $startDate->isFuture(),
+            "is_gte" => $now->gte($dueDate),
+            "diff_days" => $dueDate->diffInDays($now),
         ]);
-        
+
         // If the task hasn't started yet, return 0
-        if ($startDate->isFuture()) return 0;
-        
+        if ($startDate->isFuture()) {
+            return 0;
+        }
+
         // If current date is greater than or equal to due date, calculate days between due date and now
         if ($now->gte($dueDate)) {
             $days = intval($dueDate->diffInDays($now));
-            Log::info('Overdue days calculated:', [
-                'task_id' => $task->id,
-                'days' => $days
+            Log::info("Overdue days calculated:", [
+                "task_id" => $task->id,
+                "days" => $days,
             ]);
+
             return $days;
         }
-        
+
         return 0;
     }
 
-    public function deleteUserTask(Task $task): void{
-
+    public function deleteUserTask(Task $task): void
+    {
         try {
             $task->delete();
-        } 
-        catch (\Exception $e) 
-        {
+        } catch (\Exception $e) {
             \Log::error("Error deleting task:", [
                 "message" => $e->getMessage(),
                 "task_id" => $task->id,
             ]);
+
             throw $e;
         }
     }
@@ -94,7 +98,9 @@ class TaskService
     public function createTask(User $user, array $data): Task
     {
         // Ensure type is set - default to todo if not specified
-        if (!isset($data["type"])) $data["type"] = "todo";
+        if (!isset($data["type"])) {
+            $data["type"] = "todo";
+        }
 
         \Log::info("Creating task with data:", [
             "user_id" => $user->id,
@@ -103,7 +109,6 @@ class TaskService
 
         try {
             return DB::transaction(function () use ($user, $data) {
-
                 $task = Task::create($data);
 
                 $task->experience_reward = $this->calculateExperienceReward($task, $user);
@@ -133,9 +138,7 @@ class TaskService
 
                 return $task;
             });
-        } 
-        catch (\Exception $e) {
-
+        } catch (\Exception $e) {
             \Log::error("Failed to create task:", [
                 "user_id" => $user->id,
                 "error" => $e->getMessage(),
@@ -148,10 +151,11 @@ class TaskService
     public function updateHabit(Task $habit, array $data, array $tags = []): void
     {
         try {
-            
             $habitId = $habit->id;
-            if (!$habitId) throw new \Exception("Habit ID is missing");
 
+            if (!$habitId) {
+                throw new \Exception("Habit ID is missing");
+            }
 
             \Log::info("UpdateTask called with:", [
                 "habit_id" => $habitId,
@@ -178,9 +182,7 @@ class TaskService
 
             // Load relationships
             $habit->load("tags", "difficulty");
-
-        } 
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             \Log::error("Error in updateHabit:", [
                 "message" => $e->getMessage(),
                 "trace" => $e->getTraceAsString(),
@@ -192,8 +194,9 @@ class TaskService
 
     public function completeHabit(Task $habit): void
     {
-
-        if (!$habit->relationLoaded("difficulty")) $habit->load("difficulty");
+        if (!$habit->relationLoaded("difficulty")) {
+            $habit->load("difficulty");
+        }
 
         $habit->update([
             "is_completed" => true,
@@ -231,7 +234,6 @@ class TaskService
 
         return intval(round(($playerMaxHealth * self::PLAYER_MAX_STATS_MULTIPLIER) * $habit->difficulty->health_penalty));
     }
-
 
     public function completeTodo(Task $todo): void
     {
@@ -383,10 +385,9 @@ class TaskService
         $daily->update([
             "is_completed" => true,
             "completed_at" => now(),
-            
         ]);
 
-    // Set next_reset_at if there's a reset configuration
+        // Set next_reset_at if there's a reset configuration
         if ($daily->reset_frequency) {
             $daily->next_reset_at = $this->calculateNextResetDate($daily);
             $daily->save();
@@ -422,14 +423,14 @@ class TaskService
         $user = $daily->users()->first();
         $userStats = $user->userStatistics;
         $expLoss = $daily->experience_reward;
-        
+
         // Subtract experience and ensure it doesn't go below 0
         $userStats->current_experience = max(0, $userStats->current_experience - $expLoss);
-        
+
         // Calculate energy to restore (same as the penalty that was taken)
         $energyToRestore = $this->getEnergyPenalty($daily);
         $userStats->current_energy = min($userStats->max_energy, $userStats->current_energy + $energyToRestore);
-        
+
         $userStats->save();
     }
 
@@ -460,12 +461,13 @@ class TaskService
 
         $healthRestore = $todo->overdue_days;
         $userStats->current_health = min($userStats->max_health, $userStats->current_health + $healthRestore);
-        
+
         // Subtract experience and ensure it doesn't go below 0
         $userStats->current_experience = max(0, $userStats->current_experience - $expLoss);
-        
+
         $userStats->save();
     }
+
     public function processTags(Task $task, array $tags): array
     {
         // Process tags
@@ -493,21 +495,25 @@ class TaskService
     public function calculateNextResetDate(Task $task): ?Carbon
     {
         $config = $task->resetConfig;
-        $baseDate = $task->updated_at->setTimezone('UTC');
+        $baseDate = $task->updated_at->setTimezone("UTC");
         $resetDate = null;
 
         switch ($config->frequency_type) {
             case "daily":
                 $resetDate = $baseDate->copy()->addDay();
+
                 break;
             case "weekly":
                 $resetDate = $baseDate->copy()->addWeek();
+
                 break;
             case "monthly":
                 $resetDate = $baseDate->copy()->addMonth();
+
                 break;
             case "yearly":
                 $resetDate = $baseDate->copy()->addYear();
+
                 break;
             case "custom":
                 break;

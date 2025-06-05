@@ -10,8 +10,8 @@ use App\Services\QuoteService;
 use App\Services\TagService;
 use App\Services\TaskService;
 use App\Services\TranslationService;
-use Inertia\Inertia;
 use Illuminate\Support\Facades\Cache;
+use Inertia\Inertia;
 
 class DashboardController extends Controller
 {
@@ -110,37 +110,37 @@ class DashboardController extends Controller
     }
 
     public function getDashboardData()
-{
-    $user = auth()->user();
-    $cacheKey = 'dashboard_data_' . $user->id;
-    
-    // Cache until next day at 00:30 since todos update daily at 00:30
-    $nextUpdate = now()->addDay()->setHour(0)->setMinute(30)->setSecond(0);
-    $cacheDuration = $nextUpdate->diffInSeconds(now());
-    
-    $data = Cache::remember($cacheKey, $cacheDuration, function () use ($user) {
-        $userStatistics = $user->userStatistics;
-        $tasks = $this->taskService->getUserTasks($user);
-        
-        return [
-            'tasks' => [
-                'habits' => $tasks["habits"],
-                'dailies' => $tasks["dailies"],
-                'todos' => $tasks["todos"],
-            ],
-            'user' => [
-                'current_health' => $userStatistics->current_health,
-                'max_health' => $userStatistics->max_health,
-                'current_energy' => $userStatistics->current_energy,
-                'max_energy' => $userStatistics->max_energy,
-                'current_experience' => $userStatistics->current_experience,
-                'next_level_experience' => $userStatistics->next_level_experience,
-                'level' => $userStatistics->level,
-            ],
-            'last_sync' => now()->timestamp,
-        ];
-    });
-    
-    return response()->json($data);
-}
+    {
+        $user = auth()->user();
+        $cacheKey = "dashboard_data_" . $user->id;
+
+        // Cache until next day at 00:30 since todos update daily at 00:30
+        $nextUpdate = now()->addDay()->setHour(0)->setMinute(30)->setSecond(0);
+        $cacheDuration = $nextUpdate->diffInSeconds(now());
+
+        $data = Cache::remember($cacheKey, $cacheDuration, function () use ($user) {
+            $userStatistics = $user->userStatistics;
+            $tasks = $this->taskService->getUserTasks($user);
+
+            return [
+                "tasks" => [
+                    "habits" => $tasks["habits"],
+                    "dailies" => $tasks["dailies"],
+                    "todos" => $tasks["todos"],
+                ],
+                "user" => [
+                    "current_health" => $userStatistics->current_health,
+                    "max_health" => $userStatistics->max_health,
+                    "current_energy" => $userStatistics->current_energy,
+                    "max_energy" => $userStatistics->max_energy,
+                    "current_experience" => $userStatistics->current_experience,
+                    "next_level_experience" => $userStatistics->next_level_experience,
+                    "level" => $userStatistics->level,
+                ],
+                "last_sync" => now()->timestamp,
+            ];
+        });
+
+        return response()->json($data);
+    }
 }

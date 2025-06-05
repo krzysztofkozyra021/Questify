@@ -27,14 +27,14 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(HandleInertiaRequests::class);
         $middleware->web(EnsureClassIsSelected::class);
         $middleware->api(prepend: EnsureFrontendRequestsAreStateful::class);
-    
+
         $middleware->validateCsrfTokens(
             except: [
-                'api/*',
+                "api/*",
             ],
         );
-        
-        $middleware->trustHosts(at: ['localhost', '127.0.0.1', '0.0.0.0']);
+
+        $middleware->trustHosts(at: ["localhost", "127.0.0.1", "0.0.0.0"]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
     })
