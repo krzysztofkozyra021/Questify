@@ -240,6 +240,24 @@ class TaskController extends Controller
         }
     }
 
+    public function uncompleteTodo(Task $todo)
+    {
+        try {
+            $this->taskService->uncompleteTodo($todo);
+            
+            $this->clearDashboardCache();
+
+            return back()->with("success", "Todo uncompleted successfully");
+        } catch (\Exception $e) {
+            \Log::error("Error uncompleting todo:", [
+                "message" => $e->getMessage(),
+                "todo_id" => $todo->id,
+            ]);
+
+            return back()->withErrors(["message" => $e->getMessage()]);
+        }
+    }
+
     public function habitNotCompleted(Task $habit)
     {
         $this->taskService->habitNotCompleted($habit);
