@@ -231,7 +231,10 @@ const habitNotCompleted = (habit) => {
     preserveState: true,
     only: ['userStatistics', 'habits'],
     onSuccess: () => {
-      addNotification(trans('- ') + calculateHabitHealthPenalty(habit).toString() + ' ' + trans('HP'), 'health');
+      if(calculateHabitHealthPenalty(habit) > 0) {
+        addNotification(trans('- ') + calculateHabitHealthPenalty(habit).toString() + ' ' + trans('HP'), 'health');
+      }
+      addNotification(trans("Habit streak updated"), 'info');
       // Trigger immediate sync after not completed
       syncDashboardData((newData) => {
         if (newData.tasks?.habits) {
