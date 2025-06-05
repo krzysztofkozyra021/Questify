@@ -44,12 +44,12 @@ onUnmounted(() => {
     <!-- Hamburger Button - Only visible on mobile -->
     <button
       ref="buttonRef"
-      @click="toggleMenu"
       class="md:hidden p-2 rounded-lg hover:bg-stone-700 focus:outline-none focus:ring-2 focus:ring-amber-600"
       aria-label="Toggle menu"
+      @click="toggleMenu"
     >
       <svg
-        class="w-6 h-6 text-stone-100"
+        class="size-6 text-stone-100"
         :class="{ 'hidden': isOpen }"
         fill="none"
         stroke="currentColor"
@@ -58,7 +58,7 @@ onUnmounted(() => {
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
       </svg>
       <svg
-        class="w-6 h-6 text-stone-100"
+        class="size-6 text-stone-100"
         :class="{ 'hidden': !isOpen }"
         fill="none"
         stroke="currentColor"
@@ -73,19 +73,19 @@ onUnmounted(() => {
       v-show="isOpen"
       class="md:hidden fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-300 ease-in-out z-40"
       @click="toggleMenu"
-    ></div>
+    />
 
     <!-- Mobile Menu - Only visible on mobile -->
     <div
-      ref="menuRef"
       v-show="isOpen"
-      class="md:hidden fixed top-0 left-0 h-full w-64 bg-stone-800 shadow-xl transform transition-transform duration-300 ease-in-out z-50"
+      ref="menuRef"
+      class="md:hidden fixed top-0 left-0 h-full w-64 bg-stone-800 shadow-xl transition-transform duration-300 ease-in-out z-50"
       :class="{ 'translate-x-0': isOpen, '-translate-x-full': !isOpen }"
     >
       <div class="flex flex-col h-full">
         <!-- Menu Header -->
         <div class="p-4 border-b border-stone-700">
-          <img src="/images/logo.png" alt="Questify Logo" class="h-8 w-auto" />
+          <img src="/images/logo.png" alt="Questify Logo" class="h-8 w-auto">
         </div>
 
         <!-- Menu Content -->
@@ -116,12 +116,12 @@ onUnmounted(() => {
         </div>
 
         <!-- Menu Footer -->
-        <div class="p-4 border-t border-stone-700"
-        v-if="page.props.auth.user"
+        <div v-if="page.props.auth.user"
+             class="p-4 border-t border-stone-700"
         >
           <button 
-            @click="router.post(route('logout'))" 
-            class="w-full text-left px-4 py-2 text-red-400 hover:bg-stone-700 rounded-lg transition-colors"
+            class="w-full text-left px-4 py-2 text-red-400 hover:bg-stone-700 rounded-lg transition-colors" 
+            @click="router.post(route('logout'))"
           >
             {{ trans('Log Out') }}
           </button>
@@ -131,7 +131,7 @@ onUnmounted(() => {
 
     <!-- Tablet/Desktop Menu -->
     <div class="hidden sm:flex items-center space-x-4">
-      <slot></slot>
+      <slot />
     </div>
   </div>
 </template>

@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col min-h-screen">
     <Preloader />
-    <Header :showPlayerPanel="false" />
+    <Header :show-player-panel="false" />
     <main class="flex-1 max-w-4xl mx-auto px-4 py-8">
       <h1 class="text-3xl font-bold text-center mb-8">{{ trans('Support') }}</h1>
       
@@ -91,7 +91,7 @@
       <div class="mt-8 bg-white rounded-lg shadow-md p-6">
         <h2 class="text-xl font-semibold mb-4">{{ trans('Service status') }}</h2>
         <div class="flex items-center gap-2">
-          <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+          <div class="size-3 bg-green-500 rounded-full" />
           <span class="text-stone-600">{{ trans('All services are working properly') }}</span>
         </div>
         <p class="text-sm text-stone-500 mt-2">
@@ -114,6 +114,6 @@ import { useHead } from '@vueuse/head'
 const { trans } = useTranslation()
 
 useHead({
-  title: trans('Support') + ' | Questify'
+  title: trans('Support') + ' | Questify',
 })
 </script>

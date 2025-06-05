@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col min-h-screen">
     <Preloader />
-    <Header :showPlayerPanel="false" />
+    <Header :show-player-panel="false" />
     <main class="flex-1 max-w-4xl mx-auto p-12">
       <h1 class="text-3xl font-bold text-center mb-8">{{ trans('Privacy Policy') }}</h1>
       
@@ -133,6 +133,6 @@ import { useHead } from '@vueuse/head'
 const { trans } = useTranslation()
 
 useHead({
-  title: trans('Privacy Policy') + ' | Questify'
+  title: trans('Privacy Policy') + ' | Questify',
 })
 </script>

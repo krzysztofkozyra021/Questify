@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col min-h-screen">
     <Preloader />
-    <Header :showPlayerPanel="false" />
+    <Header :show-player-panel="false" />
     <main class="flex-1 max-w-4xl mx-auto p-12">
       <h1 class="text-4xl font-bold text-center mb-8">{{ trans('Report a bug') }}</h1>
       <ErrorModal v-if="errorMessage" :message="errorMessage" />
@@ -9,18 +9,18 @@
         <h1 class="text-3xl font-bold">{{ trans('Thank you for reporting the bug!') }}</h1>
         <p class="text-stone-400 text-xl">{{ trans('We will review your report and get back to you soon.') }}</p>
       </div>
-      <div class="bg-white rounded-lg shadow-md p-6" v-if="!messageSuccessfullySent">
-        <form @submit.prevent="submitForm" class="space-y-6">
+      <div v-if="!messageSuccessfullySent" class="bg-white rounded-lg shadow-md p-6">
+        <form class="space-y-6" @submit.prevent="submitForm">
           <div>
             <label for="title" class="block text-sm font-medium text-stone-700">{{ trans('Title') }} <span class="text-red-500">*</span></label>
             <input
-              type="text"
               id="title"
               v-model="reportBugForm.title"
+              type="text"
               class="mt-1 block w-full rounded-md border-stone-300 shadow-sm focus:border-stone-500 focus:ring-stone-500"
               required
               :placeholder="trans('Short description of the bug')"
-            />
+            >
           </div>
 
           <div>
@@ -32,7 +32,7 @@
               class="mt-1 block w-full rounded-md border-stone-300 shadow-sm focus:border-stone-500 focus:ring-stone-500"
               required
               :placeholder="trans('Detailed description of the bug')"
-            ></textarea>
+            />
           </div>
 
           <div>
@@ -44,7 +44,7 @@
               class="mt-1 block w-full rounded-md border-stone-300 shadow-sm focus:border-stone-500 focus:ring-stone-500"
               required
               :placeholder="trans('1. Open page...\n2. Click button...\n3. Enter data...')"
-            ></textarea>
+            />
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -57,7 +57,7 @@
                 class="mt-1 block w-full rounded-md border-stone-300 shadow-sm focus:border-stone-500 focus:ring-stone-500"
                 required
                 :placeholder="trans('What should happen?')"
-              ></textarea>
+              />
             </div>
 
             <div>
@@ -69,7 +69,7 @@
                 class="mt-1 block w-full rounded-md border-stone-300 shadow-sm focus:border-stone-500 focus:ring-stone-500"
                 required
                 :placeholder="trans('What happened?')"
-              ></textarea>
+              />
             </div>
           </div>
 
@@ -77,23 +77,23 @@
             <div>
               <label for="browser" class="block text-sm font-medium text-stone-700">{{ trans('Browser') }}</label>
               <input
-                type="text"
                 id="browser"
                 v-model="reportBugForm.browser"
+                type="text"
                 class="mt-1 block w-full rounded-md border-stone-300 shadow-sm focus:border-stone-500 focus:ring-stone-500"
                 :placeholder="trans('e.g. Chrome 91.0.4472.124')"
-              />
+              >
             </div>
 
             <div>
               <label for="os" class="block text-sm font-medium text-stone-700">{{ trans('Operating system') }}</label>
               <input
-                type="text"
                 id="os"
                 v-model="reportBugForm.os"
+                type="text"
                 class="mt-1 block w-full rounded-md border-stone-300 shadow-sm focus:border-stone-500 focus:ring-stone-500"
                 :placeholder="trans('e.g. Windows 10 Pro')"
-              />
+              >
             </div>
           </div>
 
@@ -138,7 +138,7 @@
         </form>
       </div>
 
-      <div class="mt-8 bg-stone-50 rounded-lg p-6" v-if="!messageSuccessfullySent">
+      <div v-if="!messageSuccessfullySent" class="mt-8 bg-stone-50 rounded-lg p-6">
         <h2 class="text-xl font-semibold mb-4">{{ trans('Tips') }}</h2>
         <div class="prose prose-stone max-w-none">
           <p>{{ trans('To ensure your report is processed as quickly as possible:') }}</p>
@@ -168,14 +168,14 @@ import { useHead } from '@vueuse/head'
 const { trans } = useTranslation()
 
 useHead({
-  title: trans('Report a bug') + ' | Questify'
+  title: trans('Report a bug') + ' | Questify',
 })
 
 const messageSuccessfullySent = ref(false)
 
 const getBrowserInfo = () => {
   const ua = navigator.userAgent
-  return ua;
+  return ua
 }
 
 const getOSInfo = () => {
@@ -198,7 +198,7 @@ const reportBugForm = ref({
   browser: getBrowserInfo(),
   os: getOSInfo(),
   priority: 'medium',
-  category: 'general'
+  category: 'general',
 })
 
 const errorMessage = ref(null)
@@ -209,14 +209,14 @@ const categories = [
   { value: 'functionality', label: 'Functionality' },
   { value: 'performance', label: 'Performance' },
   { value: 'security', label: 'Security' },
-  { value: 'other', label: 'Other' }
+  { value: 'other', label: 'Other' },
 ]
 
 const priorities = [
   { value: 'low', label: 'Low' },
   { value: 'medium', label: 'Medium' },
   { value: 'high', label: 'High' },
-  { value: 'critical', label: 'Critical' }
+  { value: 'critical', label: 'Critical' },
 ]
 
 const submitForm = () => {
@@ -226,7 +226,7 @@ const submitForm = () => {
     },
     onError: () => {
       errorMessage.value = trans('Failed to send bug report. Please try again later.')
-    }
+    },
   })
 }
 </script>

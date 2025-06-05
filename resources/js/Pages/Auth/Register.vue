@@ -13,7 +13,7 @@ import { useHead } from '@vueuse/head'
 const { trans } = useTranslation()
 
 useHead({
-  title: trans('Register') + ' | Questify'
+  title: trans('Register') + ' | Questify',
 })
 
 const form = useForm({
@@ -33,11 +33,10 @@ const submit = () => {
 <template>
   <Preloader />
   <div class="min-h-screen bg-stone-900 flex flex-col">
-    <Header :showPlayerPanel="false" />
+    <Header :show-player-panel="false" />
 
     <div class="flex-1 container mx-auto px-4 sm:px-6 py-8 sm:py-12">
       <div class="max-w-6xl mx-auto flex flex-col lg:flex-row gap-8 lg:gap-12 items-center">
-
         <!-- Left Column - Motivation Text -->
         <div class="flex-1 text-center lg:text-left">
           <h2 class="text-4xl sm:text-5xl lg:text-5xl font-bold text-amber-100 mb-4 sm:mb-6 leading-tight">{{ trans('Begin Your Epic Journey') }}</h2>
@@ -52,14 +51,14 @@ const submit = () => {
         <div class="flex-1 w-full max-w-md mx-auto">
           <div class="bg-stone-800 rounded-2xl p-6 sm:p-8 shadow-2xl">
             <h2 class="text-3xl font-bold text-center text-amber-50 mb-8">{{ trans('Sign up') }}</h2>
-            <form @submit.prevent="submit" class="space-y-6">
+            <form class="space-y-6" @submit.prevent="submit">
               <div>
                 <InputLabel for="name" :value="trans('Username')" class="text-amber-50" />
                 <TextInput
                   id="name"
                   v-model="form.name"
                   type="text"
-                  class="mt-1 block w-full bg-stone-700 text-amber-50 placeholder-stone-400 focus:border-amber-600 focus:ring-amber-600"
+                  class="mt-1 block w-full bg-stone-700 text-amber-50 placeholder:text-stone-400 focus:border-amber-600 focus:ring-amber-600"
                   required
                   autofocus
                   autocomplete="name"
@@ -73,7 +72,7 @@ const submit = () => {
                   id="email"
                   v-model="form.email"
                   type="email"
-                  class="mt-1 block w-full bg-stone-700 text-amber-50 placeholder-stone-400 focus:border-amber-600 focus:ring-amber-600"
+                  class="mt-1 block w-full bg-stone-700 text-amber-50 placeholder:text-stone-400 focus:border-amber-600 focus:ring-amber-600"
                   required
                   autocomplete="username"
                 />
@@ -86,7 +85,7 @@ const submit = () => {
                   id="password"
                   v-model="form.password"
                   type="password"
-                  class="mt-1 block w-full bg-stone-700 text-amber-50 placeholder-stone-400 focus:border-amber-600 focus:ring-amber-600"
+                  class="mt-1 block w-full bg-stone-700 text-amber-50 placeholder:text-stone-400 focus:border-amber-600 focus:ring-amber-600"
                   required
                   autocomplete="new-password"
                 />
@@ -99,7 +98,7 @@ const submit = () => {
                   id="password_confirmation"
                   v-model="form.password_confirmation"
                   type="password"
-                  class="mt-1 block w-full bg-stone-700 text-amber-50 placeholder-stone-400 focus:border-amber-600 focus:ring-amber-600"
+                  class="mt-1 block w-full bg-stone-700 text-amber-50 placeholder:text-stone-400 focus:border-amber-600 focus:ring-amber-600"
                   required
                   autocomplete="new-password"
                 />

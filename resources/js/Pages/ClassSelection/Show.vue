@@ -1,70 +1,70 @@
 <script setup>
-import { ref, computed } from 'vue';
-import { route } from 'ziggy-js';
-import { useTranslation } from '@/Composables/useTranslation';
-import Preloader from '@/Components/Preloader.vue';
-import { usePage, router } from '@inertiajs/vue3';
+import { ref, computed } from 'vue'
+import { route } from 'ziggy-js'
+import { useTranslation } from '@/Composables/useTranslation'
+import Preloader from '@/Components/Preloader.vue'
+import { usePage, router } from '@inertiajs/vue3'
 import { useHead } from '@vueuse/head'
 
 const { trans } = useTranslation()
 
 useHead({
-  title: trans('Class Selection') + ' | Questify'
+  title: trans('Class Selection') + ' | Questify',
 })
 
 const props = defineProps({
   classes: {
     type: Array,
-    required: true
-  }
-});
+    required: true,
+  },
+})
 
-const selectedClass = ref(null);
+const selectedClass = ref(null)
 
 const statRanges = {
   health: { min: 0.5, max: 1.8 },
   energy: { min: 0.4, max: 2},
-  exp: { min: 0.6, max: 2 }
-};
+  exp: { min: 0.6, max: 2 },
+}
 
 const classImages = {
   1: '/images/classes/ratWarrior.webp',
   2: '/images/classes/ratMage.webp',
   3: '/images/classes/ratRogue.webp',
-  4: '/images/classes/ratPaladin.webp'
-};
+  4: '/images/classes/ratPaladin.webp',
+}
 
 const classesWithImages = computed(() => {
   return props.classes.map(classItem => ({
     ...classItem,
-    image: classImages[classItem.id] || '/images/classes/ratWarrior.webp'
-  }));
-});
+    image: classImages[classItem.id] || '/images/classes/ratWarrior.webp',
+  }))
+})
 
 function selectClass(classId) {
-  selectedClass.value = classId;
+  selectedClass.value = classId
 }
 
 function confirmSelection() {
-  if (!selectedClass.value) return;
+  if (!selectedClass.value) return
   router.post(route('select-class.store'), {
-    class_id: selectedClass.value
-  });
+    class_id: selectedClass.value,
+  })
 }
 
 function getPercentage(multiplier, statType) {
-  const { min, max } = statRanges[statType];
-  const range = max - min;
-  const normalizedValue = (multiplier - min) / range;
-  const scaleValue = Math.round(normalizedValue * 4) + 1;
-  const percentage = scaleValue * 20;
-  return Math.min(percentage, 100);
+  const { min, max } = statRanges[statType]
+  const range = max - min
+  const normalizedValue = (multiplier - min) / range
+  const scaleValue = Math.round(normalizedValue * 4) + 1
+  const percentage = scaleValue * 20
+  return Math.min(percentage, 100)
 }
 </script>
 
 <template>
   <Preloader />
-  <div class="flex min-h-screen h-full w-full flex-col pt-4 sm:pt-8 bg-slate-800 background">
+  <div class="flex min-h-screen size-full flex-col pt-4 sm:pt-8 bg-slate-800 background">
     <div class="text-center mb-6 sm:mb-12 px-4">
       <h1 class="text-3xl sm:text-4xl font-bold text-amber-100 mb-2">{{ trans('Choose Your Class') }}</h1>
       <p class="text-base sm:text-lg text-stone-100">{{ trans('Select a class to begin your journey. This choice cannot be changed later.') }}</p>
@@ -86,7 +86,7 @@ function getPercentage(multiplier, statType) {
             :src="classItem.image"
             alt="Class Image"
             class="w-28 h-64 sm:w-36 sm:h-80 object-cover rounded-lg"
-          />
+          >
         </div>
         <h2 class="text-xl sm:text-3xl font-bold text-center text-amber-400 mb-4 sm:mb-6">{{ trans(classItem.name) }}</h2>
 
@@ -100,7 +100,7 @@ function getPercentage(multiplier, statType) {
                 <div
                   class="bg-red-600 text-white h-2 sm:h-2.5 "
                   :style="{ width: `${getPercentage(classItem.health_multiplier, 'health')}%` }"
-                ></div>
+                />
               </div>
             </div>
           </div>
@@ -113,7 +113,7 @@ function getPercentage(multiplier, statType) {
                 <div
                   class="bg-blue-600 h-2 sm:h-2.5 "
                   :style="{ width: `${getPercentage(classItem.energy_multiplier, 'energy')}%` }"
-                ></div>
+                />
               </div>
             </div>
           </div>
@@ -126,7 +126,7 @@ function getPercentage(multiplier, statType) {
                 <div
                   class="bg-amber-600 h-2 sm:h-2.5 "
                   :style="{ width: `${getPercentage(classItem.exp_multiplier, 'exp')}%` }"
-                ></div>
+                />
               </div>
             </div>
           </div>

@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col min-h-screen">
     <Preloader />
-    <Header :showPlayerPanel="false" />
+    <Header :show-player-panel="false" />
     <main class="flex-1 max-w-4xl mx-auto p-12">
       <h1 class="text-4xl font-bold text-center mb-8">{{ trans('Report a feature') }}</h1>
       <ErrorModal v-if="errorMessage" :message="errorMessage" />
@@ -11,17 +11,17 @@
       </div>
 
       <div v-else class="bg-white rounded-lg shadow-md p-6">
-        <form @submit.prevent="submitReportFeatureForm" class="space-y-6">
+        <form class="space-y-6" @submit.prevent="submitReportFeatureForm">
           <div>
             <label for="title" class="block text-sm font-medium text-stone-700">{{ trans('Title') }} <span class="text-red-500">*</span></label>
             <input
-              type="text"
               id="title"
               v-model="featureReportForm.title"
+              type="text"
               class="mt-1 block w-full rounded-md border-stone-300 shadow-sm focus:border-stone-500 focus:ring-stone-500"
               required
               :placeholder="trans('Short description of the proposed feature')"
-            />
+            >
           </div>
 
           <div>
@@ -33,7 +33,7 @@
               class="mt-1 block w-full rounded-md border-stone-300 shadow-sm focus:border-stone-500 focus:ring-stone-500"
               required
               :placeholder="trans('Detailed description of the feature, its purpose and potential benefits')"
-            ></textarea>
+            />
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -77,7 +77,7 @@
         </form>
       </div>
 
-      <div class="mt-8 bg-stone-50 rounded-lg p-6" v-if="!messageSuccessfullySent">
+      <div v-if="!messageSuccessfullySent" class="mt-8 bg-stone-50 rounded-lg p-6">
         <h2 class="text-xl font-semibold mb-4">{{ trans('Tips') }}</h2>
         <div class="prose prose-stone max-w-none">
           <p>{{ trans('To ensure your report is processed as quickly as possible:') }}</p>
@@ -106,14 +106,14 @@ import { useHead } from '@vueuse/head'
 const { trans } = useTranslation()
 
 useHead({
-  title: trans('Report a feature') + ' | Questify'
+  title: trans('Report a feature') + ' | Questify',
 })
 
 const featureReportForm = ref({
   title: '',
   description: '',
   priority: 'medium',
-  category: 'general'
+  category: 'general',
 })
 
 const messageSuccessfullySent = ref(false)
@@ -123,13 +123,13 @@ const categories = [
   { value: 'ui', label: 'Ui' },
   { value: 'functionality', label: 'Functionality' },
   { value: 'performance', label: 'Performance' },
-  { value: 'other', label: 'Other' }
+  { value: 'other', label: 'Other' },
 ]
 
 const priorities = [
   { value: 'low', label: 'Low' },
   { value: 'medium', label: 'Medium' },
-  { value: 'high', label: 'High' }
+  { value: 'high', label: 'High' },
 ] 
 
 const submitReportFeatureForm = () => {
@@ -139,7 +139,7 @@ const submitReportFeatureForm = () => {
     },
     onError: () => {
       errorMessage.value = trans('Failed to send feature report. Please try again later.')
-    }
+    },
   })
 }
 </script>

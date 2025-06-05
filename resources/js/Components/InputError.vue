@@ -1,7 +1,7 @@
 <script setup>
-import { useTranslation } from "@/Composables/useTranslation";
+import { useTranslation } from '@/Composables/useTranslation'
 
-const { trans } = useTranslation();
+const { trans } = useTranslation()
 
 defineProps({
   message: {
