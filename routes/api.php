@@ -36,7 +36,9 @@ Route::prefix('v1')->group(function () {
     Route::get('/difficulties', function () {
         return response()->json([
             'success' => true,
-            'data' => TaskDifficulty::select('difficulty_level', 'name', 'color', 'icon', 'energy_cost', 'health_penalty', 'exp_multiplier')->get()
+            'data' => Cache::remember('task_difficulties', 3600, function () {
+                return TaskDifficulty::select('difficulty_level', 'name', 'color', 'icon', 'energy_cost', 'health_penalty', 'exp_multiplier')->get();
+            })
         ]);
     });
 
@@ -44,100 +46,102 @@ Route::prefix('v1')->group(function () {
     Route::get('/reset-configs', function () {
         return response()->json([
             'success' => true,
-            'data' => TaskResetConfig::select('id', 'name', 'frequency_type', 'period', 'period_unit')->get()
+            'data' => Cache::remember('task_reset_configs', 3600, function () {
+                return TaskResetConfig::select('id', 'name', 'frequency_type', 'period', 'period_unit')->get();
+            })
         ]);
     });
 
     // Get task statistics
     Route::get('/stats', function () {
-        $stats = [
-            'total_tasks' => Task::count(),
-            'tasks_by_type' => [
-                'habits' => Task::where('type', 'habit')->count(),
-                'dailies' => Task::where('type', 'daily')->count(),
-                'todos' => Task::where('type', 'todo')->count(),
-            ],
-            'difficulty_distribution' => Task::select('difficulty_level')
-                ->selectRaw('count(*) as count')
-                ->groupBy('difficulty_level')
-                ->get(),
-        ];
-
         return response()->json([
             'success' => true,
-            'data' => $stats
+            'data' => Cache::remember('task_statistics', 1800, function () {
+                return [
+                    'total_tasks' => Task::count(),
+                    'tasks_by_type' => [
+                        'habits' => Task::where('type', 'habit')->count(),
+                        'dailies' => Task::where('type', 'daily')->count(),
+                        'todos' => Task::where('type', 'todo')->count(),
+                    ],
+                    'difficulty_distribution' => Task::select('difficulty_level')
+                        ->selectRaw('count(*) as count')
+                        ->groupBy('difficulty_level')
+                        ->get(),
+                ];
+            })
         ]);
     });
 
     // Get popular tags
     Route::get('/popular-tags', function () {
-        $tags = Tag::withCount('tasks')
-            ->orderBy('tasks_count', 'desc')
-            ->limit(10)
-            ->get(['id', 'name', 'tasks_count']);
-
         return response()->json([
             'success' => true,
-            'data' => $tags
+            'data' => Cache::remember('popular_tags', 1800, function () {
+                return Tag::withCount('tasks')
+                    ->orderBy('tasks_count', 'desc')
+                    ->limit(10)
+                    ->get(['id', 'name', 'tasks_count']);
+            })
         ]);
     });
 
     // Get task templates
     Route::get('/task-templates', function () {
-        $templates = [
-            'habits' => [
-                [
-                    'title' => 'Daily Exercise',
-                    'description' => 'Complete 30 minutes of exercise',
-                    'difficulty_level' => 2,
-                    'type' => 'habit',
-                    'experience_reward' => 50,
-                ],
-                [
-                    'title' => 'Read Books',
-                    'description' => 'Read for 20 minutes',
-                    'difficulty_level' => 1,
-                    'type' => 'habit',
-                    'experience_reward' => 30,
-                ],
-            ],
-            'dailies' => [
-                [
-                    'title' => 'Morning Routine',
-                    'description' => 'Complete your morning routine',
-                    'difficulty_level' => 1,
-                    'type' => 'daily',
-                    'experience_reward' => 40,
-                ],
-                [
-                    'title' => 'Evening Reflection',
-                    'description' => 'Reflect on your day',
-                    'difficulty_level' => 2,
-                    'type' => 'daily',
-                    'experience_reward' => 45,
-                ],
-            ],
-            'todos' => [
-                [
-                    'title' => 'Project Planning',
-                    'description' => 'Plan your next project',
-                    'difficulty_level' => 3,
-                    'type' => 'todo',
-                    'experience_reward' => 100,
-                ],
-                [
-                    'title' => 'Learning Goals',
-                    'description' => 'Set learning goals for the week',
-                    'difficulty_level' => 2,
-                    'type' => 'todo',
-                    'experience_reward' => 60,
-                ],
-            ],
-        ];
-
         return response()->json([
             'success' => true,
-            'data' => $templates
+            'data' => Cache::remember('task_templates', 86400, function () {
+                return [
+                    'habits' => [
+                        [
+                            'title' => 'Daily Exercise',
+                            'description' => 'Complete 30 minutes of exercise',
+                            'difficulty_level' => 2,
+                            'type' => 'habit',
+                            'experience_reward' => 50,
+                        ],
+                        [
+                            'title' => 'Read Books',
+                            'description' => 'Read for 20 minutes',
+                            'difficulty_level' => 1,
+                            'type' => 'habit',
+                            'experience_reward' => 30,
+                        ],
+                    ],
+                    'dailies' => [
+                        [
+                            'title' => 'Morning Routine',
+                            'description' => 'Complete your morning routine',
+                            'difficulty_level' => 1,
+                            'type' => 'daily',
+                            'experience_reward' => 40,
+                        ],
+                        [
+                            'title' => 'Evening Reflection',
+                            'description' => 'Reflect on your day',
+                            'difficulty_level' => 2,
+                            'type' => 'daily',
+                            'experience_reward' => 45,
+                        ],
+                    ],
+                    'todos' => [
+                        [
+                            'title' => 'Project Planning',
+                            'description' => 'Plan your next project',
+                            'difficulty_level' => 3,
+                            'type' => 'todo',
+                            'experience_reward' => 100,
+                        ],
+                        [
+                            'title' => 'Learning Goals',
+                            'description' => 'Set learning goals for the week',
+                            'difficulty_level' => 2,
+                            'type' => 'todo',
+                            'experience_reward' => 60,
+                        ],
+                    ],
+                ];
+            })
         ]);
     });
 
