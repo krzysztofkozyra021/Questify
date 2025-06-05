@@ -40,6 +40,7 @@ const showErrorModal = ref(false);
 const errorMessage = ref('');
 const showCreateTodoModal = ref(false);
 const showEditTodoModal = ref(false);
+const showCompletedTodos = ref(false);
 const selectedTodo = ref(null);
 const showDeleteConfirmationModal = ref(false);
 const todoToDelete = ref(null);
@@ -65,8 +66,16 @@ watch(() => props.todoTasks, (newTodos) => {
 }, { deep: true, immediate: true });
 
 // Computed
-const todosResultFromSearchMode = computed(() => {
+const todosResult = computed(() => {
   let filtered = localTodos.value;
+  
+  // Apply completed filter
+  if (showCompletedTodos.value) {
+    filtered = filtered.filter(todo => todo.is_completed);
+  } else {
+    filtered = filtered.filter(todo => !todo.is_completed);
+  }
+
   // Apply search filter if in search mode
   if (isSearchMode.value && searchQuery.value) {
     const query = searchQuery.value.toLowerCase();
@@ -94,9 +103,6 @@ const toggleSearchMode = () => {
     newTodo.value = tempInputValue.value;
   }
 };
-
-
-
 
 // Methods
 const addTodo = () => {
@@ -131,7 +137,6 @@ const addTodo = () => {
   }
 };
 
-
 const completeTodo = (todo) => {
   if(remainingHealth.value < todo.overdue_days) {
     errorMessage.value = trans('You do not have enough health to complete this task.');
@@ -160,6 +165,30 @@ const completeTodo = (todo) => {
   });
 };
 
+const uncompleteTodo = (todo) => {
+  router.post(`/tasks/todos/${todo.id}/uncomplete`, {
+    is_completed: checkboxStates.value[todo.id],
+  }, {
+    preserveScroll: true,
+    preserveState: true,
+    only: ['userStatistics', 'todoTasks'],
+    onSuccess: () => {
+      addNotification("-" + todo.experience_reward + " " + trans('XP'), 'exp');
+      if (todo.overdue_days > 0) {
+        addNotification("+" + todo.overdue_days + " " + trans('HP'), 'health');
+      }
+      syncTodos();
+    },
+    onError: () => {
+      addNotification(trans('Failed to uncomplete todo'), 'error');
+      checkboxStates.value[todo.id] = todo.is_completed;
+    }
+  });
+};
+
+const filterCompletedTodos = () => {
+  showCompletedTodos.value = !showCompletedTodos.value;
+};
 
 const openEditTodoModal = (todo) => {
   selectedTodo.value = todo;
@@ -251,7 +280,16 @@ const cancelDelete = () => {
       @confirm="confirmDelete"
       @cancel="cancelDelete"
     />
-    <h2 class="text-base sm:text-lg md:text-xl font-bold text-stone-800 border-b-2 border-stone-600 pb-2 mb-3 break-words">{{ trans("To Do's") }}</h2>
+    <div class="flex flex-col sm:flex-row items-start sm:items-center mb-3 sm:mb-4">
+      <h2 class="text-base sm:text-lg md:text-xl font-bold text-stone-800 border-b-2 border-stone-600 pb-2 break-words">{{ trans('To Do\'s') }}</h2>
+      <div class="flex flex-row gap-2 sm:gap-3 mt-2 sm:mt-0 sm:ml-auto">
+        <button @click="filterCompletedTodos" 
+          :class="{ 'text-amber-600 border-b-2 border-amber-600': showCompletedTodos }" 
+          class="text-xs sm:text-sm font-medium text-stone-600 hover:text-amber-600 transition-colors duration-200 whitespace-nowrap">
+          {{ trans('Completed') }}
+        </button>
+      </div>
+    </div>
     <div class="flex flex-col xl:flex-row xl:items-center mb-2 sm:mb-3 gap-2">
       <div class="flex-1">
         <input 
@@ -321,16 +359,17 @@ const cancelDelete = () => {
       </div>
     </div>
     <ul class="flex-1 space-y-2 overflow-y-auto pr-1">
-      <li v-for="todo in todosResultFromSearchMode" :key="todo.id" class="bg-white rounded-lg shadow">
-        <div v-if="!todo.is_completed">
+      <li v-for="todo in todosResult" :key="todo.id" class="bg-white rounded-lg shadow">
         <div class="flex items-stretch gap-2 pr-2 md:pr-4">
           <div class="flex items-center justify-center px-2 md:px-3 py-2 rounded-l-lg flex-shrink-0"
-          :class="{'bg-stone-600': !todo.difficulty}" :style="todo.difficulty ? { backgroundColor: todo.difficulty.color || '#57534e' } : {}">
+          :class="{'!bg-stone-600': !todo.difficulty || todo.is_completed} "
+          :style="{ backgroundColor: todo.difficulty ? todo.difficulty.color : '#57534e' }"
+          >
             <input 
               :id="todo.id"
               type="checkbox" 
               v-model="checkboxStates[todo.id]"
-              @change="completeTodo(todo)" 
+              @change="todo.is_completed ? uncompleteTodo(todo) : completeTodo(todo)" 
               class="w-4 h-4 md:w-6 md:h-6 rounded-md border-2 border-white cursor-pointer transition-all duration-200 ease-in-out
               checked:bg-white checked:border-white focus:ring-2 focus:ring-offset-2 focus:ring-white focus:outline-none
               hover:scale-110" 
@@ -343,7 +382,7 @@ const cancelDelete = () => {
           <div class="flex-1 py-2 cursor-pointer hover:bg-stone-50 transition-colors duration-200 min-w-0" @click="openEditTodoModal(todo)">
             <div class="flex flex-wrap items-center gap-1 md:gap-2">
               <div 
-                class="font-semibold text-stone-800 text-sm md:text-base break-words overflow-hidden" 
+                class="font-semibold text-stone-800 text-sm md:text-base break-words overflow-hidden " 
                 :class="{ 'line-through text-stone-400': todo.is_completed }"
               >
                 {{ todo.title }}
@@ -371,10 +410,10 @@ const cancelDelete = () => {
                 - {{ todo.overdue_days }} {{ trans('HP') }}
               </span>
               <span 
-                v-if="todo.due_date" 
+                v-if="todo.due_date && !todo.is_completed" 
                 class="text-xs text-stone-600 font-bold whitespace-nowrap flex-shrink-0"
               >
-                <span :class="{ 'line-through': todo.overdue_days > 0 }">
+                <span :class="{ 'line-through': todo.overdue_days > 0}">
                   {{ new Date(todo.due_date).toLocaleDateString() }}
                 </span>
                 <span 
@@ -458,7 +497,6 @@ const cancelDelete = () => {
               </button>
             </div>
           </div>
-        </div>
         </div>
       </li>
     </ul>
