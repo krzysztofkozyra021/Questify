@@ -64,6 +64,7 @@ Route::middleware(["auth"])->group(function (): void {
             Route::post("/store", [TaskController::class, "storeTodo"])->name("store");
             Route::put("/update/{todo}", [TaskController::class, "updateTodo"])->name("update");
             Route::post("/{todo}/complete", [TaskController::class, "completeTodo"])->name("complete");
+            Route::post("/{todo}/uncomplete", [TaskController::class, "uncompleteTodo"])->name("uncomplete");
         });
 
         // Dailies routes
