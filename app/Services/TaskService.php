@@ -437,7 +437,39 @@ class TaskService
         $userStats->save();
     }
 
+    public function uncompleteTodo(Task $todo): void
+    {
+        $todo->update([
+            "is_completed" => false,
+            "completed_at" => null,
+        ]);
 
+        // Load the difficulty relationship if not already loaded
+        if (!$todo->relationLoaded("difficulty")) {
+            $todo->load("difficulty");
+        }
+
+        $todo->update([
+            "is_completed" => false,
+            "completed_at" => null,
+        ]);
+
+        $todo->next_reset_at = null;
+        $todo->is_completed = false;
+        $todo->save();
+
+        $user = $todo->users()->first();
+        $userStats = $user->userStatistics;
+        $expLoss = $todo->experience_reward;
+
+        $healthRestore = $todo->overdue_days;
+        $userStats->current_health = min($userStats->max_health, $userStats->current_health + $healthRestore);
+        
+        // Subtract experience and ensure it doesn't go below 0
+        $userStats->current_experience = max(0, $userStats->current_experience - $expLoss);
+        
+        $userStats->save();
+    }
     public function processTags(Task $task, array $tags): array
     {
         // Process tags
