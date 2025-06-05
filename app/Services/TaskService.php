@@ -174,20 +174,7 @@ class TaskService
                 throw new \Exception("Habit not found after update");
             }
 
-            // Process tags
-            $tagIds = [];
-
-            foreach ($tags as $tagName) {
-                $tagName = trim($tagName);
-
-                if (!empty($tagName)) {
-                    $tag = Tag::firstOrCreate(
-                        ["name" => $tagName],
-                        ["user_id" => $habit->user_id ?? auth()->id()],
-                    );
-                    $tagIds[] = $tag->id;
-                }
-            }
+            $tagIds = $this->processTags($habit, $tags);
 
             // Sync tags using the fresh task instance
             $habit->tags()->sync($tagIds);
@@ -319,21 +306,7 @@ class TaskService
                 throw new \Exception("Todo not found after update");
             }
 
-            // Process tags
-            $tagIds = [];
-
-            foreach ($tags as $tagName) {
-                $tagName = trim($tagName);
-
-                if (!empty($tagName)) {
-                    $tag = Tag::firstOrCreate(
-                        ["name" => $tagName],
-                        ["user_id" => $todo->user_id ?? auth()->id()],
-                    );
-                    $tagIds[] = $tag->id;
-                }
-            }
-
+            $tagIds = $this->processTags($todo, $tags);
             // Sync tags using the fresh task instance
             $todo->tags()->sync($tagIds);
 
@@ -403,6 +376,8 @@ class TaskService
     public function updateDaily(Task $daily, array $data): void
     {
         $daily->update($data);
+        $tagIds = $this->processTags($daily, $data["tags"]);
+        $daily->tags()->sync($tagIds);
         $daily->experience_reward = $this->calculateExperienceReward($daily, $daily->users()->first());
         $daily->save();
     }
@@ -460,6 +435,27 @@ class TaskService
         $userStats->current_energy = min($userStats->max_energy, $userStats->current_energy + $energyToRestore);
         
         $userStats->save();
+    }
+
+
+    public function processTags(Task $task, array $tags): array
+    {
+        // Process tags
+        $tagIds = [];
+
+        foreach ($tags as $tagName) {
+            $tagName = trim($tagName);
+
+            if (!empty($tagName)) {
+                $tag = Tag::firstOrCreate(
+                    ["name" => $tagName],
+                    ["user_id" => $task->user_id ?? auth()->id()],
+                );
+                $tagIds[] = $tag->id;
+            }
+        }
+
+        return $tagIds;
     }
 
     /**
