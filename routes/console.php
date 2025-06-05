@@ -16,6 +16,9 @@ Schedule::command("tasks:increment-overdue-days")
                  ->withoutOverlapping();
 
 Schedule::command("tasks:reset-dailies")
-                // ->dailyAt("00:30")
-                 ->dailyAt("00:30")
+                ->dailyAt("00:30")
+                 ->withoutOverlapping();
+
+Schedule::command("users:reset-energy-and-health")
+                ->dailyAt("00:30")
                  ->withoutOverlapping();
