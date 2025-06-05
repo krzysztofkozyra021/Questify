@@ -72,44 +72,32 @@ const toggleDropdown = (habitId, event) => {
   activeDropdown.value = activeDropdown.value === habitId ? null : habitId;
 };
 
-const habitsResultFromSearchMode = computed(() => {
+const habitsFiltered = computed(() => {
   let filtered = habits.value;
-  // Apply search filter if in search mode
+
+  if(showWeakHabits.value) {
+    showStrongHabits.value = false;
+    filtered = filtered.filter(habit =>
+      habit.not_completed_count > habit.completed_count || habit.not_completed_count === habit.completed_count
+    );
+  } else if(showStrongHabits.value) {
+    showWeakHabits.value = false;
+    filtered = filtered.filter(habit =>
+      habit.not_completed_count < habit.completed_count
+    );
+  }
+
+
   if (isSearchMode.value && searchQuery.value) {
     const query = searchQuery.value.toLowerCase();
     filtered = filtered.filter(habit => 
       habit.title.toLowerCase().includes(query) || 
-      habit.description?.toLowerCase().includes(query) ||
-      habit.tags?.some(tag => tag.name.toLowerCase().includes(query))
+      habit.description?.toLowerCase().includes(query)
     );
   }
+
+  
   return filtered;
-});
-
-const filterWeakHabits = computed(() => {
-  showStrongHabits.value = false;
-  showWeakHabits.value = !showWeakHabits.value;
-  if (showWeakHabits.value) {
-    habits.value = tempHabits.value;
-    habits.value = habits.value.filter(habit =>
-      habit.not_completed_count > habit.completed_count || habit.not_completed_count === habit.completed_count
-    );
-  } else {
-    habits.value = tempHabits.value;
-  }
-});
-
-const filterStrongHabits = computed(() => {
-  showWeakHabits.value = false;
-  showStrongHabits.value = !showStrongHabits.value;
-  if (showStrongHabits.value) {
-    habits.value = tempHabits.value;
-    habits.value = habits.value.filter(habit =>
-      habit.not_completed_count < habit.completed_count
-    );
-  } else {
-    habits.value = tempHabits.value;
-  }
 });
 
 watch(() => props.habits, (newHabits) => {
@@ -117,7 +105,6 @@ watch(() => props.habits, (newHabits) => {
   tempHabits.value = Array.isArray(newHabits) ? [...newHabits] : Object.values(newHabits);
 }, { deep: true });
 
-// Methods
 const showAllHabits = () => {
   showWeakHabits.value = false;
   showStrongHabits.value = false;
@@ -307,12 +294,12 @@ const cancelDelete = () => {
           class="text-xs sm:text-sm font-medium text-stone-600 hover:text-amber-600 transition-colors duration-200 whitespace-nowrap">
           {{ trans('All') }}
         </button>
-        <button @click="filterWeakHabits" 
+        <button @click="showWeakHabits = !showWeakHabits; showStrongHabits = false" 
           :class="{ 'text-amber-600 border-b-2 border-amber-600': showWeakHabits }" 
           class="text-xs sm:text-sm font-medium text-stone-600 hover:text-amber-600 transition-colors duration-200 whitespace-nowrap">
           {{ trans('Weak') }}
         </button>
-        <button @click="filterStrongHabits" 
+        <button @click="showStrongHabits = !showStrongHabits; showWeakHabits = false" 
           :class="{ 'text-amber-600 border-b-2 border-amber-600': showStrongHabits }" 
           class="text-xs sm:text-sm font-medium text-stone-600 hover:text-amber-600 transition-colors duration-200 whitespace-nowrap">
           {{ trans('Strong') }}
@@ -403,7 +390,7 @@ const cancelDelete = () => {
       @edited="showEditHabitModal = false; selectedHabit = null"
     />
     <ul class="flex-1 space-y-2 overflow-y-auto pr-1">  
-      <li v-for="habit in habitsResultFromSearchMode" :key="habit.id" class="bg-white rounded-lg shadow">
+      <li v-for="habit in habitsFiltered" :key="habit.id" class="bg-white rounded-lg shadow">
         <div class="flex items-stretch gap-2">
           <div class="flex items-center justify-center px-2 md:px-3 py-2 rounded-l-lg flex-shrink-0"
           :class="{'bg-lime-500' : habit.completed_count > habit.not_completed_count,
