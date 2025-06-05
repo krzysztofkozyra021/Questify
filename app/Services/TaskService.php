@@ -16,6 +16,10 @@ use Illuminate\Support\Facades\DB;
 
 class TaskService
 {
+
+    public const DIFFICULTY_LEVEL_MULTIPLIER = 10;
+    public const PLAYER_MAX_STATS_MULTIPLIER = 0.1;
+
     public function getUserTasks(User $user): array
     {
         $tasks = $user->tasks()
@@ -34,7 +38,7 @@ class TaskService
     {
         $expMultiplier = $task->difficulty->exp_multiplier;
         $userClassExpMultiplier = $user->userStatistics->classAttributes->exp_multiplier;
-        return intval(round($task->difficulty->difficulty_level * 10 * $expMultiplier * $userClassExpMultiplier));
+        return intval(round($task->difficulty->difficulty_level * self::DIFFICULTY_LEVEL_MULTIPLIER * $expMultiplier * $userClassExpMultiplier));
     }
 
     public function calculateOverdueDays(Task $task): int
@@ -73,24 +77,24 @@ class TaskService
     }
 
     public function deleteUserTask(Task $task): void{
+
         try {
             $task->delete();
-        } catch (\Exception $e) {
+        } 
+        catch (\Exception $e) 
+        {
             \Log::error("Error deleting task:", [
                 "message" => $e->getMessage(),
                 "task_id" => $task->id,
             ]);
-
             throw $e;
         }
     }
 
     public function createTask(User $user, array $data): Task
     {
-        // Ensure type is set
-        if (!isset($data["type"])) {
-            $data["type"] = "todo"; // Default to todo if not specified
-        }
+        // Ensure type is set - default to todo if not specified
+        if (!isset($data["type"])) $data["type"] = "todo";
 
         \Log::info("Creating task with data:", [
             "user_id" => $user->id,
@@ -99,21 +103,13 @@ class TaskService
 
         try {
             return DB::transaction(function () use ($user, $data) {
-                // Create the task
+
                 $task = Task::create($data);
 
                 $task->experience_reward = $this->calculateExperienceReward($task, $user);
                 $task->overdue_days = $this->calculateOverdueDays($task);
-                
                 $task->save();
 
-                \Log::info("Task created:", [
-                    "task_id" => $task->id,
-                    "type" => $task->type,
-                    "overdue_days" => $task->overdue_days,
-                ]);
-
-                // Attach the task to the user
                 $user->tasks()->attach($task->id, [
                     "is_completed" => false,
                     "progress" => 0,
@@ -137,11 +133,12 @@ class TaskService
 
                 return $task;
             });
-        } catch (\Exception $e) {
+        } 
+        catch (\Exception $e) {
+
             \Log::error("Failed to create task:", [
                 "user_id" => $user->id,
                 "error" => $e->getMessage(),
-                "trace" => $e->getTraceAsString(),
             ]);
 
             throw $e;
@@ -151,11 +148,10 @@ class TaskService
     public function updateHabit(Task $habit, array $data, array $tags = []): void
     {
         try {
+            
             $habitId = $habit->id;
+            if (!$habitId) throw new \Exception("Habit ID is missing");
 
-            if (!$habitId) {
-                throw new \Exception("Habit ID is missing");
-            }
 
             \Log::info("UpdateTask called with:", [
                 "habit_id" => $habitId,
@@ -167,6 +163,7 @@ class TaskService
             $habit->update($data);
             $habit->experience_reward = $this->calculateExperienceReward($habit, $habit->users()->first());
             $habit->save();
+
             // Re-fetch the task to ensure we have the latest instance
             $habit = Task::find($habitId);
 
@@ -181,7 +178,9 @@ class TaskService
 
             // Load relationships
             $habit->load("tags", "difficulty");
-        } catch (\Exception $e) {
+
+        } 
+        catch (\Exception $e) {
             \Log::error("Error in updateHabit:", [
                 "message" => $e->getMessage(),
                 "trace" => $e->getTraceAsString(),
@@ -193,10 +192,8 @@ class TaskService
 
     public function completeHabit(Task $habit): void
     {
-        // Load the difficulty relationship if not already loaded
-        if (!$habit->relationLoaded("difficulty")) {
-            $habit->load("difficulty");
-        }
+
+        if (!$habit->relationLoaded("difficulty")) $habit->load("difficulty");
 
         $habit->update([
             "is_completed" => true,
@@ -204,7 +201,6 @@ class TaskService
             "completed_count" => $habit->completed_count + 1,
         ]);
 
-        // Calculate next reset date based on completion time
         if ($habit->reset_frequency) {
             $habit->next_reset_at = $this->calculateNextResetDate($habit);
             $habit->save();
@@ -224,7 +220,7 @@ class TaskService
         $userStats = $habit->users()->first()->userStatistics;
         $playerMaxEnergy = $userStats->max_energy;
 
-        return intval(round(($playerMaxEnergy * 0.1) * $habit->difficulty->energy_cost));
+        return intval(round(($playerMaxEnergy * self::PLAYER_MAX_STATS_MULTIPLIER) * $habit->difficulty->energy_cost));
     }
 
     // Calculate health penalty based on player 10% of max health and task difficulty multiplier
@@ -233,7 +229,7 @@ class TaskService
         $userStats = $habit->users()->first()->userStatistics;
         $playerMaxHealth = $userStats->max_health;
 
-        return intval(round(($playerMaxHealth * 0.1) * $habit->difficulty->health_penalty));
+        return intval(round(($playerMaxHealth * self::PLAYER_MAX_STATS_MULTIPLIER) * $habit->difficulty->health_penalty));
     }
 
 
