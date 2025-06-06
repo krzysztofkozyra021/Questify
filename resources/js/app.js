@@ -13,7 +13,7 @@ const appName = import.meta.env.VITE_APP_NAME || 'Questify'
 const head = createHead()
 
 createInertiaApp({
-  title: (title) => `${title} | ${appName}`,
+  title: (title) => `${title} ${appName}`,
   resolve: (name) =>
     resolvePageComponent(
       `./Pages/${name}.vue`,

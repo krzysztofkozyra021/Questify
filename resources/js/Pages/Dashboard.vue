@@ -19,7 +19,7 @@ const page = usePage()
 const { addNotification } = useNotification()
 
 useHead({
-  title: () => 'Questify',
+  title: () => trans('Dashboard') + ' | Questify',
 })
 
 
