@@ -1,4 +1,6 @@
 {
+    "Weekly Schedule": "Wöchentlicher Plan",
+    "Create Daily": "Tägliche Aufgabe erstellen",
     "Start adventure!": "Abenteuer beginnen!",
     "Begin Your Quest": "Beginne deine Quest",
     "Transform your productivity into an epic adventure!": "Verwandle deine Produktivität in ein episches Abenteuer!",
@@ -421,5 +423,10 @@
    "Next sync in": "Nächste Synchronisation in",
    "Sync": "Synchronisieren",
    "Syncing...": "Synchronisiere...",
-   "Habit streak updated": "Gewohnheitsstreak aktualisiert"
+   "Habit streak updated": "Gewohnheitsstreak aktualisiert",
+   "Statistics": "Statistiken",
+   "Total Completed Tasks": "Gesamte abgeschlossene Aufgaben",
+   "Todos": "Aufgaben",
+   "Highest Streak Habit": "Höchste Gewohnheitsstreak",
+   "Most Missed Habit Streak": "Am häufigsten verpasste Gewohnheitsstreak"
 }
