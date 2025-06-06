@@ -1,54 +1,52 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
-import { ModalProps } from '@/Types/components';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+import { type ModalProps } from '@/Types/components'
 
 const props = withDefaults(defineProps<ModalProps>(), {
   maxWidth: '2xl',
-  closeable: true
-});
+  closeable: true,
+})
 
-const emit = defineEmits<{
-  (e: 'close'): void;
-}>();
+const emit = defineEmits<(e: 'close') => void>()
 
-const showSlot = ref(props.show);
+const showSlot = ref(props.show)
 
 watch(
   () => props.show,
   () => {
     if (props.show) {
-      document.body.style.overflow = 'hidden';
-      showSlot.value = true;
+      document.body.style.overflow = 'hidden'
+      showSlot.value = true
     } else {
-      document.body.style.overflow = '';
+      document.body.style.overflow = ''
       setTimeout(() => {
-        showSlot.value = false;
-      }, 200);
+        showSlot.value = false
+      }, 200)
     }
   },
-);
+)
 
 const close = () => {
   if (props.closeable) {
-    emit('close');
+    emit('close')
   }
-};
+}
 
 const closeOnEscape = (e: KeyboardEvent) => {
   if (e.key === 'Escape') {
-    e.preventDefault();
+    e.preventDefault()
     if (props.show) {
-      close();
+      close()
     }
   }
-};
+}
 
-onMounted(() => document.addEventListener('keydown', closeOnEscape));
+onMounted(() => document.addEventListener('keydown', closeOnEscape))
 
 onUnmounted(() => {
-  document.removeEventListener('keydown', closeOnEscape);
-  document.body.style.overflow = '';
-});
+  document.removeEventListener('keydown', closeOnEscape)
+  document.body.style.overflow = ''
+})
 
 const maxWidthClass = computed(() => {
   return {
@@ -57,8 +55,8 @@ const maxWidthClass = computed(() => {
     lg: 'sm:max-w-lg',
     xl: 'sm:max-w-xl',
     '2xl': 'sm:max-w-2xl',
-  }[props.maxWidth];
-});
+  }[props.maxWidth]
+})
 </script>
 
 <template>
@@ -86,7 +84,7 @@ const maxWidthClass = computed(() => {
           >
             <div
               v-show="show"
-              class="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:p-6 dark:bg-gray-800"
+              class="relative overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:p-6 dark:bg-gray-800"
               :class="maxWidthClass"
             >
               <div
@@ -100,7 +98,7 @@ const maxWidthClass = computed(() => {
                 >
                   <span class="sr-only">Close</span>
                   <svg
-                    class="h-6 w-6"
+                    class="size-6"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke-width="1.5"

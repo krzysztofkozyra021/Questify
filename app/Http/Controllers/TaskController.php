@@ -1,17 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Models\Task;
-use App\Models\TaskDifficulty;
-use App\Models\TaskResetConfig;
-use Illuminate\Http\Request;
-use Inertia\Inertia;
 use App\Services\TaskService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Validation\ValidationException;
+use Inertia\Inertia;
+
 class TaskController extends Controller
 {
-    public function __construct(private TaskService $taskService)
-    {
+    public function __construct(
+        private TaskService $taskService,
+    ) {
         $this->taskService = $taskService;
     }
 
@@ -37,10 +41,107 @@ class TaskController extends Controller
         ]);
 
         $task = $this->taskService->createTask($user, $validated);
+
+        $this->clearDashboardCache();
+
         return redirect()->back();
     }
 
-    public function updateHabit(Request $request, Task $task)
+    public function storeTodo(Request $request)
+    {
+        $user = auth()->user();
+        $validated = $request->validate([
+            "title" => "required|string|max:255",
+            "description" => "nullable|string",
+            "difficulty_level" => "required|integer|exists:task_difficulties,difficulty_level",
+            "due_date" => "required|date",
+            "start_date" => "required|date",
+            "experience_reward" => "required|integer|min:1", 
+            "tags" => "array",
+            "tags.*" => "string|max:50",
+            "type" => "required|string|in:habit,daily,todo",
+        ]);
+
+        $task = $this->taskService->createTask($user, $validated);
+
+        $this->clearDashboardCache();
+
+        return redirect()->back();
+    }
+
+    public function storeDaily(Request $request)
+    {
+        $user = auth()->user();
+        $validated = $request->validate([
+            "title" => "required|string|max:255",
+            "description" => "nullable|string",
+            "difficulty_level" => "required|integer|exists:task_difficulties,difficulty_level",
+            "reset_frequency" => "required|integer|exists:task_reset_configs,id",
+            "start_date" => "required|date",
+            "weekly_schedule" => "nullable|array",
+            "weekly_schedule.*" => "string|in:monday,tuesday,wednesday,thursday,friday,saturday,sunday",
+            "tags" => "array",
+            "tags.*" => "string|max:50",
+            "type" => "required|string|in:habit,daily,todo",
+            "is_completed" => "boolean",
+            "experience_reward" => "required|integer|min:1",
+        ]);
+
+        $task = $this->taskService->createTask($user, $validated);
+
+        $this->clearDashboardCache();
+
+        return redirect()->back();
+    }
+
+    public function updateDaily(Request $request, Task $daily)
+    {
+        $validated = $request->validate([
+            "title" => "required|string|max:255",
+            "description" => "nullable|string",
+            "difficulty_level" => "required|integer|exists:task_difficulties,difficulty_level",
+            "reset_frequency" => "required|integer|exists:task_reset_configs,id",
+            "weekly_schedule" => "nullable|array",
+            "weekly_schedule.*" => "string|in:monday,tuesday,wednesday,thursday,friday,saturday,sunday",
+            "tags" => "array",
+            "tags.*" => "string|max:50",
+        ]);
+
+        $this->taskService->updateDaily($daily, $validated);
+
+        $this->clearDashboardCache();
+
+        return back()->with("success", "Daily updated successfully");
+    }
+
+    public function completeDaily(Task $daily)
+    {
+        $this->taskService->completeDaily($daily);
+
+        $this->clearDashboardCache();
+
+        return back()->with("success", "Daily completed successfully");
+    }
+
+    public function dailyNotCompleted(Task $daily)
+    {
+        $this->taskService->dailyNotCompleted($daily);
+
+        $this->clearDashboardCache();
+
+        return back()->with("success", "Daily set to not completed");
+    }
+
+    public function destroyTask(Task $task)
+    {
+        $this->taskService->deleteUserTask($task);
+
+        $this->clearDashboardCache();
+
+        return back();
+    }
+
+    public function updateHabit(Request $request, Task $habit)
     {
         try {
             $validated = $request->validate([
@@ -51,45 +152,127 @@ class TaskController extends Controller
                 "tags" => "array",
                 "tags.*" => "string|max:50",
             ]);
-            
-            \Log::info('Validated data:', $validated);
-            
+
+            \Log::info("Validated data:", $validated);
+
             // Extract and process tags
-            $tags = $validated['tags'] ?? [];
-            unset($validated['tags']);
-            
-            $this->taskService->updateTask($task, $validated, $tags);
-            
-            return back()->with('success', 'Habit updated successfully');
-            
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            \Log::error('Validation error:', ['errors' => $e->errors()]);
+            $tags = $validated["tags"] ?? [];
+            unset($validated["tags"]);
+
+            $this->taskService->updateHabit($habit, $validated, $tags);
+
+            $this->clearDashboardCache();
+
+            return back()->with("success", "Habit updated successfully");
+        } catch (ValidationException $e) {
+            \Log::error("Validation error:", ["errors" => $e->errors()]);
+
             throw $e;
         } catch (\Exception $e) {
-            \Log::error('Error updating habit:', [
-                'message' => $e->getMessage(),
+            \Log::error("Error updating habit:", [
+                "message" => $e->getMessage(),
             ]);
-            
-            return back()->withErrors(['message' => $e->getMessage()]);
+
+            return back()->withErrors(["message" => $e->getMessage()]);
         }
     }
 
-    public function completeTask(Task $task)
+    public function updateTodo(Request $request, Task $todo)
     {
-        $this->taskService->completeTask($task);
-        return back()->with("success", "Task completed successfully");
+        try {
+            $validated = $request->validate([
+                "title" => "required|string|max:255",
+                "description" => "nullable|string",
+                "difficulty_level" => "required|integer|exists:task_difficulties,difficulty_level",
+                "due_date" => "required|date",
+                "experience_reward" => "required|integer|min:1",
+                "tags" => "array",
+                "tags.*" => "string|max:50",
+            ]);
+
+            \Log::info("Validated data:", $validated);
+
+            // Extract and process tags
+            $tags = $validated["tags"] ?? [];
+            unset($validated["tags"]);
+
+            $this->taskService->updateTodo($todo, $validated, $tags);
+
+            $this->clearDashboardCache();
+
+            return back()->with("success", "Todo updated successfully");
+        } catch (ValidationException $e) {
+            \Log::error("Validation error:", ["errors" => $e->errors()]);
+
+            throw $e;
+        } catch (\Exception $e) {
+            \Log::error("Error updating todo:", [
+                "message" => $e->getMessage(),
+            ]);
+
+            return back()->withErrors(["message" => $e->getMessage()]);
+        }
     }
-    
-    public function taskNotCompleted(Task $task)
+
+    public function completeHabit(Task $habit)
     {
-        $this->taskService->taskNotCompleted($task);
-        return back();
+        $this->taskService->completeHabit($habit);
+
+        $this->clearDashboardCache();
+
+        return back()->with("success", "Habit completed successfully");
+    }
+
+    public function completeTodo(Task $todo)
+    {
+        try {
+            $this->taskService->completeTodo($todo);
+
+            $this->clearDashboardCache();
+
+            return back()->with("success", "Todo completed successfully");
+        } catch (\Exception $e) {
+            \Log::error("Error completing todo:", [
+                "message" => $e->getMessage(),
+                "todo_id" => $todo->id,
+            ]);
+
+            return back()->withErrors(["message" => $e->getMessage()]);
+        }
+    }
+
+    public function uncompleteTodo(Task $todo)
+    {
+        try {
+            $this->taskService->uncompleteTodo($todo);
+
+            $this->clearDashboardCache();
+
+            return back()->with("success", "Todo uncompleted successfully");
+        } catch (\Exception $e) {
+            \Log::error("Error uncompleting todo:", [
+                "message" => $e->getMessage(),
+                "todo_id" => $todo->id,
+            ]);
+
+            return back()->withErrors(["message" => $e->getMessage()]);
+        }
+    }
+
+    public function habitNotCompleted(Task $habit)
+    {
+        $this->taskService->habitNotCompleted($habit);
+
+        $this->clearDashboardCache();
+
+        return back()->with("success", "Habit set to not completed");
     }
 
     public function getUserRemainingHealth()
     {
         $user = auth()->user();
         $userStats = $user->userStatistics;
+
         return $userStats->current_health;
     }
 
@@ -97,33 +280,30 @@ class TaskController extends Controller
     {
         $user = auth()->user();
         $userStats = $user->userStatistics;
+
         return $userStats->current_energy;
     }
-
 
     public function resetTask(Task $task)
     {
         $task->update([
-            'is_completed' => false,
-            'completed_at' => null,
-            'progress' => 0,
+            "is_completed" => false,
+            "completed_at" => null,
+            "progress" => 0,
         ]);
 
-        return back();
-    }
-
-    public function destroy(Task $task)
-    {
-        $task->delete();
-        return back();
+        return back()->with("success", "Task reset successfully");
     }
 
     public function create()
     {
         $formData = $this->taskService->getTaskFormData();
-        
+
         return Inertia::render("Tasks/Create", $formData);
     }
 
-
-} 
+    public function clearDashboardCache(): void
+    {
+        Cache::forget("dashboard_data_" . auth()->user()->id);
+    }
+}

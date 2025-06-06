@@ -8,6 +8,7 @@ use App\Models\ClassAttribute;
 use App\Models\UserStatistics;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 
 class ClassSelectionController extends Controller
@@ -20,7 +21,7 @@ class ClassSelectionController extends Controller
             return redirect()->route("dashboard");
         }
 
-        $classes = ClassAttribute::all();
+        $classes = Cache::remember("class_attributes", 86400, fn() => ClassAttribute::all());
 
         return Inertia::render("ClassSelection/Show", [
             "classes" => $classes->map(fn($class) => [

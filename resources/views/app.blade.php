@@ -6,6 +6,10 @@
 
         <title inertia>{{ config('app.name', 'Questify') }}</title>
 
+        <!-- Favicon -->
+        <link rel="icon" type="image/png" sizes="64x64" href="{{ asset('favicon.png') }}">
+        <link rel="manifest" href="{{ asset('site.webmanifest') }}">
+
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />

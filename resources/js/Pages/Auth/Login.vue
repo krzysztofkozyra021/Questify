@@ -6,9 +6,14 @@ import TextInput from '@/Components/TextInput.vue'
 import { Link, useForm } from '@inertiajs/vue3'
 import { useTranslation } from '@/Composables/useTranslation'
 import Preloader from '@/Components/Preloader.vue'
+import { useHead } from '@vueuse/head'
 
 const { trans } = useTranslation()
 const backgroundImage = '/images/background-landscape-register.jpg'
+
+useHead({
+  title: trans('Login') + ' | Questify',
+})
 
 defineProps({
   canResetPassword: {
@@ -40,24 +45,24 @@ const submit = () => {
     <div class="flex flex-col justify-center items-center w-full lg:w-[35%] min-h-screen bg-stone-900 p-5">
       <div class="w-full max-w-md mx-auto p-6 sm:p-8 bg-stone-800 rounded-2xl shadow-2xl flex flex-col items-center">
         <!-- Logo -->
-        <img src="/images/logo.png" alt="Questify Logo" class="h-14 w-auto mb-6 mt-2 mx-auto" />
+        <img src="/images/logo.png" alt="Questify Logo" class="h-14 w-auto mb-6 mt-2 mx-auto">
 
         <!-- Divider -->
         <div class="flex items-center w-full mb-5 mt-2">
-          <div class="flex-grow h-px bg-stone-600"></div>
+          <div class="grow h-px bg-stone-600" />
           <h3 class="mx-3 text-amber-50 font-bold">{{ trans('Adventure awaits') }}</h3>
-          <div class="flex-grow h-px bg-stone-600"></div>
+          <div class="grow h-px bg-stone-600" />
         </div>
 
         <!-- Login Form -->
-        <form @submit.prevent="submit" class="w-full space-y-4">
+        <form class="w-full space-y-4" @submit.prevent="submit">
           <div>
             <InputLabel for="login" :value="trans('Email or Username (case-sensitive)')" class="text-amber-50 text-sm font-semibold" />
             <TextInput
               id="login"
               v-model="form.login"
               type="text"
-              class="mt-1 block w-full bg-stone-700 text-amber-50 placeholder-stone-400 focus:border-amber-600 focus:ring-amber-600"
+              class="mt-1 block w-full bg-stone-700 text-amber-50 placeholder:text-stone-400 focus:border-amber-600 focus:ring-amber-600"
               required
               autofocus
               autocomplete="username"
@@ -80,7 +85,7 @@ const submit = () => {
               id="password"
               v-model="form.password"
               type="password"
-              class="mt-1 block w-full bg-stone-700 text-amber-50 placeholder-stone-400 focus:border-amber-600 focus:ring-amber-600"
+              class="mt-1 block w-full bg-stone-700 text-amber-50 placeholder:text-stone-400 focus:border-amber-600 focus:ring-amber-600"
               required
               autocomplete="current-password"
               :placeholder="trans('Password')"
@@ -106,6 +111,6 @@ const submit = () => {
       </div>
     </div>
     <!-- Right: Background Image -->
-    <div class="hidden lg:block lg:w-[65%] min-h-screen" :style="{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }"></div>
+    <div class="hidden lg:block lg:w-[65%] min-h-screen" :style="{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }" />
   </div>
 </template>

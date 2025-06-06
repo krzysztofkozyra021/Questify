@@ -17,29 +17,30 @@ use Illuminate\Support\Facades\Route;
 
 require __DIR__ . "/auth.php";
 
-Route::get('/', function () {
+Route::get("/", function () {
     if (!auth()->check()) {
-        return inertia('Auth/Register');
+        return inertia("Auth/Register");
     }
-    return app(DashboardController::class)->index();
-})->name('home');
+
+    return redirect()->route("dashboard");
+})->name("home");
+
+Route::get("/language/{locale}", [LanguageController::class, "switch"])->name("language.switch");
 
 // Information pages
-Route::inertia("/about", "About")->name("about");
-Route::inertia("/faq", "Faq")->name("faq");
-Route::inertia("/terms", "Terms")->name("terms");
-Route::inertia("/policy", "Policy")->name("policy");
-Route::inertia("/contact", "Contact")->name("contact");
+Route::inertia("/about", "Support/About")->name("about");
+Route::inertia("/faq", "Support/Faq")->name("faq");
+Route::inertia("/terms", "Support/Terms")->name("terms");
+Route::inertia("/policy", "Support/Policy")->name("policy");
+Route::inertia("/contact", "Support/Contact")->name("contact");
 
 // Support and reports
 Route::get("/support", [SupportController::class, "index"])->name("support");
 Route::post("/support/contact", [SupportController::class, "contact"])->name("support.contact");
 Route::get("/report/feature", [SupportController::class, "feature"])->name("report.feature");
-Route::post("/report/feature", [SupportController::class, "storeFeature"])->name("report.feature.store");
+Route::post("/report/feature", [SupportController::class, "sendFeatureReport"])->name("report.feature.send");
 Route::get("/report/bug", [SupportController::class, "bug"])->name("report.bug");
-Route::post("/report/bug", [SupportController::class, "storeBug"])->name("report.bug.store");
-
-Route::get("/language/{locale}", [LanguageController::class, "switch"])->name("language.switch");
+Route::post("/report/bug", [SupportController::class, "sendBugReport"])->name("report.bug.send");
 
 // Routes requiring authentication
 Route::middleware(["auth"])->group(function (): void {
@@ -49,15 +50,38 @@ Route::middleware(["auth"])->group(function (): void {
 
     // Dashboard - Main game interface
     Route::get("/dashboard", [DashboardController::class, "index"])->name("dashboard");
-    Route::get("/motivational-quote/{locale}", [DashboardController::class, "getMotivationalQuote"])->name("motivational-quote");
+    Route::get("/motivational-quote/{locale}", [DashboardController::class, "getMotivationalQuote"])->name("dashboard.getMotivationalQuote");
+    Route::get("/api/user/dashboard-data", [DashboardController::class, "getDashboardData"])->name("api.user.dashboard-data");
 
     // Tasks - User-specific tasks
     Route::prefix("tasks")->name("tasks.")->group(function (): void {
-        Route::post("/store/habit", [TaskController::class, "storeHabit"])->name("store.habit");
-        Route::put("/update/habit/{task}", [TaskController::class, "updateHabit"])->name("update.habit");
-        Route::post("/{task}/complete", [TaskController::class, "completeTask"])->name("complete");
+        // Habits routes
+        Route::prefix("habits")->name("habits.")->group(function (): void {
+            Route::post("/store", [TaskController::class, "storeHabit"])->name("store");
+            Route::put("/update/{habit}", [TaskController::class, "updateHabit"])->name("update");
+            Route::post("/{habit}/complete", [TaskController::class, "completeHabit"])->name("complete");
+            Route::post("/{habit}/not-completed", [TaskController::class, "habitNotCompleted"])->name("not-completed");
+        });
+
+        // Todos routes
+        Route::prefix("todos")->name("todos.")->group(function (): void {
+            Route::post("/store", [TaskController::class, "storeTodo"])->name("store");
+            Route::put("/update/{todo}", [TaskController::class, "updateTodo"])->name("update");
+            Route::post("/{todo}/complete", [TaskController::class, "completeTodo"])->name("complete");
+            Route::post("/{todo}/uncomplete", [TaskController::class, "uncompleteTodo"])->name("uncomplete");
+        });
+
+        // Dailies routes
+        Route::prefix("dailies")->name("dailies.")->group(function (): void {
+            Route::post("/store", [TaskController::class, "storeDaily"])->name("store");
+            Route::put("/update/{daily}", [TaskController::class, "updateDaily"])->name("update");
+            Route::post("/{daily}/complete", [TaskController::class, "completeDaily"])->name("complete");
+            Route::post("/{daily}/not-completed", [TaskController::class, "dailyNotCompleted"])->name("not-completed");
+        });
+
+        // Common task routes
+        Route::delete("/{task}", [TaskController::class, "destroyTask"])->name("destroyTask");
         Route::post("/{task}/reset", [TaskController::class, "resetTask"])->name("reset");
-        Route::post("/{task}/not-completed", [TaskController::class, "taskNotCompleted"])->name("not-completed");
         Route::put("/{task}", [TaskController::class, "update"])->name("update");
     });
 
@@ -91,6 +115,4 @@ Route::middleware(["auth"])->group(function (): void {
     // Settings
     Route::get("/settings", [SettingsController::class, "index"])->name("settings");
     Route::put("/settings", [SettingsController::class, "update"])->name("settings.update");
-    Route::post("/settings/locale", [SettingsController::class, "changeLocale"])->name("settings.changeLocale");
-
 });

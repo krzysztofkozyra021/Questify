@@ -24,6 +24,7 @@ use Illuminate\Routing\Middleware\ValidateSignature;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 
 class Kernel extends HttpKernel
 {
@@ -55,7 +56,7 @@ class Kernel extends HttpKernel
         ],
 
         "api" => [
-            // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+            EnsureFrontendRequestsAreStateful::class,
             "throttle:api",
             SubstituteBindings::class,
         ],
@@ -81,13 +82,7 @@ class Kernel extends HttpKernel
         "verified" => EnsureEmailIsVerified::class,
     ];
 
-    protected function schedule(Schedule $schedule)
-{
-    // Check for tasks that need to be reset every 10 minutes
-    $schedule->call(function () {
-        $taskService = app(\App\Services\TaskService::class);
-        $resetCount = $taskService->resetDueTasks();
-        \Log::info("Reset {$resetCount} tasks");
-    })->everyTenMinutes();
-}
+    protected function schedule(Schedule $schedule): void
+    {
+    }
 }

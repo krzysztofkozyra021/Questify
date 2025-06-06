@@ -1,4 +1,8 @@
 <script setup>
+import { useTranslation } from '@/Composables/useTranslation'
+
+const { trans } = useTranslation()
+
 defineProps({
   message: {
     type: String,
@@ -9,7 +13,7 @@ defineProps({
 <template>
   <div v-show="message">
     <p class="text-sm text-red-600 dark:text-red-400">
-      {{ message }}
+      {{ trans(message) }}
     </p>
   </div>
 </template>

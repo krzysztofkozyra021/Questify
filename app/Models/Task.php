@@ -19,17 +19,17 @@ class Task extends Model
         "difficulty_level",
         "reset_frequency",
         "due_date",
+        "overdue_days",
         "start_date",
-        "repeat_every",
-        "repeat_unit",
         "is_completed",
         "is_deadline_task",
         "experience_reward",
         "checklist_items",
+        "weekly_schedule",
         "type",
         "next_reset_at",
         "completed_count",
-        "not_completed_count"
+        "not_completed_count",
     ];
     protected $casts = [
         "due_date" => "datetime",
@@ -38,8 +38,21 @@ class Task extends Model
         "is_deadline_task" => "boolean",
         "experience_reward" => "float",
         "checklist_items" => "array",
-        "next_reset_at" => "datetime"
+        "next_reset_at" => "datetime",
+        "weekly_schedule" => "array",
     ];
+
+    /**
+     * Ensure next_reset_at is always stored in UTC
+     */
+    public function setNextResetAtAttribute($value): void
+    {
+        if ($value instanceof \DateTime) {
+            $this->attributes["next_reset_at"] = $value->setTimezone("UTC");
+        } else {
+            $this->attributes["next_reset_at"] = $value;
+        }
+    }
 
     /**
      * Get the task difficulty that this task belongs to.
