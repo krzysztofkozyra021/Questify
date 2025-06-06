@@ -12,7 +12,7 @@ import { useHead } from '@vueuse/head'
 const { trans } = useTranslation()
 
 useHead({
-  title: trans('Verify Email') + ' | Questify'
+  title: trans('Verify Email') + ' | Questify',
 })
 
 const props = defineProps({
@@ -35,7 +35,7 @@ const verificationLinkSent = computed(
 <template>
   <Preloader />
   <div class="min-h-screen bg-stone-900 flex flex-col">
-    <Header :showPlayerPanel="false" />
+    <Header :show-player-panel="false" />
 
     <div class="flex-1 container mx-auto px-6 py-12">
       <div class="max-w-6xl mx-auto flex gap-12 items-center">
@@ -65,7 +65,7 @@ const verificationLinkSent = computed(
               {{ trans('A new verification link has been sent to the email address you provided during registration.') }}
             </div>
 
-            <form @submit.prevent="submit" class="space-y-6">
+            <form class="space-y-6" @submit.prevent="submit">
               <div class="flex items-center justify-between">
                 <PrimaryButton
                   class="w-full justify-center py-3 bg-amber-600 hover:bg-amber-700 text-amber-50 font-bold rounded-lg transition-colors"

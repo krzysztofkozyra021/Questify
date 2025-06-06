@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
 class TranslationService
@@ -14,21 +15,25 @@ class TranslationService
             return null;
         }
 
-        $deeplApiKey = config("services.deepl.api_key");
-        $response = Http::withHeaders([
-            "Content-Type" => "application/json",
-            "Authorization" => "DeepL-Auth-Key " . $deeplApiKey,
-        ])->post("https://api-free.deepl.com/v2/translate", [
-            "text" => [$text],
-            "target_lang" => $targetLang,
-        ]);
+        $cacheKey = "translation_" . md5($text . $targetLang);
 
-        if ($response->status() !== 200) {
-            return null;
-        }
+        return Cache::remember($cacheKey, 86400, function () use ($text, $targetLang) {
+            $deeplApiKey = config("services.deepl.api_key");
+            $response = Http::withHeaders([
+                "Content-Type" => "application/json",
+                "Authorization" => "DeepL-Auth-Key " . $deeplApiKey,
+            ])->post("https://api-free.deepl.com/v2/translate", [
+                "text" => [$text],
+                "target_lang" => $targetLang,
+            ]);
 
-        $result = $response->json();
+            if ($response->status() !== 200) {
+                return;
+            }
 
-        return $result["translations"][0]["text"] ?? null;
+            $result = $response->json();
+
+            return $result["translations"][0]["text"] ?? null;
+        });
     }
 }

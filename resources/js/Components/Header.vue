@@ -1,56 +1,57 @@
 <script setup>
-import { ref, computed } from 'vue';
-import { usePage, Link, router } from '@inertiajs/vue3';
-import { useTranslation } from '@/Composables/useTranslation';
-import PlayerPanel from '@/Components/PlayerPanel.vue';
-import HamburgerMenu from '@/Components/HamburgerMenu.vue';
-import LanguageSwitcher from '@/Components/LanguageSwitcher.vue';
+import { ref, computed } from 'vue'
+import { usePage, Link, router } from '@inertiajs/vue3'
+import { useTranslation } from '@/Composables/useTranslation'
+import PlayerPanel from '@/Components/PlayerPanel.vue'
+import HamburgerMenu from '@/Components/HamburgerMenu.vue'
 
 const props = defineProps({
   showPlayerPanel: {
     type: Boolean,
-    default: false
-  }
-});
+    default: false,
+  },
+})
 
-const { trans } = useTranslation();
-const page = usePage();
+const { trans } = useTranslation()
+const page = usePage()
 
-const showDropdown = ref(false);
-const toggleDropdown = () => { showDropdown.value = !showDropdown.value; };
-const closeDropdown = () => { showDropdown.value = false; };
-const logout = () => { router.post(route('logout')); };
+const showDropdown = ref(false)
+const toggleDropdown = () => { showDropdown.value = !showDropdown.value }
+const closeDropdown = () => { showDropdown.value = false }
+const logout = () => { router.post(route('logout')) }
 
 const isActive = (routeName) => {
-  const currentUrl = page.url;
-  return currentUrl.includes(routeName);
-};
+  const currentUrl = page.url
+  return currentUrl.includes(routeName)
+}
 
 
 const togglePlayerPanel = () => {
-  props.showPlayerPanel = !props.showPlayerPanel;
-};
+  props.showPlayerPanel = !props.showPlayerPanel
+}
 
 </script>
 
 <template>
   <header class="bg-stone-900 shadow-md">
-    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between px-2 md:px-4 py-2 relative">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between p-2 md:px-4 relative">
       <!-- Left: Logo -->
       <div class="flex items-center gap-2 md:gap-4 w-full md:w-auto justify-between md:justify-start">
         <Link 
-            :href="route('dashboard')" 
-            class="hover:scale-105 transition-all duration-300" 
-          >
-        <img src="/images/logo.png" alt="Logo" class="w-32 md:w-40 h-8 md:h-10" />
+          :href="route('dashboard')" 
+          class="hover:scale-105 transition-all duration-300" 
+        >
+          <img src="/images/logo.png" alt="Logo" class="w-32 md:w-40 h-8 md:h-10">
         </Link>
         <!-- Navigation when user is logged in-->
-        <nav class="hidden md:flex gap-4 lg:gap-6" v-if="page.props.auth.user">
+        <nav v-if="page.props.auth.user" class="hidden md:flex gap-4 lg:gap-6">
           <Link 
             :href="route('dashboard')" 
             class="text-amber-50 text-base md:text-lg font-medium px-2 md:px-4 py-1 md:py-2 transition-colors hover:bg-amber-500 hover:text-amber-50" 
             :class="{ 'border-b-4 border-amber-500 font-bold': isActive('dashboard') }"
-          >{{ trans('Tasks') }}</Link>
+          >
+            {{ trans('Tasks') }}
+          </Link>
         </nav>
         <!-- Mobile Menu -->
         <HamburgerMenu v-if="page.props.auth.user" class="md:hidden" />
@@ -59,7 +60,7 @@ const togglePlayerPanel = () => {
       <!-- Right: Login Button and Player Dropdown -->
       <div class="flex items-center gap-4">
         <!-- Navigation when user is not logged in-->
-        <nav class="hidden md:flex" v-if="!page.props.auth.user">
+        <nav v-if="!page.props.auth.user" class="hidden md:flex">
           <Link 
             :href="route('login')"
             class="block px-4 py-2 text-amber-50 hover:bg-stone-700 transition-colors sm:px-6 sm:py-2 bg-stone-600 hover:bg-stone-700 rounded-lg font-bold"
@@ -68,23 +69,23 @@ const togglePlayerPanel = () => {
           </Link>
         </nav>
         <!-- Player Dropdown -->
-        <div class="hidden md:block relative min-w-[48px] flex justify-end" v-if="page.props.auth.user">
-          <button @click="toggleDropdown" class="focus:outline-none">
-            <svg class="w-8 h-8 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
+        <div v-if="page.props.auth.user" class="hidden md:block relative min-w-[48px] flex justify-end">
+          <button class="focus:outline-none" @click="toggleDropdown">
+            <svg class="size-8 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
               <path d="M10 10a4 4 0 100-8 4 4 0 000 8zm0 2c-3.314 0-6 1.343-6 3v1a1 1 0 001 1h10a1 1 0 001-1v-1c0-1.657-2.686-3-6-3z" />
             </svg>
           </button>
-          <div v-if="showDropdown" @click.away="closeDropdown" class="absolute top-10 right-0 mt-2 w-44 bg-stone-700 rounded-lg shadow-lg border border-stone-600 py-1 z-50">
+          <div v-if="showDropdown" class="absolute top-10 right-0 mt-2 w-44 bg-stone-700 rounded-lg shadow-lg border border-stone-600 py-1 z-50" @click.away="closeDropdown">
             <Link :href="route('character')" class="block px-4 py-2 text-sm font-bold text-amber-50 hover:bg-stone-600 transition-colors">{{ trans('Stats') }}</Link>
             <Link :href="route('settings')" class="block px-4 py-2 text-sm font-bold text-amber-50 hover:bg-stone-600 transition-colors">{{ trans('Settings') }}</Link>
-            <button @click="logout" class="block w-full text-left px-4 py-2 text-sm font-bold text-red-400 hover:bg-stone-600 transition-colors">{{ trans('Log Out') }}</button>
+            <button class="block w-full text-left px-4 py-2 text-sm font-bold text-red-400 hover:bg-stone-600 transition-colors" @click="logout">{{ trans('Log Out') }}</button>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Bottom Row: PlayerPanel -->
-    <div v-if="props.showPlayerPanel" class="bg-stone-800 px-2 md:px-4 py-2">
+    <div v-if="props.showPlayerPanel" class="bg-stone-800 p-2 md:px-4">
       <div class="max-w-7xl mx-auto">
         <PlayerPanel />
       </div>

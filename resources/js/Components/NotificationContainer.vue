@@ -1,8 +1,8 @@
 <script setup>
-import { useNotification } from '@/Composables/useNotification';
-import Notification from '@/Components/Notification.vue';
+import { useNotification } from '@/Composables/useNotification'
+import Notification from '@/Components/Notification.vue'
 
-const { notifications, removeNotification } = useNotification();
+const { notifications, removeNotification } = useNotification()
 </script>
 
 <template>

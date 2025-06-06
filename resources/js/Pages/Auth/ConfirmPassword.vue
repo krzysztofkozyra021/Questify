@@ -15,7 +15,7 @@ import { useHead } from '@vueuse/head'
 const { trans } = useTranslation()
 
 useHead({
-  title: trans('Confirm Password') + ' | Questify'
+  title: trans('Confirm Password') + ' | Questify',
 })
 
 const form = useForm({
@@ -32,7 +32,7 @@ const submit = () => {
 <template>
   <Preloader />
   <div class="min-h-screen bg-stone-900 flex flex-col">
-    <Header :showPlayerPanel="false" />
+    <Header :show-player-panel="false" />
 
     <div class="container mx-auto px-4 sm:px-6 py-8 sm:py-12">
       <div class="max-w-6xl mx-auto flex flex-col lg:flex-row gap-8 lg:gap-12 items-center">
@@ -55,14 +55,14 @@ const submit = () => {
               {{ trans('This is a secure area of the application. Please confirm your password before continuing.') }}
             </div>
 
-            <form @submit.prevent="submit" class="space-y-6">
+            <form class="space-y-6" @submit.prevent="submit">
               <div>
                 <InputLabel for="password" :value="trans('Password')" class="text-stone-100" />
                 <TextInput
                   id="password"
                   v-model="form.password"
                   type="password"
-                  class="mt-1 block w-full bg-slate-700 text-stone-100 placeholder-slate-400 focus:border-amber-600 focus:ring-amber-600"
+                  class="mt-1 block w-full bg-slate-700 text-stone-100 placeholder:text-slate-400 focus:border-amber-600 focus:ring-amber-600"
                   required
                   autocomplete="current-password"
                   autofocus

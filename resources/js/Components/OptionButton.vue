@@ -1,6 +1,6 @@
 <script setup>
-import { router } from '@inertiajs/vue3';
-import { useTranslation } from '@/Composables/useTranslation';
+import { router } from '@inertiajs/vue3'
+import { useTranslation } from '@/Composables/useTranslation'
 
 const { trans } = useTranslation()
 
@@ -22,7 +22,7 @@ const props = defineProps({
 const navigate = () => {
   router.visit(props.route, {
     method: props.method,
-  });
+  })
 }
 
 </script>

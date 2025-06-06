@@ -11,11 +11,14 @@ use App\Models\TaskResetConfig;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class TaskService
 {
+    public const DIFFICULTY_LEVEL_MULTIPLIER = 10;
+    public const PLAYER_MAX_STATS_MULTIPLIER = 0.1;
+
     public function getUserTasks(User $user): array
     {
         $tasks = $user->tasks()
@@ -34,45 +37,52 @@ class TaskService
     {
         $expMultiplier = $task->difficulty->exp_multiplier;
         $userClassExpMultiplier = $user->userStatistics->classAttributes->exp_multiplier;
-        return intval(round($task->difficulty->difficulty_level * 10 * $expMultiplier * $userClassExpMultiplier));
+
+        return intval(round($task->difficulty->difficulty_level * self::DIFFICULTY_LEVEL_MULTIPLIER * $expMultiplier * $userClassExpMultiplier));
     }
 
     public function calculateOverdueDays(Task $task): int
     {
-        if (!$task->due_date) return 0;
-        
+        if (!$task->due_date) {
+            return 0;
+        }
+
         // Use UTC for all calculations
-        $dueDate = Carbon::parse($task->due_date)->setTimezone('UTC')->startOfDay();
-        $startDate = Carbon::parse($task->start_date)->setTimezone('UTC')->startOfDay();
-        $now = Carbon::now()->setTimezone('UTC')->startOfDay();
-        
-        Log::debug('Calculating overdue days:', [
-            'task_id' => $task->id,
-            'due_date' => $dueDate->toDateTimeString(),
-            'start_date' => $startDate->toDateTimeString(),
-            'now' => $now->toDateTimeString(),
-            'is_future' => $startDate->isFuture(),
-            'is_gte' => $now->gte($dueDate),
-            'diff_days' => $dueDate->diffInDays($now)
+        $dueDate = Carbon::parse($task->due_date)->setTimezone("UTC")->startOfDay();
+        $startDate = Carbon::parse($task->start_date)->setTimezone("UTC")->startOfDay();
+        $now = Carbon::now()->setTimezone("UTC")->startOfDay();
+
+        Log::debug("Calculating overdue days:", [
+            "task_id" => $task->id,
+            "due_date" => $dueDate->toDateTimeString(),
+            "start_date" => $startDate->toDateTimeString(),
+            "now" => $now->toDateTimeString(),
+            "is_future" => $startDate->isFuture(),
+            "is_gte" => $now->gte($dueDate),
+            "diff_days" => $dueDate->diffInDays($now),
         ]);
-        
+
         // If the task hasn't started yet, return 0
-        if ($startDate->isFuture()) return 0;
-        
+        if ($startDate->isFuture()) {
+            return 0;
+        }
+
         // If current date is greater than or equal to due date, calculate days between due date and now
         if ($now->gte($dueDate)) {
             $days = intval($dueDate->diffInDays($now));
-            Log::info('Overdue days calculated:', [
-                'task_id' => $task->id,
-                'days' => $days
+            Log::info("Overdue days calculated:", [
+                "task_id" => $task->id,
+                "days" => $days,
             ]);
+
             return $days;
         }
-        
+
         return 0;
     }
 
-    public function deleteUserTask(Task $task): void{
+    public function deleteUserTask(Task $task): void
+    {
         try {
             $task->delete();
         } catch (\Exception $e) {
@@ -87,9 +97,9 @@ class TaskService
 
     public function createTask(User $user, array $data): Task
     {
-        // Ensure type is set
+        // Ensure type is set - default to todo if not specified
         if (!isset($data["type"])) {
-            $data["type"] = "todo"; // Default to todo if not specified
+            $data["type"] = "todo";
         }
 
         \Log::info("Creating task with data:", [
@@ -99,21 +109,12 @@ class TaskService
 
         try {
             return DB::transaction(function () use ($user, $data) {
-                // Create the task
                 $task = Task::create($data);
 
                 $task->experience_reward = $this->calculateExperienceReward($task, $user);
                 $task->overdue_days = $this->calculateOverdueDays($task);
-                
                 $task->save();
 
-                \Log::info("Task created:", [
-                    "task_id" => $task->id,
-                    "type" => $task->type,
-                    "overdue_days" => $task->overdue_days,
-                ]);
-
-                // Attach the task to the user
                 $user->tasks()->attach($task->id, [
                     "is_completed" => false,
                     "progress" => 0,
@@ -141,7 +142,6 @@ class TaskService
             \Log::error("Failed to create task:", [
                 "user_id" => $user->id,
                 "error" => $e->getMessage(),
-                "trace" => $e->getTraceAsString(),
             ]);
 
             throw $e;
@@ -167,6 +167,7 @@ class TaskService
             $habit->update($data);
             $habit->experience_reward = $this->calculateExperienceReward($habit, $habit->users()->first());
             $habit->save();
+
             // Re-fetch the task to ensure we have the latest instance
             $habit = Task::find($habitId);
 
@@ -174,20 +175,7 @@ class TaskService
                 throw new \Exception("Habit not found after update");
             }
 
-            // Process tags
-            $tagIds = [];
-
-            foreach ($tags as $tagName) {
-                $tagName = trim($tagName);
-
-                if (!empty($tagName)) {
-                    $tag = Tag::firstOrCreate(
-                        ["name" => $tagName],
-                        ["user_id" => $habit->user_id ?? auth()->id()],
-                    );
-                    $tagIds[] = $tag->id;
-                }
-            }
+            $tagIds = $this->processTags($habit, $tags);
 
             // Sync tags using the fresh task instance
             $habit->tags()->sync($tagIds);
@@ -206,7 +194,6 @@ class TaskService
 
     public function completeHabit(Task $habit): void
     {
-        // Load the difficulty relationship if not already loaded
         if (!$habit->relationLoaded("difficulty")) {
             $habit->load("difficulty");
         }
@@ -217,7 +204,6 @@ class TaskService
             "completed_count" => $habit->completed_count + 1,
         ]);
 
-        // Calculate next reset date based on completion time
         if ($habit->reset_frequency) {
             $habit->next_reset_at = $this->calculateNextResetDate($habit);
             $habit->save();
@@ -237,7 +223,7 @@ class TaskService
         $userStats = $habit->users()->first()->userStatistics;
         $playerMaxEnergy = $userStats->max_energy;
 
-        return intval(round(($playerMaxEnergy * 0.1) * $habit->difficulty->energy_cost));
+        return intval(round(($playerMaxEnergy * self::PLAYER_MAX_STATS_MULTIPLIER) * $habit->difficulty->energy_cost));
     }
 
     // Calculate health penalty based on player 10% of max health and task difficulty multiplier
@@ -246,9 +232,8 @@ class TaskService
         $userStats = $habit->users()->first()->userStatistics;
         $playerMaxHealth = $userStats->max_health;
 
-        return intval(round(($playerMaxHealth * 0.1) * $habit->difficulty->health_penalty));
+        return intval(round(($playerMaxHealth * self::PLAYER_MAX_STATS_MULTIPLIER) * $habit->difficulty->health_penalty));
     }
-
 
     public function completeTodo(Task $todo): void
     {
@@ -319,21 +304,7 @@ class TaskService
                 throw new \Exception("Todo not found after update");
             }
 
-            // Process tags
-            $tagIds = [];
-
-            foreach ($tags as $tagName) {
-                $tagName = trim($tagName);
-
-                if (!empty($tagName)) {
-                    $tag = Tag::firstOrCreate(
-                        ["name" => $tagName],
-                        ["user_id" => $todo->user_id ?? auth()->id()],
-                    );
-                    $tagIds[] = $tag->id;
-                }
-            }
-
+            $tagIds = $this->processTags($todo, $tags);
             // Sync tags using the fresh task instance
             $todo->tags()->sync($tagIds);
 
@@ -403,6 +374,8 @@ class TaskService
     public function updateDaily(Task $daily, array $data): void
     {
         $daily->update($data);
+        $tagIds = $this->processTags($daily, $data["tags"]);
+        $daily->tags()->sync($tagIds);
         $daily->experience_reward = $this->calculateExperienceReward($daily, $daily->users()->first());
         $daily->save();
     }
@@ -412,10 +385,9 @@ class TaskService
         $daily->update([
             "is_completed" => true,
             "completed_at" => now(),
-            
         ]);
 
-    // Set next_reset_at if there's a reset configuration
+        // Set next_reset_at if there's a reset configuration
         if ($daily->reset_frequency) {
             $daily->next_reset_at = $this->calculateNextResetDate($daily);
             $daily->save();
@@ -451,15 +423,69 @@ class TaskService
         $user = $daily->users()->first();
         $userStats = $user->userStatistics;
         $expLoss = $daily->experience_reward;
-        
+
         // Subtract experience and ensure it doesn't go below 0
         $userStats->current_experience = max(0, $userStats->current_experience - $expLoss);
-        
+
         // Calculate energy to restore (same as the penalty that was taken)
         $energyToRestore = $this->getEnergyPenalty($daily);
         $userStats->current_energy = min($userStats->max_energy, $userStats->current_energy + $energyToRestore);
-        
+
         $userStats->save();
+    }
+
+    public function uncompleteTodo(Task $todo): void
+    {
+        $todo->update([
+            "is_completed" => false,
+            "completed_at" => null,
+        ]);
+
+        // Load the difficulty relationship if not already loaded
+        if (!$todo->relationLoaded("difficulty")) {
+            $todo->load("difficulty");
+        }
+
+        $todo->update([
+            "is_completed" => false,
+            "completed_at" => null,
+        ]);
+
+        $todo->next_reset_at = null;
+        $todo->is_completed = false;
+        $todo->save();
+
+        $user = $todo->users()->first();
+        $userStats = $user->userStatistics;
+        $expLoss = $todo->experience_reward;
+
+        $healthRestore = $todo->overdue_days;
+        $userStats->current_health = min($userStats->max_health, $userStats->current_health + $healthRestore);
+
+        // Subtract experience and ensure it doesn't go below 0
+        $userStats->current_experience = max(0, $userStats->current_experience - $expLoss);
+
+        $userStats->save();
+    }
+
+    public function processTags(Task $task, array $tags): array
+    {
+        // Process tags
+        $tagIds = [];
+
+        foreach ($tags as $tagName) {
+            $tagName = trim($tagName);
+
+            if (!empty($tagName)) {
+                $tag = Tag::firstOrCreate(
+                    ["name" => $tagName],
+                    ["user_id" => $task->user_id ?? auth()->id()],
+                );
+                $tagIds[] = $tag->id;
+            }
+        }
+
+        return $tagIds;
     }
 
     /**
@@ -469,21 +495,25 @@ class TaskService
     public function calculateNextResetDate(Task $task): ?Carbon
     {
         $config = $task->resetConfig;
-        $baseDate = $task->updated_at->setTimezone('UTC');
+        $baseDate = $task->updated_at->setTimezone("UTC");
         $resetDate = null;
 
         switch ($config->frequency_type) {
             case "daily":
                 $resetDate = $baseDate->copy()->addDay();
+
                 break;
             case "weekly":
                 $resetDate = $baseDate->copy()->addWeek();
+
                 break;
             case "monthly":
                 $resetDate = $baseDate->copy()->addMonth();
+
                 break;
             case "yearly":
                 $resetDate = $baseDate->copy()->addYear();
+
                 break;
             case "custom":
                 break;

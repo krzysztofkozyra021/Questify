@@ -13,7 +13,7 @@ import { useHead } from '@vueuse/head'
 const { trans } = useTranslation()
 
 useHead({
-  title: trans('Forgot Password') + ' | Questify'
+  title: trans('Forgot Password') + ' | Questify',
 })
 
 defineProps({
@@ -35,11 +35,10 @@ const submit = () => {
 <template>
   <Preloader />
   <div class="min-h-screen bg-stone-900 flex flex-col">
-    <Header :showPlayerPanel="false" />
+    <Header :show-player-panel="false" />
 
     <div class="flex-1 container mx-auto px-4 sm:px-6 flex items-center">
       <div class="max-w-6xl mx-auto flex flex-col lg:flex-row gap-8 lg:gap-12 items-center w-full">
-        
         <!-- Left Column - Motivation Text -->
         <div class="flex-1 text-center lg:text-left">
           <h2 class="text-4xl sm:text-5xl font-bold text-amber-100 mb-4 sm:mb-6 leading-tight">{{ trans('Lost Your Way?') }}</h2>
@@ -66,14 +65,14 @@ const submit = () => {
               {{ status }}
             </div>
 
-            <form @submit.prevent="submit" class="space-y-6">
+            <form class="space-y-6" @submit.prevent="submit">
               <div>
                 <InputLabel for="email" :value="trans('Email')" class="text-amber-50" />
                 <TextInput
                   id="email"
                   v-model="form.email"
                   type="email"
-                  class="mt-1 block w-full bg-stone-700 text-amber-50 placeholder-stone-400 focus:border-amber-600 focus:ring-amber-600"
+                  class="mt-1 block w-full bg-stone-700 text-amber-50 placeholder:text-stone-400 focus:border-amber-600 focus:ring-amber-600"
                   required
                   autofocus
                   autocomplete="username"

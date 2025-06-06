@@ -13,12 +13,12 @@ const currentLanguage = computed(() => {
 <template>
   <div class="relative">
     <button
-      @click="isOpen = !isOpen"
       class="flex items-center space-x-2 px-4 py-2 bg-slate-700 text-stone-100 rounded-lg hover:bg-slate-600 transition-colors"
+      @click="isOpen = !isOpen"
     >
       <span>{{ trans(currentLanguage) }}</span>
       <svg
-        class="w-4 h-4"
+        class="size-4"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -39,9 +39,9 @@ const currentLanguage = computed(() => {
       <button
         v-for="(code, name) in availableLocales"
         :key="code"
-        @click="switchLanguage(code)"
         class="w-full text-left px-4 py-2 text-stone-100 hover:bg-slate-600 transition-colors"
         :class="{ 'bg-slate-600': currentLocale === code }"
+        @click="switchLanguage(code)"
       >
         {{ trans(name) }}
       </button>

@@ -14,7 +14,7 @@ import { useHead } from '@vueuse/head'
 const { trans } = useTranslation()
 
 useHead({
-  title: trans('Reset Password') + ' | Questify'
+  title: trans('Reset Password') + ' | Questify',
 })
 
 const props = defineProps({
@@ -45,7 +45,7 @@ const submit = () => {
 <template>
   <Preloader />
   <div class="min-h-screen bg-stone-900 flex flex-col">
-    <Header :showPlayerPanel="false" />
+    <Header :show-player-panel="false" />
 
     <div class="flex-1 container mx-auto px-4 sm:px-6 py-8 sm:py-12">
       <div class="max-w-6xl mx-auto flex flex-col lg:flex-row gap-8 lg:gap-12 items-center">
@@ -64,14 +64,14 @@ const submit = () => {
           <div class="bg-stone-800 rounded-2xl p-6 sm:p-8 shadow-2xl">
             <h2 class="text-2xl sm:text-3xl font-bold text-center text-amber-50 mb-6 sm:mb-8">{{ trans('Reset Password') }}</h2>
 
-            <form @submit.prevent="submit" class="space-y-6">
+            <form class="space-y-6" @submit.prevent="submit">
               <div>
                 <InputLabel for="email" :value="trans('Email')" class="text-amber-50" />
                 <TextInput
                   id="email"
                   v-model="form.email"
                   type="email"
-                  class="mt-1 block w-full bg-stone-700 text-amber-50 placeholder-stone-400 focus:border-amber-600 focus:ring-amber-600"
+                  class="mt-1 block w-full bg-stone-700 text-amber-50 placeholder:text-stone-400 focus:border-amber-600 focus:ring-amber-600"
                   required
                   autofocus
                   autocomplete="username"
@@ -85,7 +85,7 @@ const submit = () => {
                   id="password"
                   v-model="form.password"
                   type="password"
-                  class="mt-1 block w-full bg-stone-700 text-amber-50 placeholder-stone-400 focus:border-amber-600 focus:ring-amber-600"
+                  class="mt-1 block w-full bg-stone-700 text-amber-50 placeholder:text-stone-400 focus:border-amber-600 focus:ring-amber-600"
                   required
                   autocomplete="new-password"
                 />
@@ -102,7 +102,7 @@ const submit = () => {
                   id="password_confirmation"
                   v-model="form.password_confirmation"
                   type="password"
-                  class="mt-1 block w-full bg-stone-700 text-amber-50 placeholder-stone-400 focus:border-amber-600 focus:ring-amber-600"
+                  class="mt-1 block w-full bg-stone-700 text-amber-50 placeholder:text-stone-400 focus:border-amber-600 focus:ring-amber-600"
                   required
                   autocomplete="new-password"
                 />

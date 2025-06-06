@@ -1,73 +1,73 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
-import { useTranslation } from '@/Composables/useTranslation';
+import { ref, onMounted, onUnmounted } from 'vue'
+import { useTranslation } from '@/Composables/useTranslation'
 
-const { trans } = useTranslation();
+const { trans } = useTranslation()
 
 const props = defineProps({
   message: {
     type: String,
-    required: true
+    required: true,
   },
   type: {
     type: String,
     default: 'success',
-    validator: (value) => ['success', 'error', 'warning', 'info', 'exp', 'health', 'energy'].includes(value)
+    validator: (value) => ['success', 'error', 'warning', 'info', 'exp', 'health', 'energy'].includes(value),
   },
   duration: {
     type: Number,
-    default: 3000
-  }
-});
+    default: 3000,
+  },
+})
 
-const emit = defineEmits(['close']);
-const isVisible = ref(true);
-let timeout;
+const emit = defineEmits(['close'])
+const isVisible = ref(true)
+let timeout
 
 const colors = {
   success: {
     bg: 'bg-green-100',
     text: 'text-green-800',
     border: 'border-green-200',
-    icon: 'text-green-600'
+    icon: 'text-green-600',
   },
   error: {
     bg: 'bg-red-100',
     text: 'text-red-800',
     border: 'border-red-200',
-    icon: 'text-red-600'
+    icon: 'text-red-600',
   },
   warning: {
     bg: 'bg-yellow-100',
     text: 'text-yellow-800',
     border: 'border-yellow-200',
-    icon: 'text-yellow-600'
+    icon: 'text-yellow-600',
   },
   info: {
     bg: 'bg-blue-100',
     text: 'text-blue-800',
     border: 'border-blue-200',
-    icon: 'text-blue-600'
+    icon: 'text-blue-600',
   },
   exp: {
     bg: 'bg-amber-100',
     text: 'text-amber-800',
     border: 'border-amber-200',
-    icon: 'text-amber-600'
+    icon: 'text-amber-600',
   },
   health: {
     bg: 'bg-red-100',
     text: 'text-red-800',
     border: 'border-red-200',
-    icon: 'text-red-600'
+    icon: 'text-red-600',
   },
   energy: {
     bg: 'bg-blue-100',
     text: 'text-blue-800',
     border: 'border-blue-200',
-    icon: 'text-blue-600'
-  }
-};
+    icon: 'text-blue-600',
+  },
+}
 
 const icons = {
   success: `<svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -90,19 +90,19 @@ const icons = {
   </svg>`,
   energy: `<svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
     <path d="M13 10V3L4 14h7v7l9-11h-7z" />
-  </svg>`
-};
+  </svg>`,
+}
 
 onMounted(() => {
   timeout = setTimeout(() => {
-    isVisible.value = false;
-    emit('close');
-  }, props.duration);
-});
+    isVisible.value = false
+    emit('close')
+  }, props.duration)
+})
 
 onUnmounted(() => {
-  if (timeout) clearTimeout(timeout);
-});
+  if (timeout) clearTimeout(timeout)
+})
 </script>
 
 <template>
@@ -116,16 +116,16 @@ onUnmounted(() => {
     >
       <div class="p-2 sm:p-3">
         <div class="flex items-start gap-2 sm:gap-3">
-          <div class="flex-shrink-0">
+          <div class="shrink-0">
             <div 
               class="rounded-full p-0.5"
               :class="colors[type].bg"
             >
               <div 
-                class="h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center"
+                class="size-4 sm:size-5 flex items-center justify-center"
                 :class="colors[type].icon"
                 v-html="icons[type]"
-              ></div>
+              />
             </div>
           </div>
           <div class="flex-1 min-w-0">
@@ -136,14 +136,14 @@ onUnmounted(() => {
               {{ trans(message) }}
             </p>
           </div>
-          <div class="flex-shrink-0">
+          <div class="shrink-0">
             <button
-              @click="isVisible = false; emit('close')"
               class="inline-flex text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-stone-500 rounded-md p-1"
               :class="colors[type].text"
+              @click="isVisible = false; emit('close')"
             >
               <span class="sr-only">{{ trans('Close') }}</span>
-              <svg class="h-3 w-3 sm:h-4 sm:w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <svg class="size-3 sm:size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
               </svg>
             </button>

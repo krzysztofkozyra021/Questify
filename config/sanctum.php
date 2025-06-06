@@ -1,9 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+use Illuminate\Cookie\Middleware\EncryptCookies;
+use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
+use Laravel\Sanctum\Http\Middleware\AuthenticateSession;
 use Laravel\Sanctum\Sanctum;
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Stateful Domains
@@ -15,10 +19,10 @@ return [
     |
     */
 
-    'stateful' => explode(',', env('SANCTUM_STATEFUL_DOMAINS', sprintf(
-    '%s%s',
-    'localhost,localhost:5173,127.0.0.1,127.0.0.1:5173,::1,0.0.0.0:5173',
-    Sanctum::currentApplicationUrlWithPort(),
+    "stateful" => explode(",", env("SANCTUM_STATEFUL_DOMAINS", sprintf(
+        "%s%s",
+        "localhost,localhost:5173,127.0.0.1,127.0.0.1:5173,::1,0.0.0.0:5173",
+        Sanctum::currentApplicationUrlWithPort(),
     ))),
 
     /*
@@ -33,7 +37,7 @@ return [
     |
     */
 
-    'guard' => ['web'],
+    "guard" => ["web"],
 
     /*
     |--------------------------------------------------------------------------
@@ -46,7 +50,7 @@ return [
     |
     */
 
-    'expiration' => null,
+    "expiration" => null,
 
     /*
     |--------------------------------------------------------------------------
@@ -61,7 +65,7 @@ return [
     |
     */
 
-    'token_prefix' => env('SANCTUM_TOKEN_PREFIX', ''),
+    "token_prefix" => env("SANCTUM_TOKEN_PREFIX", ""),
 
     /*
     |--------------------------------------------------------------------------
@@ -74,10 +78,9 @@ return [
     |
     */
 
-    'middleware' => [
-        'authenticate_session' => Laravel\Sanctum\Http\Middleware\AuthenticateSession::class,
-        'encrypt_cookies' => Illuminate\Cookie\Middleware\EncryptCookies::class,
-        'validate_csrf_token' => Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class,
+    "middleware" => [
+        "authenticate_session" => AuthenticateSession::class,
+        "encrypt_cookies" => EncryptCookies::class,
+        "validate_csrf_token" => ValidateCsrfToken::class,
     ],
-
 ];

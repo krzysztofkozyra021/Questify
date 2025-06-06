@@ -11,7 +11,7 @@ const { socialLinks } = page.props
 <template>
   <footer class="bg-stone-800 text-white py-4">
     <div class="max-w-7xl mx-auto px-4">
-        <!-- Logo and description -->
+      <!-- Logo and description -->
       <div class="text-center mb-4">
         <p class="text-lg font-bold mb-1">Questify</p>
         <p class="text-xs text-stone-400">{{ trans('Questify is a tool for managing tasks that helps you achieve goals.') }}</p>
@@ -34,7 +34,7 @@ const { socialLinks } = page.props
           <Link :href="route('report.feature')" class="text-stone-400 hover:text-white transition-colors text-sm">{{ trans('Report a feature') }}</Link>
           <Link :href="route('report.bug')" class="text-stone-400 hover:text-white transition-colors text-sm">{{ trans('Report a bug') }}</Link>
         </div>
-        <div class="flex flex-col items-center gap-1 col-span-2 md:col-span-1" v-if="!page.props.auth.user">
+        <div v-if="!page.props.auth.user" class="flex flex-col items-center gap-1 col-span-2 md:col-span-1">
           <Link :href="route('login')" class="text-stone-400 hover:text-white transition-colors text-sm">{{ trans('Log in') }}</Link>
           <Link :href="route('register')" class="text-stone-400 hover:text-white transition-colors text-sm">{{ trans('Register') }}</Link>
         </div>
@@ -63,7 +63,7 @@ const { socialLinks } = page.props
               class="text-stone-400 hover:text-white transition-colors"
             >
               <svg
-                class="w-5 h-5"
+                class="size-5"
                 fill="currentColor"
                 viewBox="0 0 24 24"
                 aria-hidden="true"

@@ -7,9 +7,9 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use App\Services\TaskService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
-use Illuminate\Support\Facades\Cache;
 
 class TaskController extends Controller
 {
@@ -63,11 +63,12 @@ class TaskController extends Controller
         ]);
 
         $task = $this->taskService->createTask($user, $validated);
-        
+
         $this->clearDashboardCache();
 
         return redirect()->back();
     }
+
     public function storeDaily(Request $request)
     {
         $user = auth()->user();
@@ -196,7 +197,7 @@ class TaskController extends Controller
             unset($validated["tags"]);
 
             $this->taskService->updateTodo($todo, $validated, $tags);
-            
+
             $this->clearDashboardCache();
 
             return back()->with("success", "Todo updated successfully");
@@ -226,12 +227,30 @@ class TaskController extends Controller
     {
         try {
             $this->taskService->completeTodo($todo);
-            
+
             $this->clearDashboardCache();
 
             return back()->with("success", "Todo completed successfully");
         } catch (\Exception $e) {
             \Log::error("Error completing todo:", [
+                "message" => $e->getMessage(),
+                "todo_id" => $todo->id,
+            ]);
+
+            return back()->withErrors(["message" => $e->getMessage()]);
+        }
+    }
+
+    public function uncompleteTodo(Task $todo)
+    {
+        try {
+            $this->taskService->uncompleteTodo($todo);
+
+            $this->clearDashboardCache();
+
+            return back()->with("success", "Todo uncompleted successfully");
+        } catch (\Exception $e) {
+            \Log::error("Error uncompleting todo:", [
                 "message" => $e->getMessage(),
                 "todo_id" => $todo->id,
             ]);
@@ -276,7 +295,6 @@ class TaskController extends Controller
         return back()->with("success", "Task reset successfully");
     }
 
-
     public function create()
     {
         $formData = $this->taskService->getTaskFormData();
@@ -284,8 +302,8 @@ class TaskController extends Controller
         return Inertia::render("Tasks/Create", $formData);
     }
 
-    public function clearDashboardCache()
+    public function clearDashboardCache(): void
     {
-        Cache::forget('dashboard_data_' . auth()->user()->id);
+        Cache::forget("dashboard_data_" . auth()->user()->id);
     }
 }

@@ -45,12 +45,12 @@ class Task extends Model
     /**
      * Ensure next_reset_at is always stored in UTC
      */
-    public function setNextResetAtAttribute($value)
+    public function setNextResetAtAttribute($value): void
     {
         if ($value instanceof \DateTime) {
-            $this->attributes['next_reset_at'] = $value->setTimezone('UTC');
+            $this->attributes["next_reset_at"] = $value->setTimezone("UTC");
         } else {
-            $this->attributes['next_reset_at'] = $value;
+            $this->attributes["next_reset_at"] = $value;
         }
     }
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ButtonProps } from '@/Types/components';
+import { type ButtonProps } from '@/Types/components'
 
-defineProps<ButtonProps>();
+defineProps<ButtonProps>()
 </script>
 
 <template>

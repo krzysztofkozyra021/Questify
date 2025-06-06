@@ -84,7 +84,7 @@ const maxWidthClass = computed(() => {
         >
           <div
             v-show="show"
-            class="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:p-6"
+            class="relative overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:p-6"
             :class="maxWidthClass"
           >
             <div
@@ -98,7 +98,7 @@ const maxWidthClass = computed(() => {
               >
                 <span class="sr-only">Close</span>
                 <svg
-                  class="h-6 w-6"
+                  class="size-6"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke-width="1.5"
