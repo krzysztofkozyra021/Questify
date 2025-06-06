@@ -12,7 +12,7 @@ import { useHead } from '@vueuse/head'
 const { trans } = useTranslation()
 
 useHead({
-  title: trans('Verify Email') + ' | Questify',
+  title: () => trans('Verify Email') + ' | Questify',
 })
 
 const props = defineProps({
