@@ -12,8 +12,6 @@ import { syncDashboardData } from '@/Composables/syncDashboardData'
 const { trans } = useTranslation()
 const { addNotification } = useNotification()
 
-const DEFAULT_TODO_EXPERIENCE_REWARD = 3
-
 // Props
 const props = defineProps({
   userStats: {
@@ -114,7 +112,6 @@ const addTodo = () => {
       overdue_days: 0,
       due_date: new Date().toISOString().slice(0, 10),
       start_date: new Date().toISOString().slice(0, 10),
-      experience_reward: DEFAULT_TODO_EXPERIENCE_REWARD,
       tags: [],
       is_completed: false,
       type: 'todo',
@@ -256,7 +253,6 @@ const cancelDelete = () => {
     <CreateTodoModal
       :show="showCreateTodoModal"
       :difficulties="difficulties"
-      :default-todo-experience-reward="DEFAULT_TODO_EXPERIENCE_REWARD"
       @close="showCreateTodoModal = false"
       @created="showCreateTodoModal = false; newTodo = ''; syncTodos()"
     />

@@ -12,8 +12,6 @@ import { syncDashboardData } from '@/Composables/syncDashboardData'
 const { trans } = useTranslation()
 const { addNotification } = useNotification()
 
-const DEFAULT_DAILY_EXPERIENCE_REWARD = 3
-
 // Props
 const props = defineProps({
   userStats: {
@@ -75,10 +73,10 @@ const dailiesResultFromSearchMode = computed(() => {
   // Apply search filter if in search mode
   if (isSearchMode.value && searchQuery.value) {
     const query = searchQuery.value.toLowerCase()
-    filtered = filtered.filter(todo => 
-      todo.title.toLowerCase().includes(query) || 
-      todo.description?.toLowerCase().includes(query) ||
-      todo.tags?.some(tag => tag.name.toLowerCase().includes(query)),
+    filtered = filtered.filter(daily => 
+      daily.title.toLowerCase().includes(query) || 
+      daily.description?.toLowerCase().includes(query) ||
+      daily.tags?.some(tag => tag.name.toLowerCase().includes(query)),
     )
   }
   return filtered
@@ -109,7 +107,6 @@ const addDaily = () => {
       difficulty_level: 2,
       reset_frequency: 1,
       start_date: new Date().toISOString().slice(0, 10),
-      experience_reward: DEFAULT_DAILY_EXPERIENCE_REWARD,
       weekly_schedule: [],
       tags: [],
       is_completed: false,
@@ -188,7 +185,7 @@ const uncompleteDaily = (daily) => {
 const getDailyEnergyPenalty = (daily) => {
   const playerMaxEnergy = props.userStats.max_energy
 
-  return Math.round(playerMaxEnergy * 0.1 * daily.difficulty.energy_cost)
+  return Math.round(playerMaxEnergy * 0.2 * daily.difficulty.energy_cost)
 }
 
 const openEditDailyModal = (daily) => {
@@ -262,7 +259,6 @@ const cancelDelete = () => {
     <CreateDailyModal
       :show="showCreateDailyModal"
       :difficulties="difficulties"
-      :default-daily-experience-reward="DEFAULT_DAILY_EXPERIENCE_REWARD"
       :reset-configs="resetConfigs"
       @close="showCreateDailyModal = false"
       @created="showCreateDailyModal = false; newDaily = ''; syncDailies()"

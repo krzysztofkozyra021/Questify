@@ -5,7 +5,6 @@ import { useTranslation } from '@/Composables/useTranslation'
 import { useNotification } from '@/Composables/useNotification'
 const { trans } = useTranslation()
 
-const DEFAULT_EXPERIENCE_REWARD = 3
 const { addNotification } = useNotification()
 const props = defineProps({
   show: Boolean,
@@ -26,7 +25,6 @@ const form = ref({
   start_date: new Date().toISOString().slice(0, 10),
   is_completed: false,
   is_deadline_task: false,
-  experience_reward: DEFAULT_EXPERIENCE_REWARD,
   type: 'habit',
 })
   
@@ -47,7 +45,6 @@ function submit() {
   router.post('/tasks/habits/store', {
     ...form.value,
     tags: form.value.tags.split(',').map(t => t.trim()).filter(Boolean),
-    experience_reward: DEFAULT_EXPERIENCE_REWARD,
   }, {
     preserveScroll: true,
     preserveState: true,
