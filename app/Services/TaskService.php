@@ -220,7 +220,11 @@ class TaskService
         $userStats = $user->userStatistics;
         $expGain = $habit->experience_reward;
         $userStats->current_experience += $expGain;
-        $userStats->current_energy = max(0, $userStats->current_energy - $this->getEnergyPenalty($habit));
+        
+        // Ensure energy values are rounded to integers
+        $energyPenalty = round($this->getEnergyPenalty($habit));
+        $userStats->current_energy = max(0, round($userStats->current_energy - $energyPenalty));
+        $userStats->max_energy = round($userStats->max_energy);
         $userStats->save();
     }
 
