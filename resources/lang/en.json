@@ -1,4 +1,6 @@
 {
+    "Weekly Schedule": "Weekly Schedule",
+    "Create Daily": "Create Daily",
     "Start adventure!": "Start adventure!",
     "Begin Your Quest": "Begin Your Quest",
     "Transform your productivity into an epic adventure!": "Transform your productivity into an epic adventure!",
@@ -425,5 +427,10 @@
     "Next sync in": "Next sync in",
     "Sync": "Sync",
     "Syncing...": "Syncing...",
-    "Habit streak updated": "Habit streak updated"
+    "Habit streak updated": "Habit streak updated",
+    "Statistics": "Statistics",
+    "Total Completed Tasks": "Total Completed Tasks",
+    "Todos": "Todos",
+    "Highest Streak Habit": "Highest Streak Habit",
+    "Most Missed Habit Streak": "Most Missed Habit Streak"
 }

@@ -87,12 +87,12 @@ function submit() {
           <label class="block font-semibold mb-1">{{ trans('Tags') }}</label>
           <input v-model="form.tags" class="w-full border rounded px-2 py-1" :placeholder="trans('Add tags, comma separated')">
         </div>
-        <div class="mb-3">
+        <!-- <div class="mb-3"> TODO: Add reset counter logic
           <label class="block font-semibold mb-1">{{ trans('Reset Counter') }} </label>
           <select v-model="form.reset_frequency" class="w-full border rounded px-2 py-1">
             <option v-for="r in resetConfigs" :key="r.id" :value="r.id">{{ trans(r.name) }}</option>
           </select>
-        </div>
+        </div> -->
         <button type="submit" class="w-full bg-amber-800 text-white py-2 rounded font-bold mt-2" :disabled="loading">
           {{ loading ? trans('Creating...') : trans('Create') }}
         </button>

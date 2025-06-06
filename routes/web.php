@@ -13,6 +13,7 @@ use App\Http\Controllers\TagController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserStatisticsController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\StatisticsController;
 use Illuminate\Support\Facades\Route;
 
 require __DIR__ . "/auth.php";
@@ -99,6 +100,9 @@ Route::middleware(["auth"])->group(function (): void {
     Route::get("/character", [UserStatisticsController::class, "show"])->name("character");
     Route::get("/character/stats", [UserStatisticsController::class, "stats"])->name("character.stats");
     Route::get("/character/progression", [UserStatisticsController::class, "progression"])->name("character.progression");
+    
+    // Statistics
+    Route::get("/statistics", [StatisticsController::class, "index"])->name("statistics");
 
     // Calendar - For viewing tasks' due dates
     Route::get("/calendar", [CalendarController::class, "index"])->name("calendar");

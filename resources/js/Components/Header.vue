@@ -52,6 +52,13 @@ const togglePlayerPanel = () => {
           >
             {{ trans('Tasks') }}
           </Link>
+          <Link 
+            :href="route('statistics')" 
+            class="text-amber-50 text-base md:text-lg font-medium px-2 md:px-4 py-1 md:py-2 transition-colors hover:bg-amber-500 hover:text-amber-50" 
+            :class="{ 'border-b-4 border-amber-500 font-bold': isActive('statistics') }"
+          >
+            {{ trans('Statistics') }}
+          </Link>
         </nav>
         <!-- Mobile Menu -->
         <HamburgerMenu v-if="page.props.auth.user" class="md:hidden" />
@@ -76,7 +83,7 @@ const togglePlayerPanel = () => {
             </svg>
           </button>
           <div v-if="showDropdown" class="absolute top-10 right-0 mt-2 w-44 bg-stone-700 rounded-lg shadow-lg border border-stone-600 py-1 z-50" @click.away="closeDropdown">
-            <Link :href="route('character')" class="block px-4 py-2 text-sm font-bold text-amber-50 hover:bg-stone-600 transition-colors">{{ trans('Stats') }}</Link>
+            <Link :href="route('statistics')" class="block px-4 py-2 text-sm font-bold text-amber-50 hover:bg-stone-600 transition-colors">{{ trans('Statistics') }}</Link>
             <Link :href="route('settings')" class="block px-4 py-2 text-sm font-bold text-amber-50 hover:bg-stone-600 transition-colors">{{ trans('Settings') }}</Link>
             <button class="block w-full text-left px-4 py-2 text-sm font-bold text-red-400 hover:bg-stone-600 transition-colors" @click="logout">{{ trans('Log Out') }}</button>
           </div>

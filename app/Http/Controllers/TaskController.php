@@ -27,7 +27,7 @@ class TaskController extends Controller
             "title" => "required|string|max:255",
             "description" => "nullable|string",
             "difficulty_level" => "required|integer|exists:task_difficulties,difficulty_level",
-            "reset_frequency" => "required|integer|exists:task_reset_configs,id",
+            "reset_frequency" => "integer|exists:task_reset_configs,id",
             "start_date" => "required|date",
             "is_deadline_task" => "boolean",
             "tags" => "array",

@@ -99,7 +99,7 @@ onUnmounted(() => {
               {{ trans('Tasks') }}
             </Link>
             <Link 
-              :href="route('character')" 
+              :href="route('statistics')" 
               class="block px-4 py-2 text-stone-100 hover:bg-stone-700 rounded-lg transition-colors"
               @click="toggleMenu"
             >
