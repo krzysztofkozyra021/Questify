@@ -168,7 +168,7 @@ import { useHead } from '@vueuse/head'
 const { trans } = useTranslation()
 
 useHead({
-  title: trans('Report a bug') + ' | Questify',
+  title: () => trans('Report a bug') + ' | Questify',
 })
 
 const messageSuccessfullySent = ref(false)

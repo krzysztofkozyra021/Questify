@@ -1,13 +1,11 @@
 <script setup>
-import GuestLayout from '@/Layouts/GuestLayout.vue'
 import InputError from '@/Components/InputError.vue'
 import InputLabel from '@/Components/InputLabel.vue'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import TextInput from '@/Components/TextInput.vue'
 import Preloader from '@/Components/Preloader.vue'
-import { Head, useForm, Link } from '@inertiajs/vue3'
+import { useForm } from '@inertiajs/vue3'
 import { useTranslation } from '@/Composables/useTranslation'
-import LanguageSwitcher from '@/Components/LanguageSwitcher.vue'
 import Header from '@/Components/Header.vue'
 import Footer from '@/Components/Footer.vue'
 import { useHead } from '@vueuse/head'
@@ -15,7 +13,7 @@ import { useHead } from '@vueuse/head'
 const { trans } = useTranslation()
 
 useHead({
-  title: trans('Confirm Password') + ' | Questify',
+  title: () => trans('Confirm Password') + ' | Questify',
 })
 
 const form = useForm({

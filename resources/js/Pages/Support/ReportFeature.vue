@@ -106,7 +106,7 @@ import { useHead } from '@vueuse/head'
 const { trans } = useTranslation()
 
 useHead({
-  title: trans('Report a feature') + ' | Questify',
+  title: () => trans('Report a feature') + ' | Questify',
 })
 
 const featureReportForm = ref({
