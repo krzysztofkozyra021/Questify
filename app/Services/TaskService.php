@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Log;
 
 class TaskService
 {
-    public const DIFFICULTY_LEVEL_MULTIPLIER = 10;
+    public const DIFFICULTY_LEVEL_MULTIPLIER = 7;
     public const PLAYER_MAX_STATS_MULTIPLIER = 0.1;
 
     public function getUserTasks(User $user): array
@@ -35,10 +35,17 @@ class TaskService
 
     public function calculateExperienceReward(Task $task, User $user): int
     {
+        $baseExp = match($task->type) {
+            'todo' => 30,
+            'daily' => 35,
+            'habit' => 40,
+            default => 30,
+        };
+        
         $expMultiplier = $task->difficulty->exp_multiplier;
         $userClassExpMultiplier = $user->userStatistics->classAttributes->exp_multiplier;
 
-        return intval(round($task->difficulty->difficulty_level * self::DIFFICULTY_LEVEL_MULTIPLIER * $expMultiplier * $userClassExpMultiplier));
+        return intval(round($baseExp * $expMultiplier * $userClassExpMultiplier));
     }
 
     public function calculateOverdueDays(Task $task): int
@@ -217,7 +224,7 @@ class TaskService
         $userStats->save();
     }
 
-    // Calculate energy penalty based on player 10% of max energy and task difficulty multiplier
+    // Calculate energy penalty based on player percentage of max energy and task difficulty multiplier
     public function getEnergyPenalty(Task $habit): int
     {
         $userStats = $habit->users()->first()->userStatistics;
@@ -226,7 +233,7 @@ class TaskService
         return intval(round(($playerMaxEnergy * self::PLAYER_MAX_STATS_MULTIPLIER) * $habit->difficulty->energy_cost));
     }
 
-    // Calculate health penalty based on player 10% of max health and task difficulty multiplier
+    // Calculate health penalty based on player percentage of max health and task difficulty multiplier
     public function getHealthPenalty(Task $habit): int
     {
         $userStats = $habit->users()->first()->userStatistics;

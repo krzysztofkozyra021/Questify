@@ -30,14 +30,10 @@ class TaskController extends Controller
             "reset_frequency" => "required|integer|exists:task_reset_configs,id",
             "start_date" => "required|date",
             "is_deadline_task" => "boolean",
-            "experience_reward" => "required|integer|min:1",
             "tags" => "array",
             "tags.*" => "string|max:50",
             "type" => "required|string|in:habit,daily,todo",
             "is_completed" => "boolean",
-            "is_deadline_task" => "boolean",
-            "experience_reward" => "required|integer|min:1",
-            "type" => "required|string|in:habit,daily,todo",
         ]);
 
         $task = $this->taskService->createTask($user, $validated);
@@ -56,7 +52,6 @@ class TaskController extends Controller
             "difficulty_level" => "required|integer|exists:task_difficulties,difficulty_level",
             "due_date" => "required|date",
             "start_date" => "required|date",
-            "experience_reward" => "required|integer|min:1", 
             "tags" => "array",
             "tags.*" => "string|max:50",
             "type" => "required|string|in:habit,daily,todo",
@@ -84,7 +79,6 @@ class TaskController extends Controller
             "tags.*" => "string|max:50",
             "type" => "required|string|in:habit,daily,todo",
             "is_completed" => "boolean",
-            "experience_reward" => "required|integer|min:1",
         ]);
 
         $task = $this->taskService->createTask($user, $validated);
@@ -185,7 +179,6 @@ class TaskController extends Controller
                 "description" => "nullable|string",
                 "difficulty_level" => "required|integer|exists:task_difficulties,difficulty_level",
                 "due_date" => "required|date",
-                "experience_reward" => "required|integer|min:1",
                 "tags" => "array",
                 "tags.*" => "string|max:50",
             ]);

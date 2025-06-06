@@ -12,6 +12,7 @@ use App\Http\Controllers\SupportController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserStatisticsController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Support\Facades\Route;
 
 require __DIR__ . "/auth.php";

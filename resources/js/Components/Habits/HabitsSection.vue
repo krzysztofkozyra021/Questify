@@ -13,8 +13,6 @@ import { syncDashboardData } from '@/Composables/syncDashboardData'
 const { trans } = useTranslation()
 const { addNotification } = useNotification()
 
-const DEFAULT_EXPERIENCE_REWARD = 5
-
 const props = defineProps({
   userStats: {
     type: Object,
@@ -37,7 +35,7 @@ const props = defineProps({
     required: true,
   },
 })
-
+const PLAYER_MAX_STATS_PENALTY_MULTIPLIER = 0.2;
 const showCreateHabitModal = ref(false)
 const showEditHabitModal = ref(false)
 const selectedHabit = ref(null)
@@ -92,7 +90,8 @@ const habitsFiltered = computed(() => {
     const query = searchQuery.value.toLowerCase()
     filtered = filtered.filter(habit => 
       habit.title.toLowerCase().includes(query) || 
-      habit.description?.toLowerCase().includes(query),
+      habit.description?.toLowerCase().includes(query) ||
+      habit.tags?.some(tag => tag.name.toLowerCase().includes(query)),
     )
   }
 
@@ -128,11 +127,11 @@ const toggleSearchMode = () => {
 }
 
 const calculateHabitHealthPenalty = (habit) => {
-  return Math.round(props.userStats.max_health * 0.1 * habit.difficulty.health_penalty)
+  return Math.round(props.userStats.max_health * 0.2 * habit.difficulty.health_penalty)
 }
 
 const calculateHabitEnergyPenalty = (habit) => {
-  return Math.round(props.userStats.max_energy * 0.1 * habit.difficulty.energy_cost)
+  return Math.round(props.userStats.max_energy * 0.2 * habit.difficulty.energy_cost)
 }
 
 const addTask = (type) => {
@@ -147,7 +146,6 @@ const addTask = (type) => {
       difficulty_level: 2,
       is_completed: false,
       is_deadline_task: false,
-      experience_reward: DEFAULT_EXPERIENCE_REWARD,
       type: 'habit',
     }
     

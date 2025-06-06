@@ -13,7 +13,6 @@ const props = defineProps({
   onClose: Function,
   difficulties: Array,
   resetConfigs: Array,
-  defaultDailyExperienceReward: Number,
 })
 
 const weeklySchedule = ref([])
@@ -26,7 +25,6 @@ const form = ref({
   difficulty_level: 2,
   reset_frequency: 1,
   start_date: new Date().toISOString().slice(0, 10),
-  experience_reward: props.defaultDailyExperienceReward,
   weekly_schedule: weeklySchedule.value,
   tags: '',
   is_completed: false,
@@ -53,7 +51,6 @@ function submit() {
     ...form.value,
     weekly_schedule: weeklySchedule.value,
     tags: form.value.tags.split(',').map(t => t.trim()).filter(Boolean),
-    experience_reward: props.defaultDailyExperienceReward,
   }, {
     preserveScroll: true,
     preserveState: true,

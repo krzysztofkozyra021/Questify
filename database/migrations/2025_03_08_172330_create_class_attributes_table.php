@@ -26,7 +26,7 @@ return new class() extends Migration {
                 "class_name" => "Warrior",
                 "energy_multiplier" => 1.6,
                 "health_multiplier" => 1.8,
-                "exp_multiplier" => 0.6,
+                "exp_multiplier" => 0.5,
                 "special_ability" => "Damage resistance: Reduces damage taken from tasks with high difficulty.",
                 "created_at" => now(),
                 "updated_at" => now(),

@@ -64,41 +64,41 @@ function getPercentage(multiplier, statType) {
 
 <template>
   <Preloader />
-  <div class="flex min-h-screen size-full flex-col pt-4 sm:pt-8 bg-slate-800 background">
-    <div class="text-center mb-6 sm:mb-12 px-4">
-      <h1 class="text-3xl sm:text-4xl font-bold text-amber-100 mb-2">{{ trans('Choose Your Class') }}</h1>
-      <p class="text-base sm:text-lg text-stone-100">{{ trans('Select a class to begin your journey. This choice cannot be changed later.') }}</p>
+  <div class="flex min-h-screen size-full flex-col pt-2 sm:pt-4 bg-slate-800 background">
+    <div class="text-center mb-2 sm:mb-4 px-4">
+      <h1 class="text-2xl sm:text-3xl font-bold text-amber-100 mb-1">{{ trans('Choose Your Class') }}</h1>
+      <p class="text-sm sm:text-base text-stone-100">{{ trans('Select a class to begin your journey. This choice cannot be changed later.') }}</p>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 lg:gap-12 mb-8 sm:mb-12 p-4 sm:p-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-4 sm:mb-6 p-2 sm:p-4">
       <div
         v-for="classItem in classesWithImages"
         :key="classItem.id"
-        class="flex flex-col justify-between bg-slate-600 bg-opacity-20 h-auto w-full rounded-lg shadow-md p-4 sm:p-6 ring-2 hover:-translate-y-2 ring-stone-500 hover:ring-amber-500 cursor-pointer transition-all duration-300 relative"
+        class="flex flex-col justify-between bg-slate-600 bg-opacity-20 h-auto w-full rounded-lg shadow-md p-2 sm:p-4 ring-2 hover:-translate-y-2 ring-stone-500 hover:ring-amber-500 cursor-pointer transition-all duration-300 relative"
         :class="{
           'ring-2 ring-amber-400 bg-slate-700': selectedClass === classItem.id,
           'opacity-40 grayscale hover:-translate-y-2 hover:opacity-80  hover:grayscale-0 hover:shadow-lg': selectedClass && selectedClass !== classItem.id
         }"
         @click="selectClass(classItem.id)"
       >
-        <div class="w-full opacity-100 rounded-lg mb-4 flex items-center justify-center">
+        <div class="w-full opacity-100 rounded-lg mb-2 flex items-center justify-center">
           <img
             :src="classItem.image"
             alt="Class Image"
-            class="w-28 h-64 sm:w-36 sm:h-80 object-cover rounded-lg"
+            class="w-24 h-48 sm:w-32 sm:h-64 object-contain rounded-lg"
           >
         </div>
-        <h2 class="text-xl sm:text-3xl font-bold text-center text-amber-400 mb-4 sm:mb-6">{{ trans(classItem.name) }}</h2>
+        <h2 class="text-lg sm:text-2xl font-bold text-center text-amber-400 mb-2 sm:mb-3">{{ trans(classItem.name) }}</h2>
 
         <!-- Stats section with simplified bars -->
-        <div class="space-y-3 sm:space-y-4 mb-4 sm:mb-6">
+        <div class="space-y-2 sm:space-y-3 mb-2 sm:mb-3">
           <!-- Health stat -->
           <div>
             <div class="flex items-center mb-1">
-              <span class="font-medium text-stone-100 w-20 sm:w-24 text-sm sm:text-base">{{ trans('Health') }}:</span>
-              <div class="w-full bg-slate-700  h-2 sm:h-2.5 ml-2">
+              <span class="font-medium text-stone-100 w-16 sm:w-20 text-xs sm:text-sm">{{ trans('Health') }}:</span>
+              <div class="w-full bg-slate-700 h-2 ml-2">
                 <div
-                  class="bg-red-600 text-white h-2 sm:h-2.5 "
+                  class="bg-red-600 text-white h-2"
                   :style="{ width: `${getPercentage(classItem.health_multiplier, 'health')}%` }"
                 />
               </div>
@@ -108,10 +108,10 @@ function getPercentage(multiplier, statType) {
           <!-- Energy stat -->
           <div>
             <div class="flex items-center mb-1">
-              <span class="font-medium text-stone-100 w-20 sm:w-24 text-sm sm:text-base">{{ trans('Energy') }}:</span>
-              <div class="w-full bg-slate-700  h-2 sm:h-2.5 ml-2">
+              <span class="font-medium text-stone-100 w-16 sm:w-20 text-xs sm:text-sm">{{ trans('Energy') }}:</span>
+              <div class="w-full bg-slate-700 h-2 ml-2">
                 <div
-                  class="bg-blue-600 h-2 sm:h-2.5 "
+                  class="bg-blue-600 h-2"
                   :style="{ width: `${getPercentage(classItem.energy_multiplier, 'energy')}%` }"
                 />
               </div>
@@ -121,10 +121,10 @@ function getPercentage(multiplier, statType) {
           <!-- Experience stat -->
           <div>
             <div class="flex items-center mb-1">
-              <span class="font-medium text-stone-100 w-20 sm:w-24 text-sm sm:text-base">{{ trans('EXP Gain') }}:</span>
-              <div class="w-full bg-slate-700  h-2 sm:h-2.5 ml-2">
+              <span class="font-medium text-stone-100 w-16 sm:w-20 text-xs sm:text-sm">{{ trans('EXP Gain') }}:</span>
+              <div class="w-full bg-slate-700 h-2 ml-2">
                 <div
-                  class="bg-amber-600 h-2 sm:h-2.5 "
+                  class="bg-amber-600 h-2"
                   :style="{ width: `${getPercentage(classItem.exp_multiplier, 'exp')}%` }"
                 />
               </div>
@@ -133,16 +133,16 @@ function getPercentage(multiplier, statType) {
         </div>
 
         <!-- Special ability section -->
-        <div class="pt-3 sm:pt-4 border-t border-slate-500 mt-auto">
-          <h3 class="text-base sm:text-lg font-semibold text-stone-100 mb-1 sm:mb-2">{{ trans('Special Ability') }}</h3>
-          <p class="text-sm sm:text-base text-stone-100 overflow-hidden text-ellipsis line-clamp-3 sm:line-clamp-2 max-h-16 sm:max-h-12">{{ trans(classItem.special_ability) }}</p>
+        <div class="pt-2 border-t border-slate-500 mt-auto">
+          <h3 class="text-sm sm:text-base font-semibold text-stone-100 mb-1">{{ trans('Special Ability') }}</h3>
+          <p class="text-xs sm:text-sm text-stone-100 overflow-hidden text-ellipsis line-clamp-2">{{ trans(classItem.special_ability) }}</p>
         </div>
       </div>
     </div>
 
-    <div class="flex justify-center w-full px-4 pb-8">
+    <div class="flex justify-center w-full px-4 pb-4">
       <button
-        class="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 font-medium text-lg sm:text-xl rounded-lg text-stone-100 transition-all duration-300 hover:bg-amber-500/10"
+        class="w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 font-medium text-base sm:text-lg rounded-lg text-stone-100 transition-all duration-300 hover:bg-amber-500/10"
         :class="{
           'opacity-50 cursor-not-allowed': !selectedClass,
           'hover:scale-105': selectedClass

@@ -1,4 +1,4 @@
-<script setup>
+  <script setup>
 import { ref } from 'vue'
 import { router } from '@inertiajs/vue3'
 import { useTranslation } from '@/Composables/useTranslation'
@@ -12,7 +12,6 @@ const props = defineProps({
   show: Boolean,
   onClose: Function,
   difficulties: Array,
-  defaultTodoExperienceReward: Number,
 })
   
 const emit = defineEmits(['created', 'close'])
@@ -23,7 +22,6 @@ const form = ref({
   difficulty_level: props.difficulties?.[0]?.difficulty_level || 2,
   due_date: new Date().toISOString().slice(0, 10),
   start_date: new Date().toISOString().slice(0, 10),
-  experience_reward: props.defaultTodoExperienceReward,
   tags: '',
   is_completed: false,
   type: 'todo',
@@ -46,7 +44,6 @@ function submit() {
   router.post('/tasks/todos/store', {
     ...form.value,
     tags: form.value.tags.split(',').map(t => t.trim()).filter(Boolean),
-    experience_reward: props.defaultTodoExperienceReward,
   }, {
     preserveScroll: true,
     preserveState: true,
