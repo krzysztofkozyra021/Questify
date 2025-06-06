@@ -101,6 +101,6 @@ import { useHead } from '@vueuse/head'
 const { trans } = useTranslation()
 
 useHead({
-  title: trans('Terms of Service') + ' | Questify',
+  title: () => trans('Terms of Service') + ' | Questify',
 })
 </script>

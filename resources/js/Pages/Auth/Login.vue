@@ -12,7 +12,7 @@ const { trans } = useTranslation()
 const backgroundImage = '/images/background-landscape-register.jpg'
 
 useHead({
-  title: trans('Login') + ' | Questify',
+  title: () => trans('Login') + ' | Questify',
 })
 
 defineProps({
