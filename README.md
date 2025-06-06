@@ -74,8 +74,9 @@ composer install
 ```bash
 make shell
 ```
-8.Run migrations and seed the database:
+8.Run commands, migrations and seed the database:
 ```bash
+php artisan filament:install
 php artisan migrate:fresh --seed
 exit
 ```
