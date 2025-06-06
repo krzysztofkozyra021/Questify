@@ -133,6 +133,10 @@ import { useHead } from '@vueuse/head'
 const { trans } = useTranslation()
 
 useHead({
+<<<<<<< HEAD
   title: () => trans('Privacy Policy') + ' | Questify',
+=======
+  title: trans('Privacy Policy') + ' | Questify',
+>>>>>>> c7ca75c539f7e4ab3c65cee96c4289a234ae7390
 })
 </script>

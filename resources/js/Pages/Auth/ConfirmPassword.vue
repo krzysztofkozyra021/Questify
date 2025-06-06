@@ -1,11 +1,21 @@
 <script setup>
+<<<<<<< HEAD
+=======
+import GuestLayout from '@/Layouts/GuestLayout.vue'
+>>>>>>> c7ca75c539f7e4ab3c65cee96c4289a234ae7390
 import InputError from '@/Components/InputError.vue'
 import InputLabel from '@/Components/InputLabel.vue'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import TextInput from '@/Components/TextInput.vue'
 import Preloader from '@/Components/Preloader.vue'
+<<<<<<< HEAD
 import { useForm } from '@inertiajs/vue3'
 import { useTranslation } from '@/Composables/useTranslation'
+=======
+import { Head, useForm, Link } from '@inertiajs/vue3'
+import { useTranslation } from '@/Composables/useTranslation'
+import LanguageSwitcher from '@/Components/LanguageSwitcher.vue'
+>>>>>>> c7ca75c539f7e4ab3c65cee96c4289a234ae7390
 import Header from '@/Components/Header.vue'
 import Footer from '@/Components/Footer.vue'
 import { useHead } from '@vueuse/head'
@@ -13,7 +23,11 @@ import { useHead } from '@vueuse/head'
 const { trans } = useTranslation()
 
 useHead({
+<<<<<<< HEAD
   title: () => trans('Confirm Password') + ' | Questify',
+=======
+  title: trans('Confirm Password') + ' | Questify',
+>>>>>>> c7ca75c539f7e4ab3c65cee96c4289a234ae7390
 })
 
 const form = useForm({

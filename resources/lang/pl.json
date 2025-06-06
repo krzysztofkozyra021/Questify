@@ -249,12 +249,21 @@
     "Until the user withdraws consent": "Do momentu wycofania zgody przez użytkownika",
     "6. User rights": "6. Prawa użytkownika",
     "The user has the right to:": "Użytkownik ma prawo do:",
+<<<<<<< HEAD
     "Access to their data": "Dostęp do swoich danych",
     "Rectification of data": "Sprostowanie danych",
     "Deletion of data": "Usunięcie danych",
     "Restriction of processing": "Ograniczenie przetwarzania",
     "Data transfer": "Przeniesienie danych",
     "Opposition to processing": "Sprzeciw wobec przetwarzania",
+=======
+    "Access to their data": "Dostępu do swoich danych",
+    "Rectification of data": "Sprostowania danych",
+    "Deletion of data": "Usunięcia danych",
+    "Restriction of processing": "Ograniczenia przetwarzania",
+    "Data transfer": "Przeniesienia danych",
+    "Opposition to processing": "Sprzeciwu wobec przetwarzania",
+>>>>>>> c7ca75c539f7e4ab3c65cee96c4289a234ae7390
     "7. Data security": "7. Bezpieczeństwo danych",
     "We ensure data security through:": "Zapewniamy bezpieczeństwo danych poprzez:",
     "Encryption of transmission": "Szyfrowanie transmisji",
@@ -268,7 +277,11 @@
     "Traffic analysis": "Analizy ruchu",
     "Personalization of content": "Personalizacji treści",
     "9. Contact": "9. Kontakt",
+<<<<<<< HEAD
     "For matters related to data protection, you can contact:": "W sprawach związanych z ochroną danych możesz skontaktować się z:",
+=======
+    "For matters related to data protection, you can contact:": "W sprawach związanych z ochroną danych możesz kontaktować się:",
+>>>>>>> c7ca75c539f7e4ab3c65cee96c4289a234ae7390
     "Email:": "Email:",
     "Phone:": "Telefon:",
     "Address:": "Adres:",
@@ -281,7 +294,11 @@
     "Monday - Friday: 9:00 - 17:00": "Poniedziałek - Piątek: 9:00 - 17:00",
     "Saturday: 10:00 - 14:00": "Sobota: 10:00 - 14:00",
     "Sunday: Closed": "Niedziela: Zamknięte",
+<<<<<<< HEAD
     "Find answers to the most frequently asked questions about Questify.": "Znajdź odpowiedzi na najczęściej zadawane pytania o Questify.",
+=======
+    "Find answers to the most frequently asked questions about Questify.": "Znajdź odpowiedzi na najczęściej zadawane pytania dotyczące Questify.",
+>>>>>>> c7ca75c539f7e4ab3c65cee96c4289a234ae7390
     "Go to FAQ": "Przejdź do FAQ",
     "Need help? Contact our support team.": "Potrzebujesz pomocy? Skontaktuj się z naszym zespołem wsparcia.",
     "Found a bug in the application? Help us fix it.": "Znalazłeś błąd w aplikacji? Pomóż nam go naprawić.",
@@ -292,23 +309,39 @@
     "Level system and experience": "System poziomów i doświadczenia",
     "Task management": "Zarządzanie zadaniami",
     "Account settings": "Ustawienia konta",
+<<<<<<< HEAD
     "Service status": "Status serwisu",
+=======
+    "Service status": "Status usługi",
+>>>>>>> c7ca75c539f7e4ab3c65cee96c4289a234ae7390
     "All services are working properly": "Wszystkie usługi działają prawidłowo",
     "Last update:": "Ostatnia aktualizacja:",
     "Description": "Opis",
     "Short description of the proposed feature": "Krótki opis proponowanej funkcji",
+<<<<<<< HEAD
     "Detailed description of the feature, its purpose and potential benefits": "Szczegółowy opis funkcji, jej celu i potencjalnych korzyści",
+=======
+    "Detailed description of the feature, its purpose and potential benefits": "Szczegółowy opis funkcji, jej cel i potencjalne korzyści",
+>>>>>>> c7ca75c539f7e4ab3c65cee96c4289a234ae7390
     "Category": "Kategoria",
     "Priority": "Priorytet",
     "Send report": "Wyślij zgłoszenie",
     "Tips": "Wskazówki",
+<<<<<<< HEAD
     "To ensure your report is processed as quickly as possible:": "Aby zapewnić jak najszybsze przetworzenie Twojego zgłoszenia:",
+=======
+    "To ensure your report is processed as quickly as possible:": "Aby Twoje zgłoszenie zostało przetworzone jak najszybciej:",
+>>>>>>> c7ca75c539f7e4ab3c65cee96c4289a234ae7390
     "Describe the proposed feature in detail": "Opisz proponowaną funkcję szczegółowo",
     "Explain its value to users": "Wyjaśnij jej wartość dla użytkowników",
     "Provide examples of usage": "Podaj przykłady użycia",
     "Determine the priority based on the actual need": "Określ priorytet na podstawie rzeczywistej potrzeby",
     "General": "Ogólne",
+<<<<<<< HEAD
     "Ui": "Interfejs użytkownika",
+=======
+    "Ui": "Interfejs",
+>>>>>>> c7ca75c539f7e4ab3c65cee96c4289a234ae7390
     "Functionality": "Funkcjonalność",
     "Performance": "Wydajność",
     "Other": "Inne",
@@ -330,15 +363,26 @@
     "User interface": "Interfejs użytkownika",
     "Security": "Bezpieczeństwo",
     "Critical": "Krytyczny",
+<<<<<<< HEAD
     "Describe the steps to reproduce the bug in detail": "Opisz szczegółowo kroki do odtworzenia błędu",
     "Provide information about your environment (browser, operating system)": "Podaj informacje o swoim środowisku (przeglądarka, system operacyjny)",
     "Include screenshots or recordings if possible": "Dołącz zrzuty ekranu lub nagrania, jeśli to możliwe",
     "Set the priority according to the impact on the application": "Ustaw priorytet zgodnie z wpływem na aplikację",
+=======
+    "Describe the steps to reproduce the bug in detail": "Opisz dokładnie kroki prowadzące do błędu",
+    "Provide information about your environment (browser, operating system)": "Podaj informacje o środowisku (przeglądarka, system operacyjny)",
+    "Include screenshots or recordings if possible": "Dołącz zrzuty ekranu lub nagrania, jeśli to możliwe",
+    "Set the priority according to the impact on the application": "Określ priorytet zgodnie z wpływem błędu na działanie aplikacji",
+>>>>>>> c7ca75c539f7e4ab3c65cee96c4289a234ae7390
     "Not enough health to complete this task": "Za mało zdrowia, aby wykonać to zadanie",
     "Not enough energy to complete this task": "Za mało energii, aby wykonać to zadanie",
     "Failed to create habit": "Nie udało się utworzyć nawyku",
     "Failed to create daily task": "Nie udało się utworzyć zadania dziennego",
+<<<<<<< HEAD
     "Failed to create todo task": "Nie udało się utworzyć zadania",
+=======
+    "Failed to create todo task": "Nie udało się utworzyć zadania do wykonania",
+>>>>>>> c7ca75c539f7e4ab3c65cee96c4289a234ae7390
     "Failed to complete task": "Nie udało się wykonać zadania",
     "Failed to update task": "Nie udało się zaktualizować zadania",
     "Streak": "Seria",
@@ -347,6 +391,7 @@
     "EP": "PE",
     "All": "Wszystkie",
     "Weak": "Słabe",
+<<<<<<< HEAD
     "Strong": "Silne",
     "Edit": "Edytuj",
     "Editing...": "Edytowanie...",
@@ -354,6 +399,15 @@
     "days late": "dni spóźnienia",
     "Due Date": "Termin",
     "Create Todo": "Utwórz zadanie",
+=======
+    "Strong": "Mocne",
+    "Edit": "Edytuj",
+    "Editing...": "Edycja...",
+    "due today": "na dziś",
+    "days late": "Spóźnione dni",
+    "Due Date": "Termin",
+    "Create Todo": "Dodaj zadanie do wykonania",
+>>>>>>> c7ca75c539f7e4ab3c65cee96c4289a234ae7390
     "Edit Habit": "Edytuj nawyk",
     "Delete Habit": "Usuń nawyk",
     "Are you sure you want to delete this habit?": "Czy na pewno chcesz usunąć ten nawyk?",
@@ -391,6 +445,7 @@
     "We will review your report and get back to you soon.": "Przejrzymy Twoje zgłoszenie i wkrótce się z Tobą skontaktujemy.",
     "Failed to send bug report. Please try again later.": "Nie udało się wysłać zgłoszenia błędu. Spróbuj ponownie później.",
     "Failed to complete habit": "Nie udało się wykonać nawyku",
+<<<<<<< HEAD
     "Failed to not complete habit": "Nie udało się oznaczyć nawyku jako niewykonanego",
     "Todo task updated successfully": "Zadanie zostało pomyślnie zaktualizowane",
     "Failed to update todo task": "Nie udało się zaktualizować zadania",
@@ -399,18 +454,36 @@
     "The name field is required.": "Pole nazwy jest wymagane.",
     "The name must be a string.": "Nazwa musi być tekstem.",
     "The name must not exceed 255 characters.": "Nazwa nie może przekraczać 255 znaków.",
+=======
+    "Failed to not complete habit": "Nie udało się nie wykonać nawyku",
+    "Todo task updated successfully": "Zadanie do wykonania zostało pomyślnie zaktualizowane",
+    "Failed to update todo task": "Nie udało się zaktualizować zadania do wykonania",
+    "Habit updated successfully": "Nawyk został pomyślnie zaktualizowany",
+    "Failed to update habit": "Nie udało się zaktualizować nawyku",
+    "The name field is required.": "Pole nazwa użytkownika jest wymagane.",
+    "The name must be a string.": "Nazwa użytkownika musi być tekstem.",
+    "The name must not exceed 255 characters.": "Nazwa użytkownika nie może być dłuższa niż 255 znaków.",
+>>>>>>> c7ca75c539f7e4ab3c65cee96c4289a234ae7390
     "The email field is required.": "Pole email jest wymagane.",
     "The email must be a string.": "Email musi być tekstem.",
     "The email must be lowercase.": "Email musi być pisany małymi literami.",
     "The email must be a valid email address.": "Email musi być prawidłowym adresem email.",
+<<<<<<< HEAD
     "The email must not exceed 255 characters.": "Email nie może przekraczać 255 znaków.",
     "The email has already been taken.": "Ten email jest już zajęty.",
     "The password field is required.": "Pole hasła jest wymagane.",
     "The password confirmation does not match.": "Potwierdzenie hasła nie pasuje.",
+=======
+    "The email must not exceed 255 characters.": "Email nie może być dłuższy niż 255 znaków.",
+    "The email has already been taken.": "Ten email jest już zajęty.",
+    "The password field is required.": "Pole hasło jest wymagane.",
+    "The password confirmation does not match.": "Potwierdzenie hasła nie zgadza się.",
+>>>>>>> c7ca75c539f7e4ab3c65cee96c4289a234ae7390
     "The password must be at least 8 characters.": "Hasło musi mieć co najmniej 8 znaków.",
     "The password must contain at least one letter.": "Hasło musi zawierać co najmniej jedną literę.",
     "The password must contain at least one number.": "Hasło musi zawierać co najmniej jedną cyfrę.",
     "The password must contain at least one uppercase and one lowercase letter.": "Hasło musi zawierać co najmniej jedną wielką i jedną małą literę.",
+<<<<<<< HEAD
     "The password must contain at least one symbol.": "Hasło musi zawierać co najmniej jeden symbol.",
     "The login field is required.": "Pole loginu jest wymagane.",
     "These credentials do not match our records.": "Te dane logowania nie pasują do naszych rekordów.",
@@ -431,4 +504,25 @@
     "Highest Streak Habit": "Nawyk z najdłuższą serią",
     "Most Missed Habit Streak": "Nawyk z najczęściej przerywaną serią",
     "Search dailies...": "Szukaj zadań dziennych..."
+=======
+    "The password must contain at least one symbol.": "Hasło musi zawierać co najmniej jeden znak specjalny.",
+    "The login field is required.": "Pole login jest wymagane.",
+    "These credentials do not match our records.": "Podane dane logowania nie są poprawne.",
+    "We can't find a user with that email address.": "Nie możemy znaleźć użytkownika z tym adresem email.",
+    "The current password field is required.": "Pole aktualne hasło jest wymagane.",
+    "The current password is incorrect.": "Aktualne hasło jest niepoprawne.",
+    "Dashboard data synced successfully": "Dane tablicy zostały pomyślnie zsynchronizowane",
+    "Failed to sync dashboard data. Please try again later.": "Nie udało się zsynchronizować danych. Spróbuj ponownie później.",
+    "Wait 10 seconds before syncing again.": "Poczekaj 10 sekund przed ponownym synchronizowaniem.",
+    "Syncing dashboard data...": "Synchronizowanie danych tablicy...",
+    "Next sync in": "Następna synchronizacja za",
+    "Syncing...": "Synchronizowanie...",
+    "Sync": "Synchronizuj",
+    "Habit streak updated": "Seria nawyku została zaktualizowana",
+    "Statistics": "Statystyki",
+    "Total Completed Tasks": "Łączna liczba wykonanych zadań",
+    "Todos": "Zadania do wykonania",
+    "Highest Streak Habit": "Najdłuższa seria nawyku",
+    "Most Missed Habit Streak": "Najdłuższa seria niewykonanego nawyku"
+>>>>>>> c7ca75c539f7e4ab3c65cee96c4289a234ae7390
 }  

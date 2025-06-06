@@ -9,7 +9,11 @@ import { useHead } from '@vueuse/head'
 const { trans } = useTranslation()
 
 useHead({
+<<<<<<< HEAD
   title: () => trans('FAQ') + ' | Questify',
+=======
+  title: trans('FAQ') + ' | Questify',
+>>>>>>> c7ca75c539f7e4ab3c65cee96c4289a234ae7390
 })
 
 const faqs = ref([

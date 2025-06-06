@@ -248,26 +248,45 @@
     "Until the user withdraws consent": "Bis der Benutzer die Einwilligung widerruft",
     "6. User rights": "6. Benutzerrechte",
     "The user has the right to:": "Der Benutzer hat das Recht auf:",
+<<<<<<< HEAD
     "Access to their data": "Zugriff auf ihre Daten",
+=======
+    "Access to their data": "Zugang zu seinen Daten",
+>>>>>>> c7ca75c539f7e4ab3c65cee96c4289a234ae7390
     "Rectification of data": "Berichtigung von Daten",
     "Deletion of data": "Löschung von Daten",
     "Restriction of processing": "Einschränkung der Verarbeitung",
     "Data transfer": "Datenübertragung",
     "Opposition to processing": "Widerspruch gegen die Verarbeitung",
     "7. Data security": "7. Datensicherheit",
+<<<<<<< HEAD
     "We ensure data security through:": "Wir gewährleisten die Datensicherheit durch:",
     "Encryption of transmission": "Verschlüsselung der Übertragung",
     "Regular backups": "Regelmäßige Backups",
     "Access control": "Zugangskontrolle",
+=======
+    "We ensure data security through:": "Wir gewährleisten Datensicherheit durch:",
+    "Encryption of transmission": "Verschlüsselung der Übertragung",
+    "Regular backups": "Regelmäßige Sicherungen",
+    "Access control": "Zugriffskontrolle",
+>>>>>>> c7ca75c539f7e4ab3c65cee96c4289a234ae7390
     "Monitoring the system": "Systemüberwachung",
     "8. Cookies": "8. Cookies",
     "The service uses cookies for:": "Der Dienst verwendet Cookies für:",
     "Maintaining user sessions": "Aufrechterhaltung von Benutzersitzungen",
+<<<<<<< HEAD
     "Remembering preferences": "Speichern von Präferenzen",
     "Traffic analysis": "Verkehrsanalyse",
     "Personalization of content": "Personalisierung von Inhalten",
     "9. Contact": "9. Kontakt",
     "For matters related to data protection, you can contact:": "Bei Angelegenheiten zum Datenschutz können Sie sich wenden an:",
+=======
+    "Remembering preferences": "Speichern von Einstellungen",
+    "Traffic analysis": "Traffic-Analyse",
+    "Personalization of content": "Personalisierung von Inhalten",
+    "9. Contact": "9. Kontakt",
+    "For matters related to data protection, you can contact:": "Für Angelegenheiten im Zusammenhang mit dem Datenschutz kannst du kontaktieren:",
+>>>>>>> c7ca75c539f7e4ab3c65cee96c4289a234ae7390
     "Email:": "E-Mail:",
     "Phone:": "Telefon:",
     "Address:": "Adresse:",
@@ -276,6 +295,7 @@
     "Message": "Nachricht",
     "Send message": "Nachricht senden",
     "Contact information": "Kontaktinformationen",
+<<<<<<< HEAD
     "Working hours": "Öffnungszeiten",
     "Monday - Friday: 9:00 - 17:00": "Montag - Freitag: 9:00 - 17:00",
     "Saturday: 10:00 - 14:00": "Samstag: 10:00 - 14:00",
@@ -292,6 +312,24 @@
     "Task management": "Aufgabenverwaltung",
     "Account settings": "Kontoeinstellungen",
     "Service status": "Dienststatus",
+=======
+    "Working hours": "Arbeitszeiten",
+    "Monday - Friday: 9:00 - 17:00": "Montag - Freitag: 9:00 - 17:00",
+    "Saturday: 10:00 - 14:00": "Samstag: 10:00 - 14:00",
+    "Sunday: Closed": "Sonntag: Geschlossen",
+    "Find answers to the most frequently asked questions about Questify.": "Finde Antworten auf die häufigsten Fragen zu Questify.",
+    "Go to FAQ": "Zu den FAQ",
+    "Need help? Contact our support team.": "Brauchst du Hilfe? Kontaktiere unser Support-Team.",
+    "Found a bug in the application? Help us fix it.": "Einen Fehler in der Anwendung gefunden? Hilf uns, ihn zu beheben.",
+    "Suggest a feature": "Feature vorschlagen",
+    "Have an idea for a new feature? Let us know!": "Hast du eine Idee für ein neues Feature? Lass es uns wissen!",
+    "Read our documentation to better understand how to use Questify:": "Lies unsere Dokumentation, um besser zu verstehen, wie du Questify verwenden kannst:",
+    "Beginner's guide": "Einsteiger-Leitfaden",
+    "Level system and experience": "Level-System und Erfahrung",
+    "Task management": "Aufgabenverwaltung",
+    "Account settings": "Kontoeinstellungen",
+    "Service status": "Service-Status",
+>>>>>>> c7ca75c539f7e4ab3c65cee96c4289a234ae7390
     "All services are working properly": "Alle Dienste funktionieren ordnungsgemäß",
     "Last update:": "Letzte Aktualisierung:",
     "Description": "Beschreibung",
@@ -301,11 +339,19 @@
     "Priority": "Priorität",
     "Send report": "Bericht senden",
     "Tips": "Tipps",
+<<<<<<< HEAD
     "To ensure your report is processed as quickly as possible:": "Um sicherzustellen, dass Ihr Bericht schnellstmöglich bearbeitet wird:",
     "Describe the proposed feature in detail": "Beschreiben Sie das vorgeschlagene Feature im Detail",
     "Explain its value to users": "Erklären Sie seinen Wert für Benutzer",
     "Provide examples of usage": "Geben Sie Nutzungsbeispiele",
     "Determine the priority based on the actual need": "Bestimmen Sie die Priorität basierend auf dem tatsächlichen Bedarf",
+=======
+    "To ensure your report is processed as quickly as possible:": "Um sicherzustellen, dass dein Bericht so schnell wie möglich bearbeitet wird:",
+    "Describe the proposed feature in detail": "Beschreibe das vorgeschlagene Feature detailliert",
+    "Explain its value to users": "Erkläre seinen Wert für Benutzer",
+    "Provide examples of usage": "Gib Verwendungsbeispiele an",
+    "Determine the priority based on the actual need": "Bestimme die Priorität basierend auf dem tatsächlichen Bedarf",
+>>>>>>> c7ca75c539f7e4ab3c65cee96c4289a234ae7390
     "General": "Allgemein",
     "Ui": "Benutzeroberfläche",
     "Functionality": "Funktionalität",

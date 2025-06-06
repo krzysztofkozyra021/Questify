@@ -13,7 +13,11 @@ import { useHead } from '@vueuse/head'
 const { trans } = useTranslation()
 
 useHead({
+<<<<<<< HEAD
   title: () => trans('Register') + ' | Questify',
+=======
+  title: trans('Register') + ' | Questify',
+>>>>>>> c7ca75c539f7e4ab3c65cee96c4289a234ae7390
 })
 
 const form = useForm({

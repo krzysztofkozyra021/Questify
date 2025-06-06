@@ -124,7 +124,11 @@ import Preloader from '@/Components/Preloader.vue'
 const { trans } = useTranslation()
 
 useHead({
+<<<<<<< HEAD
   title: () => trans('Contact') + ' | Questify',
+=======
+  title: trans('Contact') + ' | Questify',
+>>>>>>> c7ca75c539f7e4ab3c65cee96c4289a234ae7390
 })
 
 

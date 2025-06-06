@@ -13,7 +13,11 @@ import { useHead } from '@vueuse/head'
 const { trans } = useTranslation()
 
 useHead({
+<<<<<<< HEAD
   title: () => trans('Forgot Password') + ' | Questify',
+=======
+  title: trans('Forgot Password') + ' | Questify',
+>>>>>>> c7ca75c539f7e4ab3c65cee96c4289a234ae7390
 })
 
 defineProps({
