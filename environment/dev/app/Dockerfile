@@ -47,12 +47,14 @@ RUN apt-get update \
         nginx=${NGINX_VERSION} \
         libzip-dev \
         libpq-dev \
+        libicu-dev \
         supervisor \
         cron \
     && pecl install redis-${PHPREDIS_VERSION} \
     && docker-php-ext-install \
         zip \
         pdo_pgsql \
+        intl \
     && docker-php-ext-enable \
         redis
 
@@ -68,5 +70,10 @@ RUN if [ ${INSTALL_XDEBUG} = true ]; then \
 COPY ./entrypoint.sh /entrypoint.sh
 
 WORKDIR /application
+
+# Create storage directory and set permissions
+RUN mkdir -p /application/storage/app/public/profile-images \
+    && chown -R www-data:www-data /application/storage \
+    && chmod -R 775 /application/storage
 
 ENTRYPOINT ["/entrypoint.sh"]

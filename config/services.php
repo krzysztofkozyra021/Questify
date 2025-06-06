@@ -17,4 +17,7 @@ return [
             "channel" => env("SLACK_BOT_USER_DEFAULT_CHANNEL"),
         ],
     ],
+    "deepl" => [
+        "api_key" => env("DEEPL_API_KEY"),
+    ],
 ];

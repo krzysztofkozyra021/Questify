@@ -1,8 +1,9 @@
 /node_modules
 /public/hot
-/public/storage
+/public/storage/
 /public/js/
 /public/css/
+/storage/*
 /public/mix-manifest.json
 /vendor
 .env
@@ -19,3 +20,4 @@ google-credentials.json
 .composer
 /public/build/
 supervisord.pid
+.php-cs-fixer.cache

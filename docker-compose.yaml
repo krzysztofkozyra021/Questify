@@ -7,6 +7,8 @@ volumes:
         name: Questify-postgres-data
     Questify-redis-data:
         name: Questify-redis-data
+    Questify-storage:
+        name: Questify-storage
 
 services:
     app:
@@ -24,8 +26,10 @@ services:
             - ./environment/dev/app/php-fpm.conf:/usr/local/etc/php-fpm.d/zzz-overrides.conf:ro
             - ./environment/dev/app/supervisord.conf:/etc/supervisor/custom-supervisord.conf:ro
             - .:/application
+            - Questify-storage:/application/storage/app/public
         ports:
             - ${DOCKER_APP_HOST_PORT:-63851}:80
+            - ${VITE_PORT}:5173
         networks:
             - Questify-dev
         restart: unless-stopped
